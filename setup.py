@@ -40,6 +40,8 @@ if os.path.exists(readme_filename):
 
 install('https://github.com/bitranox/lib_cast/archive/master.zip')
 install('https://github.com/bitranox/lib_parameter/archive/master.zip')
+install('https://github.com/bitranox/lib_doctest_pycharm/archive/master.zip')
+
 
 setup(
     name='lib_log_utils',

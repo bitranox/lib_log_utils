@@ -1,4 +1,5 @@
-pytest                                                        # see : https://github.com/pytest-dev/pytest
-typing                                                        # see : https://pypi.org/project/typing/
-https://github.com/bitranox/lib_cast/archive/master.zip       # see : https://github.com/bitranox/lib_cast
-https://github.com/bitranox/lib_parameter/archive/master.zip  # see : https://github.com/bitranox/lib_parameter
+pytest                                                              # see : https://github.com/pytest-dev/pytest
+typing                                                              # see : https://pypi.org/project/typing/
+https://github.com/bitranox/lib_cast/archive/master.zip             # see : https://github.com/bitranox/lib_cast
+https://github.com/bitranox/lib_parameter/archive/master.zip        # see : https://github.com/bitranox/lib_parameter
+https://github.com/bitranox/lib_doctest_pycharm/archive/master.zip  # see : https://github.com/bitranox/lib_doctest_pycharm
