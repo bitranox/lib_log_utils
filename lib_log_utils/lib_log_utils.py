@@ -56,7 +56,6 @@ def test_log_util():
     ...
     ZeroDivisionError: division by zero
 
-
     """
     try:
         xxx = 1 / 0
