@@ -19,7 +19,7 @@ lib_log_utils
    :target: https://bettercodehub.com/results/bitranox/lib_log_utils
 .. |snyk security| image:: https://snyk.io/test/github/bitranox/lib_log_utils/badge.svg
    :target: https://snyk.io/test/github/bitranox/lib_log_utils
-.. |code climate| image:: https://api.codeclimate.com/v1/badges/64c43749ac6b4c52478d/maintainability
+.. |code climate| image:: https://api.codeclimate.com/v1/badges/fa8ed1c6aec724d3b4f7/maintainability
    :target: https://codeclimate.com/github/bitranox/lib_log_utils/maintainability
    :alt: Maintainability
 
