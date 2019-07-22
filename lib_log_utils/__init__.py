@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from .lib_log_utils import *
 
 __title__ = 'lib_log_utils'

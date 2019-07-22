@@ -6,7 +6,7 @@ import sys
 
 
 def install(package):
-    subprocess.call([sys.executable, "-m", "pip", "install", "--upgrade", '-r', package])
+    subprocess.call([sys.executable, "-m", "pip", "install", "--upgrade", package])
 
 
 try:
@@ -54,4 +54,4 @@ setup(
     install_requires=['pytest', 'typing'],
     classifiers=CLASSIFIERS,
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'lib_cast', 'lib_parameter'])
+    tests_require=['pytest'])
