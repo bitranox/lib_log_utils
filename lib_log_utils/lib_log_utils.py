@@ -46,9 +46,9 @@ def print_exception_traceback(s_error: str) -> str:
 
 def test_log_util():
     """
-    >>> import lib_doctest_pycharm
-    >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm(log_level=logging.DEBUG)
-    >>> test_log_util() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    # >>> import lib_doctest_pycharm
+    # >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm(log_level=logging.DEBUG)
+    # >>> test_log_util() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     Fehler
     ZeroDivisionError: division by zero
     Traceback Information :
@@ -61,24 +61,21 @@ def test_log_util():
         xxx = 1 / 0
         return xxx
     except ZeroDivisionError:
-        log_exception_traceback('Fehler', log_level=logging.INFO, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
+        log_exception_traceback('Fehler', log_level=logging.WARNING, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
 
 
 def test_log_util_reraise():
     """
-    >>> import lib_doctest_pycharm
-    >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm(log_level=logging.DEBUG)
-    >>> test_log_util_reraise()  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-    ...
-    RuntimeError: Fehler
+    # >>> import lib_doctest_pycharm
+    # >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm(log_level=logging.DEBUG)
+    # >>> test_log_util_reraise()  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
 
     """
     try:
         xxx = 1 / 0
         return xxx
     except ZeroDivisionError as exc:
-        s_error = log_exception_traceback('Fehler', log_level=logging.INFO, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
+        s_error = log_exception_traceback('Fehler', log_level=logging.WARNING, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
         raise RuntimeError(s_error) from exc
 
 
