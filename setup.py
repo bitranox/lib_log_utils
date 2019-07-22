@@ -49,9 +49,9 @@ setup(
     long_description_content_type='text/x-rst',
     author='Robert Nowotny',
     author_email='rnowotny1966@gmail.com',
-    url='https://github.com/bitranox/lib_list',
+    url='https://github.com/bitranox/lib_log_utils',
     packages=['lib_log_utils'],
     install_requires=['pytest', 'typing'],
     classifiers=CLASSIFIERS,
     setup_requires=['pytest-runner'],
-    tests_require=['pytest'])
+    tests_require=['pytest', 'lib_cast', 'lib_parameter'])
