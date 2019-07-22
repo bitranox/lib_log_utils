@@ -61,7 +61,7 @@ def test_log_util():
         xxx = 1 / 0
         return xxx
     except ZeroDivisionError:
-        log_exception_traceback('Fehler', log_level=logging.WARNING, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
+        log_exception_traceback('Fehler', log_level=logging.INFO, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
 
 
 def test_log_util_reraise():
