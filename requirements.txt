@@ -3,3 +3,7 @@ typing                                                              # see : http
 https://github.com/bitranox/lib_cast/archive/master.zip             # see : https://github.com/bitranox/lib_cast
 https://github.com/bitranox/lib_parameter/archive/master.zip        # see : https://github.com/bitranox/lib_parameter
 https://github.com/bitranox/lib_doctest_pycharm/archive/master.zip  # see : https://github.com/bitranox/lib_doctest_pycharm
+
+# install('https://github.com/bitranox/lib_cast/archive/master.zip')
+# install('https://github.com/bitranox/lib_parameter/archive/master.zip')
+# install('https://github.com/bitranox/lib_doctest_pycharm/archive/master.zip')
