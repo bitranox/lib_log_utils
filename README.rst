@@ -109,12 +109,11 @@ Requirements
 ------------
 following modules will be automatically installed :
 
-.. code-block:: shell
+.. code-block:: bash
 
-    pytest                                                        # see : https://github.com/pytest-dev/pytest
-    typing                                                        # see : https://pypi.org/project/typing/
-    https://github.com/bitranox/lib_cast/archive/master.zip       # see : https://github.com/bitranox/lib_cast
-    https://github.com/bitranox/lib_parameter/archive/master.zip  # see : https://github.com/bitranox/lib_parameter
+    git+https://github.com/bitranox/lib_cast.git
+    git+https://github.com/bitranox/lib_parameter.git
+    git+https://github.com/bitranox/lib_doctest_pycharm.git
 
 Acknowledgements
 ----------------
