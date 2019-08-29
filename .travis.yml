@@ -47,6 +47,10 @@ matrix:
 
     - os: linux
       language: python
+      python: '3.5'
+
+    - os: linux
+      language: python
       python: '3.6'
       # we can do that also with env - but we dont want to show it on the travis build overview
       before_install:
@@ -205,6 +209,7 @@ matrix:
         # on osx pip and python points to python 2.7 - therefore we have to use pip3 and python3 here
         - pip_command="pip3"
         - python_command="python3"
+
 
 
 install:
