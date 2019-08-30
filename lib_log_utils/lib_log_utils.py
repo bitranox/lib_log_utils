@@ -164,9 +164,9 @@ class LogAllHandlersFormatterSave(object):
     >>> logger=logging.getLogger()
     >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
     ...     lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
-    ...     logger.info('test')
     ... else:
-    ...     print('test')
+    ...     setup_console_logger_simple()
+    >>> logger.info('test')
     test
     >>> log_all_handlers_formatter_save = LogAllHandlersFormatterSave()
     >>> log_all_handlers_formatter_save.save()
@@ -181,15 +181,11 @@ class LogAllHandlersFormatterSave(object):
     ...     logger.info('test2')
     test2 prefix2: test2
 
-    >>> setup_console_logger()
-    >>> with LogAllHandlersFormatterSave():
-    ...     set_all_log_handlers_formatter_prefix(log_formatter_prefix='test3 prefix3: ')
-    ...     logger.info('test3')  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    test3 prefix3: test3
-    test3 prefix3: [...] INFO    : test3
-
     >>> # teardown
-    >>> remove_handler_by_name(name='console_handler')
+    >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
+    ...    remove_handler_by_name(name='doctest_console_handler')
+    ... else:
+    ...   remove_handler_by_name(name='console_handler')
 
     """
 
@@ -223,11 +219,11 @@ class LogHandlerFormatterSave(object):
     >>> logger=logging.getLogger()
     >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
     ...     lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
-    ...     logger.info('test')
     ... else:
-    ...     print('test')
+    ...     setup_console_logger_simple()
+    >>> logger.info('test')
     test
-    >>> handler = logger.handlers[0]
+    >>> handler = get_handler_by_name('console_handler')
 
     >>> log_handler_formatter_save = LogHandlerFormatterSave(handler=handler)
     >>> set_log_handler_formatter_prefix(handler=handler, log_formatter_prefix='test4 prefix: ')
@@ -241,17 +237,11 @@ class LogHandlerFormatterSave(object):
     ...     logger.info('test2')
     test5 prefix2: test2
 
-    >>> setup_console_logger()
-    >>> handler = get_handler_by_name('console_handler')
-
-    >>> with LogHandlerFormatterSave(handler=handler):
-    ...     set_log_handler_formatter_prefix(handler=handler, log_formatter_prefix='test6 prefix3: ')
-    ...     logger.info('test3')  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    test3
-    test6 prefix3: [...] INFO    : test3
-
     >>> # teardown
-    >>> remove_handler_by_name(name='console_handler')
+    >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
+    ...    remove_handler_by_name(name='doctest_console_handler')
+    ... else:
+    ...   remove_handler_by_name(name='console_handler')
 
     """
 
