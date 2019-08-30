@@ -192,7 +192,7 @@ class LogAllHandlersFormatterSave(object):
     """
 
     def __init__(self) -> None:
-        self._hash_formatter_by_handler: Dict[logging.Handler, Optional[logging.Formatter]] = dict()
+        self._hash_formatter_by_handler = dict()        # type: Dict[logging.Handler, Optional[logging.Formatter]]
 
     def __enter__(self) -> 'LogAllHandlersFormatterSave':
         self.save()
@@ -253,7 +253,7 @@ class LogHandlerFormatterSave(object):
 
     def __init__(self, handler: logging.Handler):
         self._handler = handler
-        self._formatter: Optional[logging.Formatter] = None
+        self._formatter = None          # type:  Optional[logging.Formatter]
         self.save()
 
     def __enter__(self) -> 'LogHandlerFormatterSave':
