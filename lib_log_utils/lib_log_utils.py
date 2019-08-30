@@ -160,12 +160,9 @@ def logger_flush_all_handlers() -> None:
 
 class LogAllHandlersFormatterSave(object):
     """
-    >>> import pytest
-    >>> pytest.skip('this doctest does not work under pytest')    # +ELLIPSIS +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-        ...
-    Skipped: this doctest does not work under pytest
-
+    """
+    '''
+    >>> # those tests dont run pytest
     >>> import lib_doctest_pycharm
     >>> logger=logging.getLogger()
     >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
@@ -187,7 +184,8 @@ class LogAllHandlersFormatterSave(object):
     >>> # teardown
     >>> remove_handler_by_name(name='doctest_console_handler')
 
-    """
+    
+    '''
 
     def __init__(self) -> None:
         self._hash_formatter_by_handler = dict()        # type: Dict[logging.Handler, Optional[logging.Formatter]]
@@ -215,12 +213,9 @@ class LogAllHandlersFormatterSave(object):
 
 class LogHandlerFormatterSave(object):
     """
-    >>> import pytest
-    >>> pytest.skip('this doctest does not work under pytest')    # +ELLIPSIS +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-        ...
-    Skipped: this doctest does not work under pytest
-
+    """
+    '''
+    >>> # those tests dont run on pytest
     >>> import lib_doctest_pycharm
     >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
     >>> logger=logging.getLogger()
@@ -242,8 +237,7 @@ class LogHandlerFormatterSave(object):
 
     >>> # teardown
     >>> remove_handler_by_name(name='doctest_console_handler')
-
-    """
+    '''
 
     def __init__(self, handler: logging.Handler):
         self._handler = handler
