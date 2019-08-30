@@ -184,7 +184,6 @@ class LogAllHandlersFormatterSave(object):
     >>> # teardown
     >>> remove_handler_by_name(name='doctest_console_handler')
 
-    
     '''
 
     def __init__(self) -> None:
@@ -237,6 +236,7 @@ class LogHandlerFormatterSave(object):
 
     >>> # teardown
     >>> remove_handler_by_name(name='doctest_console_handler')
+
     '''
 
     def __init__(self, handler: logging.Handler):
