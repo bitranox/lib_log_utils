@@ -160,6 +160,8 @@ def logger_flush_all_handlers() -> None:
 
 class LogAllHandlersFormatterSave(object):
     """
+    >>> import pytest
+    >>> pytest.skip('this doctest does not work under pytest')
     >>> import lib_doctest_pycharm
     >>> logger=logging.getLogger()
     >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
@@ -215,6 +217,8 @@ class LogAllHandlersFormatterSave(object):
 
 class LogHandlerFormatterSave(object):
     """
+    >>> import pytest
+    >>> pytest.skip('this doctest does not work under pytest')
     >>> import lib_doctest_pycharm
     >>> logger=logging.getLogger()
     >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
