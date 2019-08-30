@@ -165,6 +165,8 @@ class LogAllHandlersFormatterSave(object):
     >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
     ...     lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
     ...     logger.info('test')
+    ... else:
+    ...     print('test')
     test
     >>> log_all_handlers_formatter_save = LogAllHandlersFormatterSave()
     >>> log_all_handlers_formatter_save.save()
@@ -222,6 +224,8 @@ class LogHandlerFormatterSave(object):
     >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
     ...     lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
     ...     logger.info('test')
+    ... else:
+    ...     print('test')
     test
     >>> handler = logger.handlers[0]
 
