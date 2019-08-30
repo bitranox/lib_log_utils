@@ -5,7 +5,7 @@ import multiprocessing
 import sys
 import traceback
 from types import TracebackType
-from typing import Dict, Optional, Type, Union
+from typing import Dict, Optional, Type
 
 # OWN
 import lib_cast
@@ -69,9 +69,8 @@ def test_log_util():   # type: ignore
 
 
 def setup_stream_handler(name: str = 'console_handler') -> logging.Handler:
-    console_handler: logging.Handler
     if not exists_handler_with_name(name):
-        console_handler = logging.StreamHandler(stream=sys.stdout)
+        console_handler = logging.StreamHandler(stream=sys.stdout)      # type: logging.Handler
         console_handler.name = name
         logging.getLogger().addHandler(console_handler)
     else:
