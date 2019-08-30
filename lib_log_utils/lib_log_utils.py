@@ -161,13 +161,14 @@ def logger_flush_all_handlers() -> None:
 class LogAllHandlersFormatterSave(object):
     """
     >>> import pytest
-    >>> pytest.skip('this doctest does not work under pytest')
+    >>> pytest.skip('this doctest does not work under pytest')    # +ELLIPSIS +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+        ...
+    Skipped: this doctest does not work under pytest
+
     >>> import lib_doctest_pycharm
     >>> logger=logging.getLogger()
-    >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
-    ...     lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
-    ... else:
-    ...     setup_console_logger_simple()
+    >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
     >>> logger.info('test')
     test
     >>> log_all_handlers_formatter_save = LogAllHandlersFormatterSave()
@@ -184,10 +185,7 @@ class LogAllHandlersFormatterSave(object):
     test2 prefix2: test2
 
     >>> # teardown
-    >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
-    ...    remove_handler_by_name(name='doctest_console_handler')
-    ... else:
-    ...   remove_handler_by_name(name='console_handler')
+    >>> remove_handler_by_name(name='doctest_console_handler')
 
     """
 
@@ -218,16 +216,17 @@ class LogAllHandlersFormatterSave(object):
 class LogHandlerFormatterSave(object):
     """
     >>> import pytest
-    >>> pytest.skip('this doctest does not work under pytest')
+    >>> pytest.skip('this doctest does not work under pytest')    # +ELLIPSIS +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+        ...
+    Skipped: this doctest does not work under pytest
+
     >>> import lib_doctest_pycharm
+    >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
     >>> logger=logging.getLogger()
-    >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
-    ...     lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
-    ... else:
-    ...     setup_console_logger_simple()
     >>> logger.info('test')
     test
-    >>> handler = get_handler_by_name('console_handler')
+    >>> handler = get_handler_by_name('doctest_console_handler')
 
     >>> log_handler_formatter_save = LogHandlerFormatterSave(handler=handler)
     >>> set_log_handler_formatter_prefix(handler=handler, log_formatter_prefix='test4 prefix: ')
@@ -242,10 +241,7 @@ class LogHandlerFormatterSave(object):
     test5 prefix2: test2
 
     >>> # teardown
-    >>> if lib_doctest_pycharm.is_pycharm_docrunner() or lib_doctest_pycharm.is_pycharm_pytest_runner():
-    ...    remove_handler_by_name(name='doctest_console_handler')
-    ... else:
-    ...   remove_handler_by_name(name='console_handler')
+    >>> remove_handler_by_name(name='doctest_console_handler')
 
     """
 
