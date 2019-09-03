@@ -124,9 +124,9 @@ following modules will be automatically installed :
     pytest-runner
 
     ## Project Requirements
-    lib_cast
-    lib_parameter
-    lib_doctest_pycharm
+    lib_cast @ git+https://github.com/bitranox/lib_cast.git
+    lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
+    lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git
 
 Acknowledgements
 ----------------
@@ -148,6 +148,10 @@ This software is licensed under the `MIT license <http://en.wikipedia.org/wiki/M
 
 Changelog
 =========
+
+0.0.2
+-----
+development
 
 0.0.1
 -----
