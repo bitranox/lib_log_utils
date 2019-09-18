@@ -31,7 +31,9 @@ def setup_console_logger_color(logger: logging.Logger = logging.getLogger(),
                                name: str = 'console_logger',
                                level: int = logging.INFO,
                                fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                               datefmt: str = '%Y-%m-%d %H:%M:%S') -> logging.Logger:
+                               datefmt: str = '%Y-%m-%d %H:%M:%S',
+                               field_styles: Any = coloredlogs.DEFAULT_FIELD_STYLES,
+                               level_styles: Any = coloredlogs.DEFAULT_LEVEL_STYLES) -> logging.Logger:
     """
     >>> logger=setup_console_logger_color()
     >>> logger.debug("DEBUG")
@@ -45,11 +47,12 @@ def setup_console_logger_color(logger: logging.Logger = logging.getLogger(),
     [...][...][CRITICAL]: CRITICAL
 
     """
+
     # https://coloredlogs.readthedocs.io/en/latest/api.html
-    logger = setup_console_logger(logger=logger, name=name, level=level, fmt=fmt, datefmt=datefmt)
     fmt = fmt.format(username=getpass.getuser())
     os.environ['COLOREDLOGS_LOG_FORMAT'] = fmt
-    coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, reconfigure=False)
+    coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles)
+    logger.handlers[0].name = name
     return logger
 
 
@@ -70,6 +73,24 @@ def setup_console_logger(logger: logging.Logger = logging.getLogger(),
     console_handler.setFormatter(formatter)
     logger.setLevel(level)
     return logger
+
+
+def add_file_handler(filename: str, name: str = '', mode: str = 'a', encoding: str = None, delay: bool = None) -> logging.Handler:
+    """
+    name: the name of the file handler. if name = '', name = filename
+
+    mode: 'a': Opens a file for appending new information to it. The pointer is placed at the end of the file.
+               A new file is created if one with the same name doesn't exist.
+          'w': Opens in write-only mode. The pointer is placed at the beginning of the file and this will overwrite
+               any existing file with the same name. It will create a new file if one with the same name doesn't exist.
+    """
+    if not exists_handler_with_name(filename):
+        file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)   # type: logging.Handler
+        file_handler.name = filename
+        logging.getLogger().addHandler(file_handler)
+    else:
+        file_handler = get_handler_by_name(filename)
+    return file_handler
 
 
 def banner(level: int, message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
