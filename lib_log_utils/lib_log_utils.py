@@ -4,11 +4,12 @@ import logging.handlers
 import getpass
 import multiprocessing
 import os
+import platform
 import sys
 import textwrap
 import traceback
 from types import TracebackType
-from typing import Dict, Optional, Type
+from typing import Any, Dict, Optional, Type
 
 # EXT
 import coloredlogs      # type: ignore
@@ -18,21 +19,57 @@ import lib_cast
 import lib_parameter
 
 
-def install_color_log(logger: logging.Logger = logging.getLogger()) -> None:
+class HostnameFilter(logging.Filter):
+    hostname = platform.node()
+
+    def filter(self, record: Any) -> bool:
+        record.hostname = HostnameFilter.hostname
+        return True
+
+
+def setup_console_logger_color(logger: logging.Logger = logging.getLogger(),
+                               name: str = 'console_logger',
+                               level: int = logging.INFO,
+                               fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
+                               datefmt: str = '%Y-%m-%d %H:%M:%S') -> logging.Logger:
     """
-    >>> logger=logging.getLogger()
-    >>> install_color_log()
+    >>> logger=setup_console_logger_color()
     >>> logger.debug("DEBUG")
-    >>> logger.info("INFO")
-    >>> logger.warning("WARNING")
-    >>> logger.critical("ERROR")
+    >>> logger.info("INFO")             # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+    [...][...][INFO    ]: INFO
+    >>> logger.warning("WARNING")       # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+    [...][...][WARNING ]: WARNING
+    >>> logger.error("ERROR")           # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+    [...][...][ERROR   ]: ERROR
+    >>> logger.critical("CRITICAL")     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+    [...][...][CRITICAL]: CRITICAL
 
     """
     # https://coloredlogs.readthedocs.io/en/latest/api.html
+    logger = setup_console_logger(logger=logger, name=name, level=level, fmt=fmt, datefmt=datefmt)
+    fmt = fmt.format(username=getpass.getuser())
+    os.environ['COLOREDLOGS_LOG_FORMAT'] = fmt
+    coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, reconfigure=False)
+    return logger
 
-    username = getpass.getuser()
-    os.environ['COLOREDLOGS_LOG_FORMAT'] = '[{username}@%(hostname)s][%(asctime)s]: %(message)s'.format(username=username)
-    coloredlogs.install(logger=logger)
+
+def setup_console_logger(logger: logging.Logger = logging.getLogger(),
+                         name: str = 'console_handler',
+                         level: int = logging.INFO,
+                         fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
+                         datefmt: str = '%Y-%m-%d %H:%M:%S') -> logging.Logger:
+    """
+    >>> logger = setup_console_logger()
+
+    """
+    fmt = fmt.format(username=getpass.getuser())
+    console_handler = setup_stream_handler(name=name)
+    console_handler.addFilter(HostnameFilter())
+    console_handler.setLevel(level)
+    formatter = logging.Formatter(fmt, datefmt)
+    console_handler.setFormatter(formatter)
+    logger.setLevel(level)
+    return logger
 
 
 def banner(level: int, message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
@@ -48,7 +85,7 @@ def banner(level: int, message: str, banner_width: int = 140, wrap_text: bool = 
     logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
     for line in l_message:
         if wrap_text:
-            l_wrapped_lines = textwrap.wrap(line, width=banner_width-2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
+            l_wrapped_lines = textwrap.wrap(line, width=banner_width - 2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
             for wrapped_line in l_wrapped_lines:
                 msg_line = wrapped_line + (banner_width - len(wrapped_line) - 1) * ' ' + '*'
                 logger.log(level=level, msg=msg_line)
@@ -127,19 +164,6 @@ def setup_stream_handler(name: str = 'console_handler') -> logging.Handler:
     return console_handler
 
 
-def setup_console_logger(level: int = logging.INFO, name: str = 'console_handler') -> None:
-    """
-    >>> setup_console_logger()
-
-    """
-    console_handler = setup_stream_handler(name=name)
-    console_handler.setLevel(level)
-    datefmt = '%Y-%m-%d %H:%M:%S'
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)-8s: %(message)s', datefmt)
-    console_handler.setFormatter(formatter)
-    logging.getLogger().setLevel(level)
-
-
 def setup_console_logger_simple(level: int = logging.INFO, name: str = 'console_handler') -> None:
     """
     >>> setup_console_logger_simple()
@@ -168,7 +192,7 @@ def setup_console_logger_like_yaml_short(level: int = logging.INFO, name: str = 
 def get_handler_by_name(name: str) -> logging.Handler:
     """
     >>> import unittest
-    >>> setup_console_logger()
+    >>> logger = setup_console_logger()
     >>> unittest.TestCase().assertIsNotNone(get_handler_by_name, ['console_handler'])
     >>> unittest.TestCase().assertRaises(ValueError, get_handler_by_name, ['unknown_handler'])
 
