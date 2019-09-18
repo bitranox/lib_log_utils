@@ -1,19 +1,68 @@
 # STDLIB
 import logging
 import logging.handlers
+import getpass
 import multiprocessing
+import os
 import sys
+import textwrap
 import traceback
 from types import TracebackType
 from typing import Dict, Optional, Type
+
+# EXT
+import coloredlogs      # type: ignore
 
 # OWN
 import lib_cast
 import lib_parameter
 
 
+def install_color_log(logger: logging.Logger = logging.getLogger()) -> None:
+    """
+    >>> logger=logging.getLogger()
+    >>> install_color_log()
+    >>> logger.debug("DEBUG")
+    >>> logger.info("INFO")
+    >>> logger.warning("WARNING")
+    >>> logger.critical("ERROR")
+
+    """
+    # https://coloredlogs.readthedocs.io/en/latest/api.html
+
+    username = getpass.getuser()
+    os.environ['COLOREDLOGS_LOG_FORMAT'] = '[{username}@%(hostname)s][%(asctime)s]: %(message)s'.format(username=username)
+    coloredlogs.install(logger=logger)
+
+
+def banner(level: int, message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    """
+    >>> banner(logging.ERROR, 'test', wrap_text=True)
+    >>> banner(logging.ERROR, 'test', wrap_text=False)
+    >>> banner(logging.ERROR, 'das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', banner_width=10, wrap_text=True)
+    >>> banner(logging.ERROR, 'das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', banner_width=10, wrap_text=False)
+
+    """
+    sep_line = '*' * banner_width
+    l_message = message.split('\n')
+    logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
+    for line in l_message:
+        if wrap_text:
+            l_wrapped_lines = textwrap.wrap(line, width=banner_width-2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
+            for wrapped_line in l_wrapped_lines:
+                msg_line = wrapped_line + (banner_width - len(wrapped_line) - 1) * ' ' + '*'
+                logger.log(level=level, msg=msg_line)
+        else:
+            line = "* " + line.rstrip()
+            if len(line) < banner_width - 1:
+                line = line + (banner_width - len(line) - 1) * ' ' + '*'
+            logger.log(level=level, msg=line)
+    logger.log(level=level, msg=sep_line)
+
+
 def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
-                            log_level_exec_info: Optional[int] = None, log_level_traceback: Optional[int] = None) -> str:
+                            log_level_exec_info: Optional[int] = None,
+                            log_level_traceback: Optional[int] = None) -> str:
     logger = logging.getLogger()
     log_level_exec_info = lib_parameter.get_default_if_none(log_level_exec_info, log_level)
     log_level_traceback = lib_parameter.get_default_if_none(log_level_traceback, log_level_exec_info)

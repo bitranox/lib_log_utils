@@ -10,7 +10,8 @@ except ImportError:
     from distutils.core import setup
 
 package_name = 'lib_log_utils'                                                                  # type: str
-required = ['lib_cast @ git+https://github.com/bitranox/lib_cast.git',
+required = ['coloredlogs',
+            'lib_cast @ git+https://github.com/bitranox/lib_cast.git',
             'lib_parameter @ git+https://github.com/bitranox/lib_parameter.git',
             'lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git']    # type: List
 
