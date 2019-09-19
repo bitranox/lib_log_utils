@@ -35,20 +35,17 @@ def setup_console_logger_color(logger: logging.Logger = logging.getLogger(),
                                field_styles: Any = coloredlogs.DEFAULT_FIELD_STYLES,
                                level_styles: Any = coloredlogs.DEFAULT_LEVEL_STYLES) -> logging.Logger:
     """
+    # https://coloredlogs.readthedocs.io/en/latest/api.html
+
     >>> logger=setup_console_logger_color()
     >>> logger.debug("DEBUG")
-    >>> logger.info("INFO")             # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-    [...][...][INFO    ]: INFO
-    >>> logger.warning("WARNING")       # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-    [...][...][WARNING ]: WARNING
-    >>> logger.error("ERROR")           # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-    [...][...][ERROR   ]: ERROR
-    >>> logger.critical("CRITICAL")     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-    [...][...][CRITICAL]: CRITICAL
+    >>> logger.info("INFO")
+    >>> logger.warning("WARNING")
+    >>> logger.error("ERROR")
+    >>> logger.critical("CRITICAL")
 
     """
-
-    # https://coloredlogs.readthedocs.io/en/latest/api.html
+    remove_all_handlers(logger=logger)
     fmt = fmt.format(username=getpass.getuser())
     os.environ['COLOREDLOGS_LOG_FORMAT'] = fmt
     coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles)
@@ -65,6 +62,7 @@ def setup_console_logger(logger: logging.Logger = logging.getLogger(),
     >>> logger = setup_console_logger()
 
     """
+    remove_all_handlers(logger=logger)
     fmt = fmt.format(username=getpass.getuser())
     console_handler = setup_stream_handler(name=name)
     console_handler.addFilter(HostnameFilter())
@@ -75,7 +73,12 @@ def setup_console_logger(logger: logging.Logger = logging.getLogger(),
     return logger
 
 
-def add_file_handler(filename: str, name: str = '', mode: str = 'a', encoding: str = None, delay: bool = None) -> logging.Handler:
+def add_file_handler(filename: str,
+                     logger: logging.Logger = logging.getLogger(),
+                     name: str = '',
+                     mode: str = 'a',
+                     encoding: str = 'utf-8',
+                     delay: bool = True) -> logging.Handler:
     """
     name: the name of the file handler. if name = '', name = filename
 
@@ -83,13 +86,17 @@ def add_file_handler(filename: str, name: str = '', mode: str = 'a', encoding: s
                A new file is created if one with the same name doesn't exist.
           'w': Opens in write-only mode. The pointer is placed at the beginning of the file and this will overwrite
                any existing file with the same name. It will create a new file if one with the same name doesn't exist.
+    delay: If delay is true, then file opening is deferred until the first call to emit(). By default, the file grows indefinitely.
     """
-    if not exists_handler_with_name(filename):
+    if not name:
+        name = filename
+
+    if not exists_handler_with_name(name):
         file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)   # type: logging.Handler
-        file_handler.name = filename
-        logging.getLogger().addHandler(file_handler)
+        file_handler.name = name
+        logger.addHandler(file_handler)
     else:
-        file_handler = get_handler_by_name(filename)
+        file_handler = get_handler_by_name(name)
     return file_handler
 
 
@@ -230,6 +237,12 @@ def get_handler_by_name(name: str) -> logging.Handler:
 def remove_handler_by_name(name: str) -> None:
     handler = get_handler_by_name(name=name)
     logging.getLogger().removeHandler(handler)
+
+
+def remove_all_handlers(logger: logging.Logger = logging.getLogger()) -> None:
+    handlers = logger.handlers
+    for handler in handlers:
+        logger.removeHandler(handler)
 
 
 def exists_handler_with_name(name: str) -> bool:
