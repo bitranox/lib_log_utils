@@ -27,55 +27,13 @@ class HostnameFilter(logging.Filter):
         return True
 
 
-def setup_console_logger_color(logger: logging.Logger = logging.getLogger(),
-                               name: str = 'console_logger',
-                               level: int = logging.INFO,
-                               fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                               datefmt: str = '%Y-%m-%d %H:%M:%S',
-                               field_styles: Any = coloredlogs.DEFAULT_FIELD_STYLES,
-                               level_styles: Any = coloredlogs.DEFAULT_LEVEL_STYLES) -> logging.Logger:
-    """
-    # https://coloredlogs.readthedocs.io/en/latest/api.html
-
-    >>> logger=setup_console_logger_color()
-    >>> logger.debug("DEBUG")
-    >>> logger.info("INFO")
-    >>> logger.warning("WARNING")
-    >>> logger.error("ERROR")
-    >>> logger.critical("CRITICAL")
-
-    """
-    remove_all_handlers(logger=logger)
-    fmt = fmt.format(username=getpass.getuser())
-    os.environ['COLOREDLOGS_LOG_FORMAT'] = fmt
-    coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles)
-    logger.handlers[0].name = name
-    return logger
-
-
-def setup_console_logger(logger: logging.Logger = logging.getLogger(),
-                         name: str = 'console_handler',
-                         level: int = logging.INFO,
-                         fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                         datefmt: str = '%Y-%m-%d %H:%M:%S') -> logging.Logger:
-    """
-    >>> logger = setup_console_logger()
-
-    """
-    remove_all_handlers(logger=logger)
-    fmt = fmt.format(username=getpass.getuser())
-    console_handler = setup_stream_handler(name=name)
-    console_handler.addFilter(HostnameFilter())
-    console_handler.setLevel(level)
-    formatter = logging.Formatter(fmt, datefmt)
-    console_handler.setFormatter(formatter)
-    logger.setLevel(level)
-    return logger
-
-
 def add_file_handler(filename: str,
                      logger: logging.Logger = logging.getLogger(),
                      name: str = '',
+                     level: int = logging.INFO,
+                     fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
+                     datefmt: str = '%Y-%m-%d %H:%M:%S',
+                     remove_existing_handlers: bool = False,
                      mode: str = 'a',
                      encoding: str = 'utf-8',
                      delay: bool = True) -> logging.Handler:
@@ -88,16 +46,89 @@ def add_file_handler(filename: str,
                any existing file with the same name. It will create a new file if one with the same name doesn't exist.
     delay: If delay is true, then file opening is deferred until the first call to emit(). By default, the file grows indefinitely.
     """
-    if not name:
-        name = filename
+
+    file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)  # type: logging.Handler
+    file_handler = _add_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt,
+                                datefmt=datefmt, remove_existing_handlers=remove_existing_handlers)
+    return file_handler
+
+
+def add_stream_handler(logger: logging.Logger = logging.getLogger(),
+                       name: str = 'stream_handler',
+                       level: int = logging.INFO,
+                       fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
+                       datefmt: str = '%Y-%m-%d %H:%M:%S',
+                       remove_existing_handlers: bool = True) -> logging.Handler:
+
+    """
+    >>> result = add_stream_handler()
+
+    """
+    stream_handler = logging.StreamHandler(stream=sys.stderr)  # type: logging.Handler
+    stream_handler = _add_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt,
+                                  datefmt=datefmt, remove_existing_handlers=remove_existing_handlers)
+    return stream_handler
+
+
+def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
+                             name: str = 'stream_handler_color',
+                             level: int = logging.INFO,
+                             fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
+                             datefmt: str = '%Y-%m-%d %H:%M:%S',
+                             field_styles: Any = coloredlogs.DEFAULT_FIELD_STYLES,
+                             level_styles: Any = coloredlogs.DEFAULT_LEVEL_STYLES,
+                             remove_existing_handlers: bool = True) -> logging.Handler:
+    """
+    # https://coloredlogs.readthedocs.io/en/latest/api.html
+
+    >>> logger=logging.getLogger()
+    >>> handler = add_stream_handler_color()
+    >>> logger.debug("DEBUG")
+    >>> logger.info("INFO")
+    >>> logger.warning("WARNING")
+    >>> logger.error("ERROR")
+    >>> logger.critical("CRITICAL")
+
+    """
+    if remove_existing_handlers:
+        remove_all_handlers(logger=logger)
 
     if not exists_handler_with_name(name):
-        file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)   # type: logging.Handler
-        file_handler.name = name
-        logger.addHandler(file_handler)
+        fmt = fmt.format(username=getpass.getuser())
+        os.environ['COLOREDLOGS_LOG_FORMAT'] = fmt
+        coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles)
+        logger.handlers[-1].name = name
+        return logger.handlers[-1]
     else:
-        file_handler = get_handler_by_name(name)
-    return file_handler
+        raise ValueError('Handler "{name}" already exists'.format(name=name))
+
+
+def _add_handler(handler: logging.Handler,
+                 logger: logging.Logger = logging.getLogger(),
+                 name: str = 'stream_handler',
+                 level: int = logging.INFO,
+                 fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
+                 datefmt: str = '%Y-%m-%d %H:%M:%S',
+                 remove_existing_handlers: bool = True) -> logging.Handler:
+
+    """
+    >>> result = add_stream_handler()
+
+    """
+    if remove_existing_handlers:
+        remove_all_handlers(logger=logger)
+
+    if not exists_handler_with_name(name):
+        handler.addFilter(HostnameFilter())
+        fmt = fmt.format(username=getpass.getuser())
+        formatter = logging.Formatter(fmt, datefmt)
+        handler.setFormatter(formatter)
+        handler.setLevel(level)
+        handler.name = name
+        logger.addHandler(handler)
+        return handler
+    else:
+        raise ValueError('Handler "{name}" already exists'.format(name=name))
 
 
 def banner(level: int, message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
@@ -192,35 +223,10 @@ def setup_stream_handler(name: str = 'console_handler') -> logging.Handler:
     return console_handler
 
 
-def setup_console_logger_simple(level: int = logging.INFO, name: str = 'console_handler') -> None:
-    """
-    >>> setup_console_logger_simple()
-
-    """
-    console_handler = setup_stream_handler(name=name)
-    console_handler.setLevel(level)
-    formatter = logging.Formatter('%(message)s')
-    console_handler.setFormatter(formatter)
-
-
-def setup_console_logger_like_yaml_short(level: int = logging.INFO, name: str = 'console_handler') -> None:
-    """
-    >>> setup_console_logger_like_yaml_short()
-
-    """
-
-    console_handler = setup_stream_handler(name=name)
-    console_handler.setLevel(level)
-    datefmt = '%Y-%m-%d %H:%M:%S'
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)-8s: %(name)-60s: %(message)s', datefmt)
-    console_handler.setFormatter(formatter)
-    logging.getLogger().setLevel(level)
-
-
 def get_handler_by_name(name: str) -> logging.Handler:
     """
     >>> import unittest
-    >>> logger = setup_console_logger()
+    >>> logger = add_stream_handler()
     >>> unittest.TestCase().assertIsNotNone(get_handler_by_name, ['console_handler'])
     >>> unittest.TestCase().assertRaises(ValueError, get_handler_by_name, ['unknown_handler'])
 
@@ -369,12 +375,6 @@ class LogHandlerFormatterSave(object):
         self._handler.formatter = self._formatter
 
 
-def set_all_log_handlers_formatter_prefix(log_formatter_prefix: str) -> None:
-    _logger = logging.getLogger()
-    for handler in _logger.handlers:
-        set_log_handler_formatter_prefix(handler, log_formatter_prefix)
-
-
 def set_log_handler_formatter_prefix(handler: logging.Handler, log_formatter_prefix: str) -> None:
     if handler.formatter:
         if handler.formatter._fmt:
@@ -387,32 +387,3 @@ def set_log_handler_formatter_prefix(handler: logging.Handler, log_formatter_pre
         datefmt = '%Y-%m-%d %H:%M:%S'
         formatter = logging.Formatter(log_formatter_prefix + '%(message)s', datefmt)
         handler.setFormatter(formatter)
-
-
-class RpycQueueHandler(logging.handlers.QueueHandler):
-    """ Log Queue handler - fügt einen Prefix (die RPYC Server informationen) der Log Message hinzu
-    Que Handler ist allerdings Ressourcenintensiv und funktioniert am Threaded Rpyc Server schlecht,
-    die Queue muss immer offen gehalten werden. ---> versuchen wir besser SocketHandler, dann braucht der
-    Client auch nur immer EINEN SocketListener, egal mit wievielen Servern er verbunden ist !
-    """
-
-    def __init__(self, queue: multiprocessing.Queue, message_prefix: str):  # type: ignore
-        self._message_prefix = message_prefix
-        super().__init__(queue)
-
-    # noinspection PyTypeHints
-    def prepare(self, record: logging.LogRecord) -> logging.LogRecord:
-        self.format(record)
-        record.msg = self._message_prefix + record.message
-        record.args = None                  # type: ignore
-        record.exc_info = None
-        record.exc_text = None
-        return record
-
-    def enqueue(self, record: logging.LogRecord) -> None:
-        """ only put the messages from the own connection to the queue (for threaded server) """
-        # noinspection PyBroadException
-        try:
-            self.queue.put_nowait(record)   # type: ignore
-        except Exception:  # wenn die queue nicht mehr existiert
-            pass
