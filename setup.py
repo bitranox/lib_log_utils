@@ -15,8 +15,8 @@ required = ['coloredlogs',
             'lib_parameter @ git+https://github.com/bitranox/lib_parameter.git',
             'lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git']    # type: List
 
-required_for_tests = list()                                                         # type: List
-entry_points = dict()                                                               # type: Dict
+required_for_tests = list()                                                                     # type: List
+entry_points = {'console_scripts': ['lib_log_utils = lib_log_utils.lib_log_utils:main']}        # type: Dict
 
 
 def get_version(dist_directory: str) -> str:

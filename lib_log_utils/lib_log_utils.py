@@ -1,144 +1,106 @@
 # STDLIB
+
+# noinspection PyUnresolvedReferences
+import getpass
+# noinspection PyUnresolvedReferences
 import logging
 import logging.handlers
-import getpass
-import multiprocessing
-import os
-import platform
-import sys
 import textwrap
-import traceback
-from types import TracebackType
-from typing import Any, Dict, Optional, Type
+from typing import Dict
 
 # EXT
-import coloredlogs      # type: ignore
+import fire
 
-# OWN
-import lib_cast
-import lib_parameter
-
-
-class HostnameFilter(logging.Filter):
-    hostname = platform.node()
-
-    def filter(self, record: Any) -> bool:
-        record.hostname = HostnameFilter.hostname
-        return True
+# PROJ
+# imports for local pytest
+try:
+    from .log_handlers import *     # type: ignore # pragma: no cover
+# imports for doctest
+except ImportError:                 # type: ignore # pragma: no cover
+    from log_handlers import *      # type: ignore # pragma: no cover
 
 
-def add_file_handler(filename: str,
-                     logger: logging.Logger = logging.getLogger(),
-                     name: str = '',
-                     level: int = logging.INFO,
-                     fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                     datefmt: str = '%Y-%m-%d %H:%M:%S',
-                     remove_existing_handlers: bool = False,
-                     mode: str = 'a',
-                     encoding: str = 'utf-8',
-                     delay: bool = True) -> logging.Handler:
+logging.SPAM = 5
+logging.VERBOSE = 15
+logging.NOTICE = 25
+logging.SUCCESS = 35
+
+
+class BannerSettings(object):
+    called_via_commandline = False
+    fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
+    datefmt = '%Y-%m-%d %H:%M:%S'
+
+    field_styles = {
+                        'asctime': {'color': 'green'},
+                        'hostname': {'color': 'green'},                         # 'hostname': {'color': 'magenta'},
+                        'levelname': {'color': 'green'},                        # 'levelname': {'color': 'black', 'bold': True},
+                        'name': {'color': 'blue'},
+                        'programname': {'color': 'cyan'}
+                   }                                                            # type: Dict[str, Dict[str, Any]]
+
+    level_styles = {
+                        'level 5': {'color': 'green', 'faint': True},           # level 5   - SPAM
+                        'debug': {'color': 'blue', 'bright': True},             # level 10  - DEBUG     # 'debug': {'color': 'green'},
+                        'level 15': {'color': 'blue'},                          # level 15  - VERBOSE
+                        'info': {},                                             # level 20  - INFO
+                        'level 25': {'color': 'magenta'},                       # level 25  - NOTICE
+                        'warning': {'color': 'yellow'},                         # level 30  - WARNING
+                        'level 35': {'color': 'green', 'bold': True},           # level 35  - SUCCESS
+                        'error': {'color': 'red', 'bright': True},              # level 40  - ERROR
+                        'critical': {'background': 'red', 'bright': True},      # level 50  - CRITICAL
+                    }                                                           # type: Dict[str, Dict[str, Any]]
+
+
+def banner_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_debug(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_info(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=35, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_warning(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_error(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_critical(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    banner_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def banner_level(message: str, level: int = logging.INFO, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
     """
-    name: the name of the file handler. if name = '', name = filename
-
-    mode: 'a': Opens a file for appending new information to it. The pointer is placed at the end of the file.
-               A new file is created if one with the same name doesn't exist.
-          'w': Opens in write-only mode. The pointer is placed at the beginning of the file and this will overwrite
-               any existing file with the same name. It will create a new file if one with the same name doesn't exist.
-    delay: If delay is true, then file opening is deferred until the first call to emit(). By default, the file grows indefinitely.
-    """
-
-    file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)  # type: logging.Handler
-    file_handler = _add_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt,
-                                datefmt=datefmt, remove_existing_handlers=remove_existing_handlers)
-    return file_handler
-
-
-def add_stream_handler(logger: logging.Logger = logging.getLogger(),
-                       name: str = 'stream_handler',
-                       level: int = logging.INFO,
-                       fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                       datefmt: str = '%Y-%m-%d %H:%M:%S',
-                       remove_existing_handlers: bool = True) -> logging.Handler:
-
-    """
-    >>> result = add_stream_handler()
-
-    """
-    stream_handler = logging.StreamHandler(stream=sys.stderr)  # type: logging.Handler
-    stream_handler = _add_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt,
-                                  datefmt=datefmt, remove_existing_handlers=remove_existing_handlers)
-    return stream_handler
-
-
-def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
-                             name: str = 'stream_handler_color',
-                             level: int = logging.INFO,
-                             fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                             datefmt: str = '%Y-%m-%d %H:%M:%S',
-                             field_styles: Any = coloredlogs.DEFAULT_FIELD_STYLES,
-                             level_styles: Any = coloredlogs.DEFAULT_LEVEL_STYLES,
-                             remove_existing_handlers: bool = True) -> logging.Handler:
-    """
-    # https://coloredlogs.readthedocs.io/en/latest/api.html
-
-    >>> logger=logging.getLogger()
-    >>> handler = add_stream_handler_color()
-    >>> logger.debug("DEBUG")
-    >>> logger.info("INFO")
-    >>> logger.warning("WARNING")
-    >>> logger.error("ERROR")
-    >>> logger.critical("CRITICAL")
-
-    """
-    if remove_existing_handlers:
-        remove_all_handlers(logger=logger)
-
-    if not exists_handler_with_name(name):
-        fmt = fmt.format(username=getpass.getuser())
-        os.environ['COLOREDLOGS_LOG_FORMAT'] = fmt
-        coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles)
-        logger.handlers[-1].name = name
-        return logger.handlers[-1]
-    else:
-        raise ValueError('Handler "{name}" already exists'.format(name=name))
-
-
-def _add_handler(handler: logging.Handler,
-                 logger: logging.Logger = logging.getLogger(),
-                 name: str = 'stream_handler',
-                 level: int = logging.INFO,
-                 fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                 datefmt: str = '%Y-%m-%d %H:%M:%S',
-                 remove_existing_handlers: bool = True) -> logging.Handler:
+    >>> BannerSettings.called_via_commandline = True
+    >>> banner_level('test', logging.SUCCESS, wrap_text=True)
+    >>> banner_level('test', logging.ERROR, wrap_text=True)
+    >>> banner_level('test', logging.ERROR, wrap_text=False)
+    >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=True)
+    >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=False)
 
     """
-    >>> result = add_stream_handler()
-
-    """
-    if remove_existing_handlers:
-        remove_all_handlers(logger=logger)
-
-    if not exists_handler_with_name(name):
-        handler.addFilter(HostnameFilter())
-        fmt = fmt.format(username=getpass.getuser())
-        formatter = logging.Formatter(fmt, datefmt)
-        handler.setFormatter(formatter)
-        handler.setLevel(level)
-        handler.name = name
-        logger.addHandler(handler)
-        return handler
-    else:
-        raise ValueError('Handler "{name}" already exists'.format(name=name))
-
-
-def banner(level: int, message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    """
-    >>> banner(logging.ERROR, 'test', wrap_text=True)
-    >>> banner(logging.ERROR, 'test', wrap_text=False)
-    >>> banner(logging.ERROR, 'das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', banner_width=10, wrap_text=True)
-    >>> banner(logging.ERROR, 'das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', banner_width=10, wrap_text=False)
-
-    """
+    if BannerSettings.called_via_commandline:
+        add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt, field_styles=BannerSettings.field_styles,
+                                 level_styles=BannerSettings.level_styles)
     sep_line = '*' * banner_width
     l_message = message.split('\n')
     logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
@@ -156,234 +118,20 @@ def banner(level: int, message: str, banner_width: int = 140, wrap_text: bool = 
     logger.log(level=level, msg=sep_line)
 
 
-def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
-                            log_level_exec_info: Optional[int] = None,
-                            log_level_traceback: Optional[int] = None) -> str:
-    logger = logging.getLogger()
-    log_level_exec_info = lib_parameter.get_default_if_none(log_level_exec_info, log_level)
-    log_level_traceback = lib_parameter.get_default_if_none(log_level_traceback, log_level_exec_info)
-
-    if s_error and log_level != logging.NOTSET:
-        logger.log(level=log_level, msg=s_error)
-
-    if log_level_exec_info != logging.NOTSET:
-        exc_info = sys.exc_info()[1]
-        exc_info_type = lib_cast.get_type_as_string(exc_info)
-        exc_info_msg = exc_info_type + ': ' + str(exc_info)
-        logger.log(level=log_level_exec_info, msg=exc_info_msg)     # type: ignore
-
-    if log_level_traceback != logging.NOTSET:
-        s_traceback = 'Traceback Information : \n' + traceback.format_exc()
-        s_traceback = s_traceback.rstrip('\n')
-        logger.log(level=log_level_traceback, msg=s_traceback)      # type: ignore
-    logger_flush_all_handlers()
-    return s_error  # to use it as input for re-raising
+def main():
+    BannerSettings.called_via_commandline = True
+    fire.Fire({
+        'banner_spam': banner_spam,
+        'banner_debug': banner_debug,
+        'banner_verbose': banner_verbose,
+        'banner_info': banner_info,
+        'banner_notice': banner_notice,
+        'banner_success': banner_success,
+        'banner_warning': banner_warning,
+        'banner_error': banner_error,
+        'banner_critical': banner_critical,
+    })
 
 
-def print_exception_traceback(s_error: str) -> str:
-    print(s_error)
-    exc_info = sys.exc_info()[1]
-    exc_info_type = lib_cast.get_type_as_string(exc_info)
-    exc_info_msg = exc_info_type + ': ' + str(exc_info)
-    print(exc_info_msg)
-
-    s_traceback = 'Traceback Information : \n' + traceback.format_exc()
-    s_traceback = s_traceback.rstrip('\n')
-    print(s_traceback)
-    return s_error  # to use it as input for re-raising
-
-
-def test_log_util():   # type: ignore
-    """
-    # >>> import lib_doctest_pycharm
-    # >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm(log_level=logging.DEBUG)
-    # >>> test_log_util() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    Fehler
-    ZeroDivisionError: division by zero
-    Traceback Information :
-    Traceback (most recent call last):
-    ...
-    ZeroDivisionError: division by zero
-
-    """
-    try:
-        xxx = 1 / 0
-        return xxx
-    except ZeroDivisionError:
-        log_exception_traceback('Fehler', log_level=logging.WARNING, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
-
-
-def setup_stream_handler(name: str = 'console_handler') -> logging.Handler:
-    if not exists_handler_with_name(name):
-        console_handler = logging.StreamHandler(stream=sys.stdout)      # type: logging.Handler
-        console_handler.name = name
-        logging.getLogger().addHandler(console_handler)
-    else:
-        console_handler = get_handler_by_name(name)
-    return console_handler
-
-
-def get_handler_by_name(name: str) -> logging.Handler:
-    """
-    >>> import unittest
-    >>> logger = add_stream_handler()
-    >>> unittest.TestCase().assertIsNotNone(get_handler_by_name, ['console_handler'])
-    >>> unittest.TestCase().assertRaises(ValueError, get_handler_by_name, ['unknown_handler'])
-
-    """
-
-    handlers = logging.getLogger().handlers
-    for handler in handlers:
-        if hasattr(handler, 'name'):
-            if handler.name == name:
-                return handler
-    raise ValueError('Logging Handler "{name}" not found'.format(name=name))
-
-
-def remove_handler_by_name(name: str) -> None:
-    handler = get_handler_by_name(name=name)
-    logging.getLogger().removeHandler(handler)
-
-
-def remove_all_handlers(logger: logging.Logger = logging.getLogger()) -> None:
-    handlers = logger.handlers
-    for handler in handlers:
-        logger.removeHandler(handler)
-
-
-def exists_handler_with_name(name: str) -> bool:
-    handlers = logging.getLogger().handlers
-    for handler in handlers:
-        if hasattr(handler, 'name'):
-            if handler.name == name:
-                return True
-    return False
-
-
-def logger_flush_all_handlers() -> None:
-    """
-    >>> logger_flush_all_handlers()
-
-    """
-    flush_logger = logging.getLogger()
-    for handler in flush_logger.handlers:
-        if hasattr(handler, 'flush'):
-            handler.flush()
-
-
-class LogAllHandlersFormatterSave(object):
-    """
-    """
-    '''
-    >>> # those tests dont run pytest
-    >>> import lib_doctest_pycharm
-    >>> logger=logging.getLogger()
-    >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
-    >>> logger.info('test')
-    test
-    >>> log_all_handlers_formatter_save = LogAllHandlersFormatterSave()
-    >>> log_all_handlers_formatter_save.save()
-    >>> set_all_log_handlers_formatter_prefix(log_formatter_prefix='test1 prefix: ')
-    >>> logger.info('test')
-    test1 prefix: test
-    >>> log_all_handlers_formatter_save.restore()
-    >>> log_all_handlers_formatter_save.close()
-
-    >>> with LogAllHandlersFormatterSave():
-    ...     set_all_log_handlers_formatter_prefix(log_formatter_prefix='test2 prefix2: ')
-    ...     logger.info('test2')
-    test2 prefix2: test2
-
-    >>> # teardown
-    >>> remove_handler_by_name(name='doctest_console_handler')
-
-    '''
-
-    def __init__(self) -> None:
-        self._hash_formatter_by_handler = dict()        # type: Dict[logging.Handler, Optional[logging.Formatter]]
-
-    def __enter__(self) -> 'LogAllHandlersFormatterSave':
-        self.save()
-        return self
-
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
-        self.restore()
-        self.close()
-
-    def close(self) -> None:
-        del self._hash_formatter_by_handler
-
-    def save(self) -> None:
-        _logger = logging.getLogger()
-        for handler in _logger.handlers:
-            self._hash_formatter_by_handler[handler] = handler.formatter
-
-    def restore(self) -> None:
-        for handler, old_formatter in self._hash_formatter_by_handler.items():
-            handler.formatter = old_formatter
-
-
-class LogHandlerFormatterSave(object):
-    """
-    """
-    '''
-    >>> # those tests dont run on pytest
-    >>> import lib_doctest_pycharm
-    >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
-    >>> logger=logging.getLogger()
-    >>> logger.info('test')
-    test
-    >>> handler = get_handler_by_name('doctest_console_handler')
-
-    >>> log_handler_formatter_save = LogHandlerFormatterSave(handler=handler)
-    >>> set_log_handler_formatter_prefix(handler=handler, log_formatter_prefix='test4 prefix: ')
-    >>> logger.info('test')
-    test4 prefix: test
-    >>> log_handler_formatter_save.restore()
-    >>> log_handler_formatter_save.close()
-
-    >>> with LogHandlerFormatterSave(handler=handler):
-    ...     set_log_handler_formatter_prefix(handler=handler, log_formatter_prefix='test5 prefix2: ')
-    ...     logger.info('test2')
-    test5 prefix2: test2
-
-    >>> # teardown
-    >>> remove_handler_by_name(name='doctest_console_handler')
-
-    '''
-
-    def __init__(self, handler: logging.Handler):
-        self._handler = handler
-        self._formatter = None          # type:  Optional[logging.Formatter]
-        self.save()
-
-    def __enter__(self) -> 'LogHandlerFormatterSave':
-        return self
-
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
-        self.restore()
-        self.close()
-
-    def close(self) -> None:
-        del self._handler
-        del self._formatter
-
-    def save(self) -> None:
-        self._formatter = self._handler.formatter
-
-    def restore(self) -> None:
-        self._handler.formatter = self._formatter
-
-
-def set_log_handler_formatter_prefix(handler: logging.Handler, log_formatter_prefix: str) -> None:
-    if handler.formatter:
-        if handler.formatter._fmt:
-            handler.formatter._fmt = log_formatter_prefix + handler.formatter._fmt
-            handler.formatter._style._fmt = log_formatter_prefix + handler.formatter._style._fmt
-        else:
-            handler.formatter._fmt = log_formatter_prefix + '%(message)s'
-            handler.formatter._style._fmt = log_formatter_prefix + '%(message)s'
-    else:
-        datefmt = '%Y-%m-%d %H:%M:%S'
-        formatter = logging.Formatter(log_formatter_prefix + '%(message)s', datefmt)
-        handler.setFormatter(formatter)
+if __name__ == '__main__':
+    main()
