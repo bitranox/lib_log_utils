@@ -110,7 +110,7 @@ def banner_level(message: str, level: int = logging.INFO, banner_width: int = 14
     logger.log(level=level, msg=sep_line)
 
 
-def banner_color_test(message: str) -> None:
+def banner_color_test() -> None:
     """ test banner colors """
     banner_spam('test level spam')
     banner_debug('test level debug')
