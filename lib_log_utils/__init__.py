@@ -1,6 +1,6 @@
 import pathlib
 from .lib_log_utils import *
-
+from log_traceback import *
 
 def get_version() -> str:
     with open(str(pathlib.Path(__file__).parent / 'version.txt'), mode='r') as version_file:
