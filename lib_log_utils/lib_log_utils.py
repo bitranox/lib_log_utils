@@ -6,20 +6,19 @@ import getpass
 import logging
 
 # EXT
-import fire
+try:
+    import fire
+except:
+    pass
 
 # PROJ
 # imports for local pytest
 try:
     from .log_banner import *       # type: ignore # pragma: no cover
-    from .log_handlers import *     # type: ignore # pragma: no cover
-    from .log_levels import *       # type: ignore # pragma: no cover
 
 # imports for doctest
 except ImportError:                 # type: ignore # pragma: no cover
     from log_banner import *        # type: ignore # pragma: no cover
-    from log_handlers import *      # type: ignore # pragma: no cover
-    from log_levels import *        # type: ignore # pragma: no cover
 
 
 def main():
