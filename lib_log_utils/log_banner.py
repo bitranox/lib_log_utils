@@ -12,9 +12,11 @@ from typing import Any, Dict
 # imports for local pytest
 try:
     from .log_handlers import *     # type: ignore # pragma: no cover
+    from .log_levels import *     # type: ignore # pragma: no cover
 # imports for doctest
 except ImportError:                 # type: ignore # pragma: no cover
     from log_handlers import *      # type: ignore # pragma: no cover
+    from log_levels import *     # type: ignore # pragma: no cover
 
 
 class BannerSettings(object):
