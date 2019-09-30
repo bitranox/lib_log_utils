@@ -25,7 +25,8 @@ except ImportError:                 # type: ignore # pragma: no cover
 
 def main() -> None:
     BannerSettings.called_via_commandline = True
-    is_called_via_pytest = [(sysarg != '') for sysarg in sys.argv if 'pytest' in sysarg]
+    # we must not call fire if the program is called via pytest
+    is_called_via_pytest = [(sys_arg != '') for sys_arg in sys.argv if 'pytest' in sys_arg]
     if not is_called_via_pytest:
         fire.Fire({
             'banner_color_test': banner_color_test,
