@@ -6,9 +6,10 @@ import logging
 import sys
 
 # EXT
+# noinspection PyBroadException
 try:
     import fire                             # type: ignore
-except (ImportError, ModuleNotFoundError):
+except Exception:
     # maybe we dont need fire if not called via commandline, so accept if it is not there
     pass
 
