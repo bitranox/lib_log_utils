@@ -49,7 +49,7 @@ function pytest_loop {
         fi
 
         clr_green "*** MYPY Module strict **************************************************************************"
-        python3 -m mypy "${my_dir}" --strict --no-warn-unused-ignores --follow-imports=skip
+        python3 -m mypy "${my_dir}" --strict --no-warn-unused-ignores --follow-imports=skip --no-implicit-reexport
             # shellcheck disable=SC2181  # Check Exit Code directly
             if [[ "${?}" -gt 0 ]]; then
                 clr_red "MYPY Error in Module"

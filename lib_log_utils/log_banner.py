@@ -6,7 +6,7 @@ import getpass
 import logging
 import logging.handlers
 import textwrap
-from typing import Dict
+from typing import Any, Dict
 
 # PROJ
 # imports for local pytest
@@ -24,28 +24,28 @@ class BannerSettings(object):
     datefmt = '%Y-%m-%d %H:%M:%S'
 
     field_styles = {
-                        'asctime': {'color': 'green'},
-                        'hostname': {'color': 'green'},                         # 'hostname': {'color': 'magenta'},
-                        'levelname': {'color': 'yellow'},                       # 'levelname': {'color': 'black', 'bold': True},
-                        'name': {'color': 'blue'},
-                        'programname': {'color': 'cyan'}
-                   }                                                            # type: Dict[str, Dict[str, Any]]
+        'asctime': {'color': 'green'},
+        'hostname': {'color': 'green'},                         # 'hostname': {'color': 'magenta'},
+        'levelname': {'color': 'yellow'},                       # 'levelname': {'color': 'black', 'bold': True},
+        'name': {'color': 'blue'},
+        'programname': {'color': 'cyan'}
+    }                                                           # type: Dict[str, Dict[str, Any]]
 
     level_styles = {
-                        'spam': {'color': 'magenta', 'bright': True},           # level 5   - SPAM
-                        'debug': {'color': 'blue', 'bright': True},             # level 10  - DEBUG
-                        'verbose': {'background': 'blue', 'bright': True},      # level 15  - VERBOSE
-                        'info': {},                                             # level 20  - INFO
-                        'notice': {'background': 'magenta', 'bright': True},    # level 25  - NOTICE
-                        'warning': {'color': 'red', 'bright': True},            # level 30  - WARNING
-                        'success': {'color': 'green', 'bright': True},          # level 35  - SUCCESS
-                        'error': {'background': 'red', 'bright': True},         # level 40  - ERROR
-                        'critical': {'background': 'red'},                      # level 50  - CRITICAL
-                    }                                                           # type: Dict[str, Dict[str, Any]]
+        'spam': {'color': 'magenta', 'bright': True},           # level 5   - SPAM
+        'debug': {'color': 'blue', 'bright': True},             # level 10  - DEBUG
+        'verbose': {'background': 'blue', 'bright': True},      # level 15  - VERBOSE
+        'info': {},                                             # level 20  - INFO
+        'notice': {'background': 'magenta', 'bright': True},    # level 25  - NOTICE
+        'warning': {'color': 'red', 'bright': True},            # level 30  - WARNING
+        'success': {'color': 'green', 'bright': True},          # level 35  - SUCCESS
+        'error': {'background': 'red', 'bright': True},         # level 40  - ERROR
+        'critical': {'background': 'red'},                      # level 50  - CRITICAL
+    }                                                           # type: Dict[str, Dict[str, Any]]
 
 
 def banner_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    banner_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    banner_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)        # type: ignore
 
 
 def banner_debug(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
@@ -53,7 +53,7 @@ def banner_debug(message: str, banner_width: int = 140, wrap_text: bool = True, 
 
 
 def banner_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    banner_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    banner_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
 def banner_info(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
@@ -61,11 +61,11 @@ def banner_info(message: str, banner_width: int = 140, wrap_text: bool = True, l
 
 
 def banner_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    banner_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    banner_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)      # type: ignore
 
 
 def banner_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    banner_level(message=message, level=35, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    banner_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
 def banner_warning(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
@@ -80,7 +80,8 @@ def banner_critical(message: str, banner_width: int = 140, wrap_text: bool = Tru
     banner_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def banner_level(message: str, level: int = logging.INFO, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+def banner_level(message: str, level: int = logging.INFO, banner_width: int = 140, wrap_text: bool = True,
+                 logger: logging.Logger = logging.getLogger()) -> None:
     """
     >>> BannerSettings.called_via_commandline = True
     >>> banner_level('test', logging.SUCCESS, wrap_text=True)
