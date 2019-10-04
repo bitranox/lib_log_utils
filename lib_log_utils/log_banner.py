@@ -113,6 +113,59 @@ def banner_level(message: str, level: int = logging.INFO, banner_width: int = 14
     logger.log(level=level, msg=sep_line)
 
 
+def log_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_debug(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_info(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_warning(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_error(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_critical(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
+    log_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+
+
+def log_level(message: str, level: int = logging.INFO, banner_width: int = 140, wrap_text: bool = True,
+              logger: logging.Logger = logging.getLogger()) -> None:
+
+    if BannerSettings.called_via_commandline:
+        add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt, field_styles=BannerSettings.field_styles,
+                                 level_styles=BannerSettings.level_styles)
+    l_message = message.split('\n')
+    for line in l_message:
+        if wrap_text:
+            l_wrapped_lines = textwrap.wrap(line, width=banner_width, tabsize=4, replace_whitespace=False)
+            for msg_line in l_wrapped_lines:
+                logger.log(level=level, msg=msg_line)
+        else:
+            msg_line = line.rstrip()
+            logger.log(level=level, msg=msg_line)
+
+
 def banner_color_test() -> None:
     """ test banner colors """
     banner_spam('test level spam')
