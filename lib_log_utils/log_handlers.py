@@ -93,7 +93,7 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
         datefmt = override_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
         field_styles = override_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
         level_styles = override_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
-        coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True, stream=sys.stdout)
+        coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True)
         logger.handlers[-1].name = name
         return logger.handlers[-1]
     else:
