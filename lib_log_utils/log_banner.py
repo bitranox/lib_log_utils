@@ -114,7 +114,7 @@ def banner_level(message: str, level: int = logging.INFO, banner_width: int = 14
 
 
 def log_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    log_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    log_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)       # type: ignore
 
 
 def log_debug(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
@@ -122,7 +122,7 @@ def log_debug(message: str, banner_width: int = 140, wrap_text: bool = True, log
 
 
 def log_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    log_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    log_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)    # type: ignore
 
 
 def log_info(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
@@ -130,11 +130,11 @@ def log_info(message: str, banner_width: int = 140, wrap_text: bool = True, logg
 
 
 def log_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    log_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    log_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
 def log_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
-    log_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
+    log_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)    # type: ignore
 
 
 def log_warning(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
