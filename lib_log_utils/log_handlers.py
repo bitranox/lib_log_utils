@@ -5,8 +5,7 @@ import getpass
 import os
 import platform
 import sys
-from types import TracebackType
-from typing import Any, Optional, Type
+from typing import Any, Optional
 
 # EXT
 import coloredlogs      # type: ignore
@@ -223,7 +222,7 @@ class SaveLogHandlerFormatter(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):              # type: ignore
-        # correct typing, but does not work under python 3.5
+        # correct typing, but does not work under python 3.5 under xenial
         # def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
         self.restore()
         self.close()
