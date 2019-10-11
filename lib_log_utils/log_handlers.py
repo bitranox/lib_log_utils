@@ -222,7 +222,9 @@ class SaveLogHandlerFormatter(object):
     def __enter__(self) -> 'SaveLogHandlerFormatter':
         return self
 
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
+    def __exit__(self, exc_type, exc_val, exc_tb):              # type: ignore
+        # correct typing, but does not work under python 3.5
+        # def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
         self.restore()
         self.close()
 
