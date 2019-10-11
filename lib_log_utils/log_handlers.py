@@ -95,9 +95,10 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
         level_styles = override_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
         coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True)
         logger.handlers[-1].name = name
-        return logger.handlers[-1]
+        handler = logger.handlers[-1]
     else:
-        raise ValueError('Handler "{name}" already exists'.format(name=name))
+        handler = get_handler_by_name(name=name)
+    return handler
 
 
 def override_via_environment(original_value: Any, environment_variable: str) -> Any:

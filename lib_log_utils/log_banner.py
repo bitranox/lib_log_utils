@@ -155,6 +155,7 @@ def log_level(message: str, level: int = logging.INFO, banner_width: int = 140, 
     if BannerSettings.called_via_commandline:
         add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt, field_styles=BannerSettings.field_styles,
                                  level_styles=BannerSettings.level_styles)
+
     l_message = message.split('\n')
     for line in l_message:
         if wrap_text:
