@@ -153,6 +153,8 @@ def log_critical(message: str, banner_width: int = 140, wrap_text: bool = True, 
 def log_level(message: str, level: int = logging.INFO, banner_width: int = 140, wrap_text: bool = True,
               logger: logging.Logger = logging.getLogger()) -> None:
 
+    message = str(message)
+
     if BannerSettings.called_via_commandline:
         add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt, field_styles=BannerSettings.field_styles,
                                  level_styles=BannerSettings.level_styles)
