@@ -88,12 +88,12 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     if not exists_handler_with_name(name):
         # for travis / xenial we need to set environment variables
         # set_colored_log_environment_variables_if_not_set(fmt, datefmt, field_styles, level_styles)
-        fmt = override_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
+        fmt = override_fmt_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
         if hasattr(fmt, 'format'):
             fmt = fmt.format(username=getpass.getuser())
-        datefmt = override_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
-        field_styles = coloredlogs.parse_encoded_styles(override_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES'))
-        level_styles = coloredlogs.parse_encoded_styles(override_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES'))
+        datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
+        field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
+        level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
         print(field_styles)
         print(level_styles)
         coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True)
@@ -104,9 +104,17 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     return handler
 
 
-def override_via_environment(original_value: Any, environment_variable: str) -> Any:
+def override_fmt_via_environment(original_value: Any, environment_variable: str) -> Any:
     if environment_variable in os.environ:
         return_value = os.environ[environment_variable]
+    else:
+        return_value = original_value
+    return return_value
+
+
+def override_style_via_environment(original_value: Any, environment_variable: str) -> Any:
+    if environment_variable in os.environ:
+        return_value = coloredlogs.parse_encoded_styles(os.environ[environment_variable])
     else:
         return_value = original_value
     return return_value
