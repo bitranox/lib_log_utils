@@ -93,6 +93,7 @@ def banner_level(message: str, level: int = logging.INFO, banner_width: int = 14
     >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=False)
 
     """
+    message = str(message)
     if BannerSettings.called_via_commandline:
         add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt, field_styles=BannerSettings.field_styles,
                                  level_styles=BannerSettings.level_styles)
