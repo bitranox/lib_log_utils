@@ -253,7 +253,10 @@ def set_log_handler_formatter_prefix(handler: logging.Handler, log_formatter_pre
         handler.setFormatter(formatter)
 
 
-def set_colored_log_environment_variables_if_not_set(fmt: str, datefmt: str, field_styles: Dict[str, Dict[str, Any]], level_styles: Dict[str, Dict[str, Any]]) -> None:
+def set_colored_log_environment_variables_if_not_set(fmt: str,
+                                                     datefmt: str,
+                                                     field_styles: Dict[str, Dict[str, Any]],
+                                                     level_styles: Dict[str, Dict[str, Any]]) -> None:
     """
     for travis / xenial we need to set environment variables, or colored logs does not work (on travis, linux xenial)
     if the environment variables are set already, they wont be overwritten
@@ -264,8 +267,10 @@ def set_colored_log_environment_variables_if_not_set(fmt: str, datefmt: str, fie
         os.environ['COLOREDLOGS_DATE_FORMAT'] = datefmt
     if not is_environment_variable_set('COLOREDLOGS_FIELD_STYLES'):
         os.environ['COLOREDLOGS_FIELD_STYLES'] = convert_styles_to_text(field_styles)
+        print(os.environ['COLOREDLOGS_FIELD_STYLES'])
     if not is_environment_variable_set('COLOREDLOGS_LEVEL_STYLES'):
         os.environ['COLOREDLOGS_LEVEL_STYLES'] = convert_styles_to_text(level_styles)
+        print(os.environ['COLOREDLOGS_LEVEL_STYLES'])
 
 
 def is_environment_variable_set(env_variable: str) -> bool:
