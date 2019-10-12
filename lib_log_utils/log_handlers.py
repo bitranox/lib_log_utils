@@ -86,13 +86,14 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
         remove_all_handlers(logger=logger)
 
     if not exists_handler_with_name(name):
-        set_colored_log_environment_variables_if_not_set(fmt, datefmt, field_styles, level_styles)    # for travis / xenial we need to set environment variables
+        # for travis / xenial we need to set environment variables
+        set_colored_log_environment_variables_if_not_set(fmt, datefmt, field_styles, level_styles)
         fmt = override_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
         if hasattr(fmt, 'format'):
             fmt = fmt.format(username=getpass.getuser())
         datefmt = override_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
-        field_styles = override_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
-        level_styles = override_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
+        field_styles = coloredlogs.parse_encoded_styles(override_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES'))
+        level_styles = coloredlogs.parse_encoded_styles(override_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES'))
         coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True)
         logger.handlers[-1].name = name
         handler = logger.handlers[-1]
@@ -103,7 +104,7 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
 
 def override_via_environment(original_value: Any, environment_variable: str) -> Any:
     if environment_variable in os.environ:
-        return_value = None
+        return_value = os.environ[environment_variable]
     else:
         return_value = original_value
     return return_value
