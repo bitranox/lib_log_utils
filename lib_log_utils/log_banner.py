@@ -50,16 +50,16 @@ class BannerSettings(object):
 
     """
     level_styles = {
-        'spam': {'color': 'magenta'},                       # level 5   - SPAM
-        'debug': {'color': 'blue'},                         # level 10  - DEBUG
-        'verbose': {'background': 'blue'},                  # level 15  - VERBOSE
-        'info': {},                                                         # level 20  - INFO
-        'notice': {'background': 'magenta'},                # level 25  - NOTICE
-        'warning': {'color': 'red'},                        # level 30  - WARNING
-        'success': {'color': 'green'},                      # level 35  - SUCCESS
-        'error': {'background': 'red', 'bold': True},       # level 40  - ERROR
-        'critical': {'background': 'red'},                  # level 50  - CRITICAL
-    }                                                       # type: Dict[str, Dict[str, Any]]
+        'spam': {'color': 'magenta', 'bold': True},                       # level 5   - SPAM
+        'debug': {'color': 'blue', 'bold': True},                         # level 10  - DEBUG
+        'verbose': {'background': 'blue', 'bold': True},                  # level 15  - VERBOSE
+        'info': {},                                                       # level 20  - INFO
+        'notice': {'background': 'magenta', 'bold': True},                # level 25  - NOTICE
+        'warning': {'color': 'red', 'bold': True},                        # level 30  - WARNING
+        'success': {'color': 'green', 'bold': True},                      # level 35  - SUCCESS
+        'error': {'background': 'red', 'bold': True},                     # level 40  - ERROR
+        'critical': {'background': 'red'},                                # level 50  - CRITICAL
+    }                                                                     # type: Dict[str, Dict[str, Any]]
 
 
 
