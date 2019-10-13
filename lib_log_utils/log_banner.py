@@ -36,13 +36,13 @@ class BannerSettings(object):
     level_styles = {
         'spam': {'color': 'magenta', 'bright': True},                       # level 5   - SPAM
         'debug': {'color': 'blue', 'bright': True},                         # level 10  - DEBUG
-        'verbose': {'background': {'color': 'blue', 'bright': True}},       # level 15  - VERBOSE
+        'verbose': {'background': 'blue', 'bright': True},                  # level 15  - VERBOSE
         'info': {},                                                         # level 20  - INFO
-        'notice': {'background': {'color': 'magenta', 'bright': True}},     # level 25  - NOTICE
+        'notice': {'background': 'magenta', 'bright': True},                # level 25  - NOTICE
         'warning': {'color': 'red', 'bright': True},                        # level 30  - WARNING
         'success': {'color': 'green', 'bright': True},                      # level 35  - SUCCESS
-        'error': {'background': {'color': 'red', 'bright': True}},          # level 40  - ERROR
-        'critical': {'background': {'color': 'red'}},                       # level 50  - CRITICAL
+        'error': {'background': 'red', 'bright': True},                     # level 40  - ERROR
+        'critical': {'background': 'red'},                                  # level 50  - CRITICAL
     }                                                                       # type: Dict[str, Dict[str, Any]]
 
 
@@ -171,7 +171,11 @@ def log_level(message: str, level: int = logging.INFO, banner_width: int = 140, 
 
 
 def banner_color_test() -> None:
-    """ test banner colors """
+    """ test banner colors
+
+    >>> banner_color_test()
+
+    """
     banner_spam('test level spam')
     banner_debug('test level debug')
     banner_verbose('test level verbose')
