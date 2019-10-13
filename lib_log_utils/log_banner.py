@@ -57,8 +57,8 @@ class BannerSettings(object):
         'notice': {'background': 'magenta', 'bold': True},                # level 25  - NOTICE
         'warning': {'color': 'red', 'bold': True},                        # level 30  - WARNING
         'success': {'color': 'green', 'bold': True},                      # level 35  - SUCCESS
-        'error': {'background': 'red', 'bold': True},                     # level 40  - ERROR
-        'critical': {'background': 'red'},                                # level 50  - CRITICAL
+        'error': {'background': 'red'},                                   # level 40  - ERROR
+        'critical': {'background': 'red', 'bold': True},                  # level 50  - CRITICAL
     }                                                                     # type: Dict[str, Dict[str, Any]]
 
 
