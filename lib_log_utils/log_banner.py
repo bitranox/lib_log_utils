@@ -5,6 +5,8 @@ import getpass
 # noinspection PyUnresolvedReferences
 import logging
 import logging.handlers
+import platform
+import subprocess
 import textwrap
 from typing import Any, Dict
 
@@ -33,6 +35,7 @@ class BannerSettings(object):
         'programname': {'color': 'cyan'}
     }                                                           # type: Dict[str, Dict[str, Any]]
 
+    """
     level_styles = {
         'spam': {'color': 'magenta', 'bright': True},                       # level 5   - SPAM
         'debug': {'color': 'blue', 'bright': True},                         # level 10  - DEBUG
@@ -44,6 +47,37 @@ class BannerSettings(object):
         'error': {'background': 'red', 'bright': True},                     # level 40  - ERROR
         'critical': {'background': 'red'},                                  # level 50  - CRITICAL
     }                                                                       # type: Dict[str, Dict[str, Any]]
+
+    """
+    level_styles = {
+        'spam': {'color': 95},                                              # level 5   - SPAM
+        'debug': {'color': 94},                                             # level 10  - DEBUG
+        'verbose': {'color': 44},                                           # level 15  - VERBOSE
+        'info': {},                                                         # level 20  - INFO
+        'notice': {'color': 45},                                            # level 25  - NOTICE
+        'warning': {'color': 91},                                           # level 30  - WARNING
+        'success': {'color': 92},                                           # level 35  - SUCCESS
+        'error': {'color': 41},                                             # level 40  - ERROR
+        'critical': {'color': 101},                                         # level 50  - CRITICAL
+    }                                                                       # type: Dict[str, Dict[str, Any]]
+
+
+
+
+def get_terminal_colors() -> int:
+    """
+    >>> if platform.system().lower() == 'windows':
+    ...     assert get_terminal_colors() == 256
+    ... else:
+    ...    assert get_terminal_colors() == 8 or get_terminal_colors() == 256
+
+    """
+    if platform.system().lower() != 'windows':
+        s_colors = subprocess.check_output(['tput', 'colors'])
+        colors = int(s_colors)
+    else:
+        colors = 256
+    return colors
 
 
 def banner_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
