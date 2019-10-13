@@ -94,8 +94,6 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
         datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
         field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
         level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
-        print(field_styles)
-        print(level_styles)
         coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True)
         logger.handlers[-1].name = name
         handler = logger.handlers[-1]
@@ -278,10 +276,8 @@ def set_colored_log_environment_variables_if_not_set(fmt: str,
         os.environ['COLOREDLOGS_DATE_FORMAT'] = datefmt
     if not is_environment_variable_set('COLOREDLOGS_FIELD_STYLES'):
         os.environ['COLOREDLOGS_FIELD_STYLES'] = convert_styles_to_text(field_styles)
-        print(os.environ['COLOREDLOGS_FIELD_STYLES'])
     if not is_environment_variable_set('COLOREDLOGS_LEVEL_STYLES'):
         os.environ['COLOREDLOGS_LEVEL_STYLES'] = convert_styles_to_text(level_styles)
-        print(os.environ['COLOREDLOGS_LEVEL_STYLES'])
 
 
 def is_environment_variable_set(env_variable: str) -> bool:
@@ -309,6 +305,8 @@ def convert_styles_to_text(style_dict: Dict[str, Dict[str, Any]]):
     >>> result = convert_styles_to_text(level_styles)
     >>> assert result.startswith('critical=background=red;debug=bright,color=blue;error=background=red,bright;info=;notice=background=magenta,')
     >>> assert result == convert_styles_to_text(coloredlogs.parse_encoded_styles(result))
+    >>> convert_styles_to_text(level_styles)
+
     """
     l_styles = list()
     for style in style_dict:
@@ -322,6 +320,8 @@ def dict_to_string(val_dict: Dict[str, Any], seperator: str = ',') -> str:
     """
     >>> dict_to_string({'background': 'blue', 'bright': True})
     'background=blue,bright'
+    >>> coloredlogs.parse_encoded_styles('background=color=blue,bright')
+
     """
     l_str = list()
     for key in val_dict:

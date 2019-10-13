@@ -34,16 +34,16 @@ class BannerSettings(object):
     }                                                           # type: Dict[str, Dict[str, Any]]
 
     level_styles = {
-        'spam': {'color': 'magenta', 'bright': True},           # level 5   - SPAM
-        'debug': {'color': 'blue', 'bright': True},             # level 10  - DEBUG
-        'verbose': {'background': 'blue', 'bright': True},      # level 15  - VERBOSE
-        'info': {},                                             # level 20  - INFO
-        'notice': {'background': 'magenta', 'bright': True},    # level 25  - NOTICE
-        'warning': {'color': 'red', 'bright': True},            # level 30  - WARNING
-        'success': {'color': 'green', 'bright': True},          # level 35  - SUCCESS
-        'error': {'background': 'red', 'bright': True},         # level 40  - ERROR
-        'critical': {'background': 'red'},                      # level 50  - CRITICAL
-    }                                                           # type: Dict[str, Dict[str, Any]]
+        'spam': {'color': 'magenta', 'bright': True},                       # level 5   - SPAM
+        'debug': {'color': 'blue', 'bright': True},                         # level 10  - DEBUG
+        'verbose': {'background': {'color': 'blue', 'bright': True}},       # level 15  - VERBOSE
+        'info': {},                                                         # level 20  - INFO
+        'notice': {'background': {'color': 'magenta', 'bright': True}},     # level 25  - NOTICE
+        'warning': {'color': 'red', 'bright': True},                        # level 30  - WARNING
+        'success': {'color': 'green', 'bright': True},                      # level 35  - SUCCESS
+        'error': {'background': {'color': 'red', 'bright': True}},          # level 40  - ERROR
+        'critical': {'background': {'color': 'red'}},                       # level 50  - CRITICAL
+    }                                                                       # type: Dict[str, Dict[str, Any]]
 
 
 def banner_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
