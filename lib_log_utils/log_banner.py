@@ -21,6 +21,22 @@ except ImportError:                 # type: ignore # pragma: no cover
     from log_levels import *     # type: ignore # pragma: no cover
 
 
+def get_number_of_terminal_colors() -> int:
+    """
+    >>> if platform.system().lower() == 'windows':
+    ...     assert get_number_of_terminal_colors() == 256
+    ... else:
+    ...    assert get_number_of_terminal_colors() == 8 or get_number_of_terminal_colors() == 256
+
+    """
+    if platform.system().lower() != 'windows':
+        s_colors = subprocess.check_output(['tput', 'colors'])
+        colors = int(s_colors)
+    else:
+        colors = 256
+    return colors
+
+
 class BannerSettings(object):
     called_via_commandline = False
     # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
@@ -35,8 +51,7 @@ class BannerSettings(object):
         'programname': {'color': 'cyan'}
     }                                                           # type: Dict[str, Dict[str, Any]]
 
-    """
-    level_styles = {
+    level_styles_256 = {
         'spam': {'color': 'magenta', 'bright': True},                       # level 5   - SPAM
         'debug': {'color': 'blue', 'bright': True},                         # level 10  - DEBUG
         'verbose': {'background': 'blue', 'bright': True},                  # level 15  - VERBOSE
@@ -48,8 +63,7 @@ class BannerSettings(object):
         'critical': {'background': 'red'},                                  # level 50  - CRITICAL
     }                                                                       # type: Dict[str, Dict[str, Any]]
 
-    """
-    level_styles = {
+    level_styles_8 = {
         'spam': {'color': 'magenta', 'bold': True},                       # level 5   - SPAM
         'debug': {'color': 'blue', 'bold': True},                         # level 10  - DEBUG
         'verbose': {'background': 'blue', 'bold': True},                  # level 15  - VERBOSE
@@ -61,23 +75,10 @@ class BannerSettings(object):
         'critical': {'background': 'red', 'bold': True},                  # level 50  - CRITICAL
     }                                                                     # type: Dict[str, Dict[str, Any]]
 
-
-
-
-def get_terminal_colors() -> int:
-    """
-    >>> if platform.system().lower() == 'windows':
-    ...     assert get_terminal_colors() == 256
-    ... else:
-    ...    assert get_terminal_colors() == 8 or get_terminal_colors() == 256
-
-    """
-    if platform.system().lower() != 'windows':
-        s_colors = subprocess.check_output(['tput', 'colors'])
-        colors = int(s_colors)
+    if get_number_of_terminal_colors() == 8:
+        level_styles = level_styles_8
     else:
-        colors = 256
-    return colors
+        level_styles = level_styles_256
 
 
 def banner_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger()) -> None:
