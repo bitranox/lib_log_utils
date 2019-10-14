@@ -54,7 +54,7 @@ class BannerSettings(object):
     level_styles_256 = {
         'spam': {'color': 'magenta', 'bright': True},                       # level 5   - SPAM
         'debug': {'color': 'blue', 'bright': True},                         # level 10  - DEBUG
-        'verbose': {'background': 'blue', 'bright': True},                  # level 15  - VERBOSE
+        'verbose': {'color': 'yellow', 'bright': True},                     # level 15  - VERBOSE
         'info': {},                                                         # level 20  - INFO
         'notice': {'background': 'magenta', 'bright': True},                # level 25  - NOTICE
         'warning': {'color': 'red', 'bright': True},                        # level 30  - WARNING
@@ -64,16 +64,16 @@ class BannerSettings(object):
     }                                                                       # type: Dict[str, Dict[str, Any]]
 
     level_styles_8 = {
-        'spam': {'color': 'magenta', 'bold': True},                       # level 5   - SPAM
-        'debug': {'color': 'blue', 'bold': True},                         # level 10  - DEBUG
-        'verbose': {'background': 'blue', 'bold': True},                  # level 15  - VERBOSE
-        'info': {},                                                       # level 20  - INFO
-        'notice': {'background': 'magenta', 'bold': True},                # level 25  - NOTICE
-        'warning': {'color': 'red', 'bold': True},                        # level 30  - WARNING
-        'success': {'color': 'green', 'bold': True},                      # level 35  - SUCCESS
-        'error': {'background': 'red'},                                   # level 40  - ERROR
-        'critical': {'background': 'red', 'bold': True},                  # level 50  - CRITICAL
-    }                                                                     # type: Dict[str, Dict[str, Any]]
+        'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
+        'debug': {'color': 'blue', 'bold': True},                           # level 10  - DEBUG
+        'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
+        'info': {},                                                         # level 20  - INFO
+        'notice': {'background': 'magenta', 'bold': True},                  # level 25  - NOTICE
+        'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
+        'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
+        'error': {'background': 'red'},                                     # level 40  - ERROR
+        'critical': {'background': 'red', 'bold': True},                    # level 50  - CRITICAL
+    }                                                                       # type: Dict[str, Dict[str, Any]]
 
     if get_number_of_terminal_colors() == 8:
         level_styles = level_styles_8
