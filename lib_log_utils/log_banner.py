@@ -33,8 +33,10 @@ def get_number_of_terminal_colors() -> int:
     """
     if platform.system().lower() != 'windows':
         try:
-            my_process = subprocess.run(['tput', 'colors'], check=True, capture_output=True)
-            colors = int(my_process.stdout)
+            # my_process = subprocess.run(['tput', 'colors'], check=True, capture_output=True)
+            # colors = int(my_process.stdout)
+            output = subprocess.check_output(['tput', 'colors'])
+            colors = int(output)
         except subprocess.CalledProcessError:
             colors = 256
     else:
