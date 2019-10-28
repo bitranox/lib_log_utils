@@ -5,9 +5,11 @@ import getpass
 # noinspection PyUnresolvedReferences
 import logging
 import logging.handlers
+# noinspection PyUnresolvedReferences
 import platform
 import subprocess
 import textwrap
+# noinspection PyUnresolvedReferences
 from typing import Any, Dict
 
 # PROJ
@@ -86,6 +88,7 @@ class BannerSettings(object):
 
 def banner_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)        # type: ignore
 
 
@@ -96,6 +99,7 @@ def banner_debug(message: str, banner_width: int = 140, wrap_text: bool = True, 
 
 def banner_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
@@ -106,11 +110,13 @@ def banner_info(message: str, banner_width: int = 140, wrap_text: bool = True, l
 
 def banner_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)      # type: ignore
 
 
 def banner_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
@@ -133,6 +139,7 @@ def banner_level(message: str, level: int = logging.INFO, banner_width: int = 14
                  logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     """
     >>> BannerSettings.called_via_commandline = True
+    >>> # noinspection PyUnresolvedReferences
     >>> banner_level('test', logging.SUCCESS, wrap_text=True)
     >>> banner_level('test', logging.ERROR, wrap_text=True)
     >>> banner_level('test', logging.ERROR, wrap_text=False)
@@ -164,6 +171,7 @@ def banner_level(message: str, level: int = logging.INFO, banner_width: int = 14
 
 def log_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)       # type: ignore
 
 
@@ -174,6 +182,7 @@ def log_debug(message: str, banner_width: int = 140, wrap_text: bool = True, log
 
 def log_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)    # type: ignore
 
 
@@ -184,11 +193,13 @@ def log_info(message: str, banner_width: int = 140, wrap_text: bool = True, logg
 
 def log_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
 def log_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
     if not quiet:
+        # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)    # type: ignore
 
 
