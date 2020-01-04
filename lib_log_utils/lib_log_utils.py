@@ -41,7 +41,7 @@ def main() -> None:
                 'banner_warning': banner_warning,
                 'banner_error': banner_error,
                 'banner_critical': banner_critical,
-            })
+                })
 
     except FileNotFoundError:
         # see https://www.thegeekstuff.com/2010/10/linux-error-codes for error codes

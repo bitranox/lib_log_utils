@@ -16,11 +16,11 @@ from typing import Any, Dict
 # imports for local pytest
 try:
     from .log_handlers import *     # type: ignore # pragma: no cover
-    from .log_levels import *     # type: ignore # pragma: no cover
+    from .log_levels import *       # type: ignore # pragma: no cover
 # imports for doctest
 except ImportError:                 # type: ignore # pragma: no cover
     from log_handlers import *      # type: ignore # pragma: no cover
-    from log_levels import *     # type: ignore # pragma: no cover
+    from log_levels import *        # type: ignore # pragma: no cover
 
 
 def get_number_of_terminal_colors() -> int:
@@ -49,6 +49,9 @@ class BannerSettings(object):
     # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
     fmt = '%(message)s'
     datefmt = '%Y-%m-%d %H:%M:%S'
+    banner_width = 140
+    wrap_text = True
+    quiet = False
 
     field_styles = {
         'asctime': {'color': 'green'},
@@ -56,7 +59,7 @@ class BannerSettings(object):
         'levelname': {'color': 'yellow'},                       # 'levelname': {'color': 'black', 'bold': True},
         'name': {'color': 'blue'},
         'programname': {'color': 'cyan'}
-    }                                                           # type: Dict[str, Dict[str, Any]]
+        }                                                       # type: Dict[str, Dict[str, Any]]
 
     level_styles_256 = {
         'spam': {'color': 'magenta', 'bright': True},                       # level 5   - SPAM
@@ -68,7 +71,7 @@ class BannerSettings(object):
         'success': {'color': 'green', 'bright': True},                      # level 35  - SUCCESS
         'error': {'background': 'red', 'bright': True},                     # level 40  - ERROR
         'critical': {'background': 'red'},                                  # level 50  - CRITICAL
-    }                                                                       # type: Dict[str, Dict[str, Any]]
+        }                                                                   # type: Dict[str, Dict[str, Any]]
 
     level_styles_8 = {
         'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
@@ -80,7 +83,7 @@ class BannerSettings(object):
         'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
         'error': {'background': 'red'},                                     # level 40  - ERROR
         'critical': {'background': 'red', 'bold': True},                    # level 50  - CRITICAL
-    }                                                                       # type: Dict[str, Dict[str, Any]]
+        }                                                                   # type: Dict[str, Dict[str, Any]]
 
     if get_number_of_terminal_colors() == 8:
         level_styles = level_styles_8
@@ -88,57 +91,97 @@ class BannerSettings(object):
         level_styles = level_styles_256
 
 
-def banner_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_spam(message: str,
+                banner_width: int = BannerSettings.banner_width,
+                wrap_text: bool = BannerSettings.wrap_text,
+                logger: logging.Logger = logging.getLogger(),
+                quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)        # type: ignore
 
 
-def banner_debug(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_debug(message: str,
+                 banner_width: int = BannerSettings.banner_width,
+                 wrap_text: bool = BannerSettings.wrap_text,
+                 logger: logging.Logger = logging.getLogger(),
+                 quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         banner_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def banner_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_verbose(message: str,
+                   banner_width: int = BannerSettings.banner_width,
+                   wrap_text: bool = BannerSettings.wrap_text,
+                   logger: logging.Logger = logging.getLogger(),
+                   quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
-def banner_info(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_info(message: str,
+                banner_width: int = BannerSettings.banner_width,
+                wrap_text: bool = BannerSettings.wrap_text,
+                logger: logging.Logger = logging.getLogger(),
+                quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         banner_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def banner_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_notice(message: str,
+                  banner_width: int = BannerSettings.banner_width,
+                  wrap_text: bool = BannerSettings.wrap_text,
+                  logger: logging.Logger = logging.getLogger(),
+                  quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)      # type: ignore
 
 
-def banner_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_success(message: str,
+                   banner_width: int = BannerSettings.banner_width,
+                   wrap_text: bool = BannerSettings.wrap_text,
+                   logger: logging.Logger = logging.getLogger(),
+                   quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         banner_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
-def banner_warning(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_warning(message: str,
+                   banner_width: int = BannerSettings.banner_width,
+                   wrap_text: bool = BannerSettings.wrap_text,
+                   logger: logging.Logger = logging.getLogger(),
+                   quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         banner_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def banner_error(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_error(message: str,
+                 banner_width: int = BannerSettings.banner_width,
+                 wrap_text: bool = BannerSettings.wrap_text,
+                 logger: logging.Logger = logging.getLogger(),
+                 quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         banner_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def banner_critical(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_critical(message: str,
+                    banner_width: int = BannerSettings.banner_width,
+                    wrap_text: bool = BannerSettings.wrap_text,
+                    logger: logging.Logger = logging.getLogger(),
+                    quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         banner_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def banner_level(message: str, level: int = logging.INFO, banner_width: int = 140, wrap_text: bool = True,
-                 logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def banner_level(message: str,
+                 level: int = logging.INFO,
+                 banner_width: int = BannerSettings.banner_width,
+                 wrap_text: bool = BannerSettings.wrap_text,
+                 logger: logging.Logger = logging.getLogger(),
+                 quiet: bool = BannerSettings.quiet) -> None:
     """
     >>> BannerSettings.called_via_commandline = True
     >>> # noinspection PyUnresolvedReferences
@@ -171,57 +214,97 @@ def banner_level(message: str, level: int = logging.INFO, banner_width: int = 14
         logger.log(level=level, msg=sep_line)
 
 
-def log_spam(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_spam(message: str,
+             banner_width: int = BannerSettings.banner_width,
+             wrap_text: bool = BannerSettings.wrap_text,
+             logger: logging.Logger = logging.getLogger(),
+             quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger)       # type: ignore
 
 
-def log_debug(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_debug(message: str,
+              banner_width: int = BannerSettings.banner_width,
+              wrap_text: bool = BannerSettings.wrap_text,
+              logger: logging.Logger = logging.getLogger(),
+              quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         log_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def log_verbose(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_verbose(message: str,
+                banner_width: int = BannerSettings.banner_width,
+                wrap_text: bool = BannerSettings.wrap_text,
+                logger: logging.Logger = logging.getLogger(),
+                quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)    # type: ignore
 
 
-def log_info(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_info(message: str,
+             banner_width: int = BannerSettings.banner_width,
+             wrap_text: bool = BannerSettings.wrap_text,
+             logger: logging.Logger = logging.getLogger(),
+             quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         log_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def log_notice(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_notice(message: str,
+               banner_width: int = BannerSettings.banner_width,
+               wrap_text: bool = BannerSettings.wrap_text,
+               logger: logging.Logger = logging.getLogger(),
+               quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger)     # type: ignore
 
 
-def log_success(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_success(message: str,
+                banner_width: int = BannerSettings.banner_width,
+                wrap_text: bool = BannerSettings.wrap_text,
+                logger: logging.Logger = logging.getLogger(),
+                quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         # noinspection PyUnresolvedReferences
         log_level(message=message, level=logging.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger)    # type: ignore
 
 
-def log_warning(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_warning(message: str,
+                banner_width: int = BannerSettings.banner_width,
+                wrap_text: bool = BannerSettings.wrap_text,
+                logger: logging.Logger = logging.getLogger(),
+                quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         log_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def log_error(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_error(message: str,
+              banner_width: int = BannerSettings.banner_width,
+              wrap_text: bool = BannerSettings.wrap_text,
+              logger: logging.Logger = logging.getLogger(),
+              quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         log_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def log_critical(message: str, banner_width: int = 140, wrap_text: bool = True, logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_critical(message: str,
+                 banner_width: int = BannerSettings.banner_width,
+                 wrap_text: bool = BannerSettings.wrap_text,
+                 logger: logging.Logger = logging.getLogger(),
+                 quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         log_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger)
 
 
-def log_level(message: str, level: int = logging.INFO, banner_width: int = 140, wrap_text: bool = True,
-              logger: logging.Logger = logging.getLogger(), quiet: bool = False) -> None:
+def log_level(message: str,
+              level: int = logging.INFO,
+              banner_width: int = BannerSettings.banner_width,
+              wrap_text: bool = BannerSettings.wrap_text,
+              logger: logging.Logger = logging.getLogger(),
+              quiet: bool = BannerSettings.quiet) -> None:
     if not quiet:
         message = str(message)
 
