@@ -28,6 +28,7 @@ def add_file_handler(filename: str,
                      remove_existing_handlers: bool = False,
                      mode: str = 'a',
                      encoding: str = 'utf-8',
+
                      delay: bool = True) -> logging.Handler:
     """
     name: the name of the file handler. if name = '', name = filename

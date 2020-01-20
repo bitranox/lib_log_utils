@@ -15,7 +15,7 @@ import lib_parameter
 # PROJ
 # imports for local pytest
 try:
-    from . import log_banner  # type: ignore # pragma: no cover
+    from . import log_banner        # type: ignore # pragma: no cover
     from . import log_handlers      # type: ignore # pragma: no cover
 # imports for doctest
 except ImportError:                 # type: ignore # pragma: no cover
