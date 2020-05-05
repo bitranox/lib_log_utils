@@ -5,7 +5,7 @@ import pathlib
 from typing import Dict, List
 
 try:
-    from setuptools import setup
+    from setuptools import setup    # type: ignore
 except ImportError:
     from distutils.core import setup
 
@@ -15,10 +15,10 @@ required = ['coloredlogs',
             'lib_cast @ git+https://github.com/bitranox/lib_cast.git',
             'lib_parameter @ git+https://github.com/bitranox/lib_parameter.git',
             'lib_platform @ git+https://github.com/bitranox/lib_platform.git',
-            'lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git']    # type: List
+            'lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git']    # type: List[str]
 
-required_for_tests = list()                                                                     # type: List
-entry_points = {'console_scripts': ['lib_log_utils = lib_log_utils.lib_log_utils:main']}        # type: Dict
+required_for_tests = list()                                                                     # type: List[str]
+entry_points = {'console_scripts': ['lib_log_utils = lib_log_utils.lib_log_utils:main']}        # type: Dict[str, List[str]]
 
 
 def get_version(dist_directory: str) -> str:

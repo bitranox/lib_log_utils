@@ -9,25 +9,23 @@ import traceback
 from typing import Optional
 
 # OWN
-import lib_cast
-import lib_parameter
+import lib_cast                     # type: ignore
+import lib_parameter                # type: ignore
 
 # PROJ
-# imports for local pytest
 try:
-    from . import log_banner        # type: ignore # pragma: no cover
-    from . import log_handlers      # type: ignore # pragma: no cover
-# imports for doctest
-except ImportError:                 # type: ignore # pragma: no cover
-    import log_banner               # type: ignore # pragma: no cover
-    import log_handlers             # type: ignore # pragma: no cover
+    from . import log_banner        # type: ignore
+    from . import log_handlers      # type: ignore
+except ImportError:
+    import log_banner               # type: ignore
+    import log_handlers             # type: ignore
 
 
 def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
                             log_level_exec_info: Optional[int] = None,
                             log_level_traceback: Optional[int] = None) -> str:
-    log_level_exec_info = lib_parameter.get_default_if_none(log_level_exec_info, log_level)
-    log_level_traceback = lib_parameter.get_default_if_none(log_level_traceback, log_level_exec_info)
+    log_level_exec_info = int(lib_parameter.get_default_if_none(log_level_exec_info, log_level))
+    log_level_traceback = int(lib_parameter.get_default_if_none(log_level_traceback, log_level_exec_info))
 
     if s_error and log_level != logging.NOTSET:
         log_banner.log_level(message=s_error, level=log_level)

@@ -8,7 +8,7 @@ import sys
 from typing import Any, Dict, Optional
 
 # OWN
-import lib_platform
+import lib_platform     # type: ignore
 
 # EXT
 import coloredlogs      # type: ignore
@@ -78,7 +78,7 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
                              fmt: str = default_fmt,
                              datefmt: str = default_date_fmt,
                              field_styles: Dict[str, Dict[str, Any]] = coloredlogs.DEFAULT_FIELD_STYLES,
-                             level_styles: Dict[str, Dict[str, Any]] = coloredlogs.DEFAULT_LEVEL_STYLES,
+                             level_styles: Dict[str, object] = coloredlogs.DEFAULT_LEVEL_STYLES,
                              remove_existing_handlers: bool = True) -> logging.Handler:
     """
     # https://coloredlogs.readthedocs.io/en/latest/api.html
