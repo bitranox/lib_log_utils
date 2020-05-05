@@ -7,8 +7,17 @@ import platform
 import sys
 from typing import Any, Dict, Optional
 
+# OWN
+import lib_platform
+
 # EXT
 import coloredlogs      # type: ignore
+
+
+# default_fmt_string = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'
+
+default_fmt = '[{username}@{hostname_short}][%(programname)s@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s'
+default_date_fmt = '%Y-%m-%d %H:%M:%S'
 
 
 class HostnameFilter(logging.Filter):
@@ -23,8 +32,8 @@ def add_file_handler(filename: str,
                      logger: logging.Logger = logging.getLogger(),
                      name: str = '',
                      level: int = logging.INFO,
-                     fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                     datefmt: str = '%Y-%m-%d %H:%M:%S',
+                     fmt: str = default_fmt,
+                     datefmt: str = default_date_fmt,
                      remove_existing_handlers: bool = False,
                      mode: str = 'a',
                      encoding: str = 'utf-8',
@@ -49,8 +58,8 @@ def add_file_handler(filename: str,
 def add_stream_handler(logger: logging.Logger = logging.getLogger(),
                        name: str = 'stream_handler',
                        level: int = logging.INFO,
-                       fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                       datefmt: str = '%Y-%m-%d %H:%M:%S',
+                       fmt: str = default_fmt,
+                       datefmt: str = default_date_fmt,
                        remove_existing_handlers: bool = True) -> logging.Handler:
 
     """
@@ -66,8 +75,8 @@ def add_stream_handler(logger: logging.Logger = logging.getLogger(),
 def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
                              name: str = 'stream_handler_color',
                              level: int = logging.INFO,
-                             fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                             datefmt: str = '%Y-%m-%d %H:%M:%S',
+                             fmt: str = default_fmt,
+                             datefmt: str = default_date_fmt,
                              field_styles: Dict[str, Dict[str, Any]] = coloredlogs.DEFAULT_FIELD_STYLES,
                              level_styles: Dict[str, Dict[str, Any]] = coloredlogs.DEFAULT_LEVEL_STYLES,
                              remove_existing_handlers: bool = True) -> logging.Handler:
@@ -89,7 +98,7 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     if not exists_handler_with_name(name):
         fmt = override_fmt_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
         if hasattr(fmt, 'format'):
-            fmt = fmt.format(username=getpass.getuser())
+            fmt = format_fmt(fmt)
         datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
         field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
         level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
@@ -121,8 +130,8 @@ def _add_handler(handler: logging.Handler,
                  logger: logging.Logger = logging.getLogger(),
                  name: str = 'stream_handler',
                  level: int = logging.INFO,
-                 fmt: str = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s',
-                 datefmt: str = '%Y-%m-%d %H:%M:%S',
+                 fmt: str = default_fmt,
+                 datefmt: str = default_date_fmt,
                  remove_existing_handlers: bool = True) -> logging.Handler:
 
     """
@@ -134,7 +143,7 @@ def _add_handler(handler: logging.Handler,
 
     if not exists_handler_with_name(name):
         handler.addFilter(HostnameFilter())
-        fmt = fmt.format(username=getpass.getuser())
+        fmt = format_fmt(fmt)
         formatter = logging.Formatter(fmt, datefmt)
         handler.setFormatter(formatter)
         handler.setLevel(level)
@@ -143,6 +152,11 @@ def _add_handler(handler: logging.Handler,
         return handler
     else:
         raise ValueError('Handler "{name}" already exists'.format(name=name))
+
+
+def format_fmt(fmt: str) -> str:
+    fmt = fmt.format(username=getpass.getuser(), hostname_short=lib_platform.hostname_short, hostname=lib_platform.hostname)
+    return fmt
 
 
 def get_handler_by_name(name: str) -> logging.Handler:
@@ -256,6 +270,6 @@ def set_log_handler_formatter_prefix(handler: logging.Handler, log_formatter_pre
             handler.formatter._fmt = log_formatter_prefix + '%(message)s'
             handler.formatter._style._fmt = log_formatter_prefix + '%(message)s'
     else:
-        datefmt = '%Y-%m-%d %H:%M:%S'
+        datefmt = default_date_fmt
         formatter = logging.Formatter(log_formatter_prefix + '%(message)s', datefmt)
         handler.setFormatter(formatter)

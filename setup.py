@@ -14,6 +14,7 @@ required = ['coloredlogs',
             'fire',
             'lib_cast @ git+https://github.com/bitranox/lib_cast.git',
             'lib_parameter @ git+https://github.com/bitranox/lib_parameter.git',
+            'lib_platform @ git+https://github.com/bitranox/lib_platform.git',
             'lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git']    # type: List
 
 required_for_tests = list()                                                                     # type: List
