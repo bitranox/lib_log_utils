@@ -9,14 +9,15 @@ from typing import Any, Dict, Optional
 
 # OWN
 import lib_platform     # type: ignore
+import lib_programname  # type: ignore
 
 # EXT
 import coloredlogs      # type: ignore
 
 
 # default_fmt_string = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'
-
-default_fmt = '[{username}@{hostname_short}][%(programname)s@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s'
+# we dont use the built in %(programname)s because it does not work in doctest
+default_fmt = '[{username}@{hostname_short}][{program_name}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s'
 default_date_fmt = '%Y-%m-%d %H:%M:%S'
 
 
@@ -155,7 +156,10 @@ def _add_handler(handler: logging.Handler,
 
 
 def format_fmt(fmt: str) -> str:
-    fmt = fmt.format(username=getpass.getuser(), hostname_short=lib_platform.hostname_short, hostname=lib_platform.hostname)
+    fmt = fmt.format(username=getpass.getuser(),
+                     hostname_short=lib_platform.hostname_short,
+                     hostname=lib_platform.hostname,
+                     program_name=lib_programname.get_programname_fullpath().stem)
     return fmt
 
 
