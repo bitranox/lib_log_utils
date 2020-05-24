@@ -9,7 +9,6 @@ import traceback
 from typing import Optional
 
 # OWN
-import lib_cast                     # type: ignore
 import lib_parameter                # type: ignore
 
 # PROJ
@@ -32,7 +31,7 @@ def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
 
     if log_level_exec_info != logging.NOTSET:
         exc_info = sys.exc_info()[1]
-        exc_info_type = lib_cast.get_type_as_string(exc_info)
+        exc_info_type = type(exc_info).__name__
         exc_info_msg = exc_info_type + ': ' + str(exc_info)
         log_banner.log_level(message=exc_info_msg, level=log_level_exec_info)
 
@@ -48,7 +47,7 @@ def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
 def print_exception_traceback(s_error: str) -> str:
     print(s_error)
     exc_info = sys.exc_info()[1]
-    exc_info_type = lib_cast.get_type_as_string(exc_info)
+    exc_info_type = type(exc_info).__name__
     exc_info_msg = exc_info_type + ': ' + str(exc_info)
     print(exc_info_msg)
 

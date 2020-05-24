@@ -12,7 +12,6 @@ except ImportError:
 package_name = 'lib_log_utils'                                                                  # type: str
 required = ['coloredlogs',
             'fire',
-            'lib_cast @ git+https://github.com/bitranox/lib_cast.git',
             'lib_parameter @ git+https://github.com/bitranox/lib_parameter.git',
             'lib_platform @ git+https://github.com/bitranox/lib_platform.git',
             'lib_programname @ git+https://github.com/bitranox/lib_programname.git',
