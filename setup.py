@@ -12,11 +12,11 @@ except ImportError:
 package_name = 'lib_log_utils'                                                                  # type: str
 required = ['coloredlogs',
             'fire',
-            'git+https://github.com/bitranox/lib_cast.git',
-            'git+https://github.com/bitranox/lib_parameter.git',
-            'git+https://github.com/bitranox/lib_platform.git',
-            'git+https://github.com/bitranox/lib_programname.git',
-            'git+https://github.com/bitranox/lib_doctest_pycharm.git']    # type: List[str]
+            'lib_cast @ git+https://github.com/bitranox/lib_cast.git',
+            'lib_parameter @ git+https://github.com/bitranox/lib_parameter.git',
+            'lib_platform @ git+https://github.com/bitranox/lib_platform.git',
+            'lib_programname @ git+https://github.com/bitranox/lib_programname.git',
+            'lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git']    # type: List[str]
 
 required_for_tests = list()                                                                     # type: List[str]
 entry_points = {'console_scripts': ['lib_log_utils = lib_log_utils.lib_log_utils:main']}        # type: Dict[str, List[str]]
