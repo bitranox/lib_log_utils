@@ -22,8 +22,7 @@ from typing import Dict
 from docopt import docopt       # type: ignore
 
 # OWN
-# import lib_log_utils                      # type: ignore
-from .lib_log_utils import lib_log_utils    # type: ignore
+import lib_log_utils                        # type: ignore
 import rst_include                          # type: ignore
 
 
