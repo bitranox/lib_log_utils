@@ -17,7 +17,7 @@ from typing import Any, Dict
 try:
     from .log_handlers import *     # pragma: no cover
     from .log_levels import *       # pragma: no cover
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     from log_handlers import *      # type: ignore # pragma: no cover
     from log_levels import *        # type: ignore # pragma: no cover
 

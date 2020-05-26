@@ -15,7 +15,7 @@ import lib_parameter                # type: ignore
 try:
     from . import log_banner        # type: ignore
     from . import log_handlers      # type: ignore
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     import log_banner               # type: ignore
     import log_handlers             # type: ignore
 

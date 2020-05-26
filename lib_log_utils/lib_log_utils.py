@@ -17,7 +17,7 @@ except Exception:
 # PROJ
 try:
     from .log_banner import *       # type: ignore # pragma: no cover
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     from log_banner import *        # type: ignore # pragma: no cover
 
 
