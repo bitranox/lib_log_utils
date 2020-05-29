@@ -31,7 +31,7 @@ this library makes it easy to log colored messages from python and from the comm
 automated tests, Travis Matrix, Documentation, Badges for this Project are managed with `lib_travis_template <https://github
 .com/bitranox/lib_travis_template>`_ - check it out
 
-supports python 3.5-3.8, pypy3 and possibly other dialects.
+supports python 3.6-3.8, pypy3 and possibly other dialects.
 
 `100% code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, mypy static type checking, tested under `Linux, macOS, Windows and Wine <https://travis-ci
 .org/bitranox/lib_log_utils>`_, automatic daily builds  and monitoring
