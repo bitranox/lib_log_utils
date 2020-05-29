@@ -316,18 +316,19 @@ def log_level(message: str,
                 logger.log(level=level, msg=msg_line)
 
 
-def banner_color_test() -> None:
+def banner_color_test(quiet: bool = False) -> None:
     """ test banner colors
 
     >>> banner_color_test()
 
     """
-    banner_spam('test level spam')
-    banner_debug('test level debug')
-    banner_verbose('test level verbose')
-    banner_info('test level info')
-    banner_notice('test level notice')
-    banner_success('test level success')
-    banner_warning('test level warning')
-    banner_error('test level error')
-    banner_critical('test level critical')
+    if not quiet:
+        banner_spam('test level spam')
+        banner_debug('test level debug')
+        banner_verbose('test level verbose')
+        banner_info('test level info')
+        banner_notice('test level notice')
+        banner_success('test level success')
+        banner_warning('test level warning')
+        banner_error('test level error')
+        banner_critical('test level critical')

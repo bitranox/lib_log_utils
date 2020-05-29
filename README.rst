@@ -3,11 +3,11 @@ lib_log_utils
 
 |Pypi Status| |license| |maintenance|
 
-|Build Status| |Codecov Status| |Better Code| |code climate| |snyk security|
+|Build Status| |Codecov Status| |Better Code| |code climate| |code climate coverage| |snyk security|
 
 .. |license| image:: https://img.shields.io/github/license/webcomics/pywine.svg
    :target: http://en.wikipedia.org/wiki/MIT_License
-.. |maintenance| image:: https://img.shields.io/maintenance/yes/{last_update_yyyy}.svg
+.. |maintenance| image:: https://img.shields.io/maintenance/yes/2021.svg
 .. |Build Status| image:: https://travis-ci.org/bitranox/lib_log_utils.svg?branch=master
    :target: https://travis-ci.org/bitranox/lib_log_utils
 .. for the pypi status link note the dashes, not the underscore !
@@ -22,17 +22,25 @@ lib_log_utils
 .. |code climate| image:: https://api.codeclimate.com/v1/badges/fa8ed1c6aec724d3b4f7/maintainability
    :target: https://codeclimate.com/github/bitranox/lib_log_utils/maintainability
    :alt: Maintainability
+.. |code climate coverage| image:: https://api.codeclimate.com/v1/badges/fa8ed1c6aec724d3b4f7/test_coverage
+   :target: https://codeclimate.com/github/bitranox/lib_log_utils/test_coverage
+   :alt: Code Coverage
 
-some convenience functions for logging
+this library makes it easy to log colored messages from python and from the commandline. Text Wrapping is supported.
 
-supports python 3.7 and possibly other dialects.
+automated tests, Travis Matrix, Documentation, Badges for this Project are managed with `lib_travis_template <https://github
+.com/bitranox/lib_travis_template>`_ - check it out
 
-`100% code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, mypy static type checking, tested under `Linux, OsX, Windows and Wine <https://travis-ci.org/bitranox/lib_log_utils>`_, automatic daily builds  and monitoring
+supports python 3.5-3.8, pypy3 and possibly other dialects.
+
+`100% code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, mypy static type checking, tested under `Linux, macOS, Windows and Wine <https://travis-ci
+.org/bitranox/lib_log_utils>`_, automatic daily builds  and monitoring
 
 ----
 
 - `Installation and Upgrade`_
-- `Basic Usage`_
+- `Usage`_
+- `Usage from Commandline`_
 - `Requirements`_
 - `Acknowledgements`_
 - `Contribute`_
@@ -47,63 +55,152 @@ supports python 3.7 and possibly other dialects.
 Installation and Upgrade
 ------------------------
 
-From source code:
+Before You start, its highly recommended to update pip and setup tools:
+
 
 .. code-block:: bash
 
-    # normal install
-    python setup.py install
-    # test without installing
-    python setup.py test
+    python3 -m pip --upgrade pip
+    python3 -m pip --upgrade setuptools
+    python3 -m pip --upgrade wheel
 
-via pip latest Release:
 
-.. code-block:: bash
-
-    # latest Release from pypi
-    pip install lib_log_utils
-
-    # test without installing
-    pip install lib_log_utils --install-option test
-
-via pip latest Development Version:
+install latest version with pip (recommended):
 
 .. code-block:: bash
 
     # upgrade all dependencies regardless of version number (PREFERRED)
-    pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git --upgrade-strategy eager
-    # normal install
-    pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git
-    # test without installing
-    pip install git+https://github.com/bitranox/lib_log_utils.git --install-option test
+    python3 -m pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git --upgrade-strategy eager
 
-via requirements.txt:
+    # test without installing (can be skipped)
+    python3 -m pip install git+https://github.com/bitranox/lib_log_utils.git --install-option test
+
+    # normal install
+    python3 -m pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git
+
+
+install latest pypi Release (if there is any):
+
+.. code-block:: bash
+
+    # latest Release from pypi
+    python3 -m pip install --upgrade lib_log_utils
+
+    # test without installing (can be skipped)
+    python3 -m pip install lib_log_utils --install-option test
+
+    # normal install
+    python3 -m pip install --upgrade lib_log_utils
+
+
+
+include it into Your requirements.txt:
 
 .. code-block:: bash
 
     # Insert following line in Your requirements.txt:
-    # for the latest Release:
+    # for the latest Release on pypi (if any):
     lib_log_utils
     # for the latest Development Version :
-    git+https://github.com/bitranox/lib_log_utils.git
+    lib_log_utils @ git+https://github.com/bitranox/lib_log_utils.git
 
     # to install and upgrade all modules mentioned in requirements.txt:
-    pip install --upgrade -r /<path>/requirements.txt
+    python3 -m pip install --upgrade -r /<path>/requirements.txt
 
-via python:
 
-.. code-block:: python
+Install from source code:
 
-    # for the latest Release
-    python -m pip install upgrade lib_log_utils
+.. code-block:: bash
 
-    # for the latest Development Version
-    python -m pip install upgrade git+https://github.com/bitranox/lib_log_utils.git
+    # cd ~
+    $ git clone https://github.com/bitranox/lib_log_utils.git
+    $ cd lib_log_utils
 
-Basic Usage
+    # test without installing (can be skipped)
+    python3 setup.py test
+
+    # normal install
+    python3 setup.py install
+
+
+via makefile:
+
+if You are on linux, makefiles are a very convenient way to install. Here we can do much more, like installing virtual environment, clean caches and so on.
+This is still in development and not recommended / working at the moment:
+
+.. code-block:: shell
+
+    # from Your shell's homedirectory:
+    $ git clone https://github.com/bitranox/lib_log_utils.git
+    $ cd lib_log_utils
+
+    # to run the tests:
+    $ make test
+
+    # to install the package
+    $ make install
+
+    # to clean the package
+    $ make clean
+
+    # uninstall the package
+    $ make uninstall
+
+Usage
 -----------
 
-TBA
+.. code-block::
+
+    import the module and check the code - its easy and documented there, including doctest examples.
+    in case of any questions the usage section might be expanded at a later time
+
+Usage from Commandline
+------------------------
+
+.. code-block:: bash
+
+   Usage:
+       log_util (-h | -v | -i)
+       log_util spam            <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util debug           <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util verbose         <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util info            <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util notice          <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util success         <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util warning         <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util error           <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util critical        <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_spam     <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_debug    <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_verbose  <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_info     <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_notice   <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_success  <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_warning  <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_error    <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util banner_critical <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
+       log_util color_test      [ --quiet=(True|False) ]
+
+   Options:
+       -h, --help          show help
+       -v, --version       show version
+       -i, --info          show Info
+
+   if parameter --log_console is anything else then "False" (not case sensitive), then it is considered as True.
+   if parameter --log_console is not present, it is also considered as True
+   This makes it possible to silence messages elegantly in a shellscript:
+
+       #!/bin/bash
+       debug_messages="False"
+       info_messages="True"
+       ...
+       ...
+       log_util debug "some debug message ${IFS}and here the second line" --log_console=${debug_messages}
+       log_util info "some info message" --log_console=${info_messages}
+       ...
+
+
+   this module exposes no other useful functions to the commandline
 
 Requirements
 ------------
@@ -111,22 +208,13 @@ following modules will be automatically installed :
 
 .. code-block:: bash
 
-    ## Test Requirements
-    ## following Requirements will be installed temporarily for
-    ## "setup.py install test" or "pip install <package> --install-option test"
-    typing ; python_version < "3.5"
-    pathlib; python_version < "3.4"
-    mypy ; platform_python_implementation != "PyPy" and python_version >= "3.5"
-    pytest
-    pytest-pep8 ; python_version < "3.5"
-    pytest-pycodestyle ; python_version >= "3.5"
-    pytest-mypy ; platform_python_implementation != "PyPy" and python_version >= "3.5"
-    pytest-runner
-
     ## Project Requirements
-    lib_cast @ git+https://github.com/bitranox/lib_cast.git
-    lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
+    coloredlogs
+    docopt
     lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git
+    lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
+    lib_platform @ git+https://github.com/bitranox/lib_platform.git
+    lib_programname @ git+https://github.com/bitranox/lib_programname.git
 
 Acknowledgements
 ----------------

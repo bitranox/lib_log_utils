@@ -1,20 +1,12 @@
 # noinspection PyUnresolvedReferences
-import logging
-import pathlib
+from . import __init__conf__
+
+__title__ = __init__conf__.title
+__version__ = __init__conf__.version
+__name__ = __init__conf__.name
+__url__ = __init__conf__.url
+__author__ = __init__conf__.author
+__author_email__ = __init__conf__.author_email
+__shell_command__ = __init__conf__.shell_command
 
 from .lib_log_utils import *
-from .log_banner import *
-from .log_handlers import *
-from .log_levels import *
-from .log_traceback import *
-
-
-def get_version() -> str:
-    with open(str(pathlib.Path(__file__).parent / 'version.txt'), mode='r') as version_file:
-        version = version_file.readline()
-    return version
-
-
-__title__ = 'lib_log_utils'
-__version__ = get_version()
-__name__ = 'lib_log_utils'

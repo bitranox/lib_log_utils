@@ -1,20 +1,20 @@
 language: python
 group: travis_latest
-dist: xenial
+dist: bionic
 sudo: true
 
 env:
     global:
-        - github_master="git+https://github.com/${TRAVIS_REPO_SLUG}.git"
-        - pip_command="pip"
         - python_command="python"
+        - pip_command="python -m pip"
         - WINEDEBUG=fixme-all       # switch off wine fix me messages
-        # pypi_password for lib_log_utils
+        - CC_TEST_REPORTER_ID="cc62399f4be04b06102d2abf0d9093568122ae927cccd884c5cdc9b2e856c85f"
+        # pypi_password for lib_parameter
         # This works for sure - the Travis deploy is somehow buggy.
         # create the secret :
         # cd /<repository>
-        # travis encrypt -r bitranox/lib_log_utils pypi_password=*****
-        # copy and paste the encrypted password here
+        # travis encrypt -r bitranox/lib_parameter pypi_password=*****
+        # copy and paste the encrypted password in the project_conf.py
         - secure: "b/MeY1E7Ps+8bWyaUlMSXEcHpL16Q0sv16kRQ7W841GbBYruDq5YNt/u193gk67kHNPbkuVeKrtnpw8jfgT1ykiVI08vfqJKqGUBokhyFg0Tg0AwOgE49QQm6zFpZQ92QoFnEN2HDMgMts//XvF/fu6Phz6xTr4/rtyiLHXkVQ1UcAk+dmo9VG2AnCuPnDYr34gujJPj2N+3TAXZgbT+1IS9+yIIXelUphSMj4A1JuQlro7KAQuV2IuIaL88iiv8dsqJFcumQcBfYCSqZYhd8vRoRe3Io2G/q3nlrZp51Kr85eOfPHQI7QhPAiAweGRCZ31bc4rbZIj+orbcNncFB8kXThNzFq4v0/zaRkSIlnmwqkA4EU7mhm0z0m3FdAJ3hpi5Vcxpbj6juf5zzk6RZubmT6wdiW9F7vU9DT/j3cCk/C0vKw5bPt4uBikqYkwW1RKxZjUBPNJCfIwwuEuZciOS65lT2E9I8qxLUTWJAssNEjhnfHTkyXdiliQdFebRoyZrRG6YzrtWLTL+h5XNF6Vt8O9vCoOZPGPmYhz5EndjpEekN13tYxrrw0uLotxxdrDUfnc4GH0UwKMWVzjZBOf+4dm/+MoByOgmEwKR5MDnGrdkApj1CGM6LnCYiq1ad1m3Aa+AsqT914RFk1505v5WM+jgbl3KfmZYkGB2TB8="
 
 addons:
@@ -45,6 +45,7 @@ matrix:
           - /usr/local/lib_bash/lib_retry.sh retry choco install python3
           - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
 
+
     - os: linux
       language: python
       python: '3.5'
@@ -52,11 +53,6 @@ matrix:
     - os: linux
       language: python
       python: '3.6'
-      # we can do that also with env - but we dont want to show it on the travis build overview
-      before_install:
-          - export mypy_static_typecheck="True"
-          - export build_docs="True"
-          - export deploy_on_pypi="True"
 
     - os: linux
       language: python
@@ -65,151 +61,32 @@ matrix:
     - os: linux
       language: python
       python: '3.8'
+      before_install:
+          - export mypy_static_typecheck="True"
+          - export build_docs="True"
+          - export deploy_on_pypi="True"
 
     - os: linux
       language: python
       python: '3.8-dev'
 
+
     - os: linux
       language: python
       python: 'pypy3'
 
-    - os: linux
-      language: python
-      name: "WINE stable 32 Bit Python 3.7, Windows XP"
-      env:
-          - WINEARCH="win32"
-          - WINEPREFIX="${HOME}/wine/wine32"
-          - CMDPREFIX="wine"
-          - wine_windows_version="winxp"
-          - wine_release="stable"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE stable 64 Bit Python 3.7, Windows XP"
-      env:
-          - WINEPREFIX="${HOME}/wine/wine64"
-          - CMDPREFIX="wine"
-          - wine_windows_version="winxp"
-          - wine_release="stable"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE stable 32 Bit Python 3.7, Windows 10"
-      env:
-          - WINEARCH="win32"
-          - WINEPREFIX="${HOME}/wine/wine32"
-          - CMDPREFIX="wine"
-          - wine_windows_version="win10"
-          - wine_release="stable"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE stable 64 Bit Python 3.7, Windows 10"
-      env:
-          - WINEPREFIX="${HOME}/wine/wine64"
-          - CMDPREFIX="wine"
-          - wine_windows_version="win10"
-          - wine_release="stable"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE devel 32 Bit Python 3.7, Windows XP"
-      env:
-          - WINEARCH="win32"
-          - WINEPREFIX="${HOME}/wine/wine32"
-          - CMDPREFIX="wine"
-          - wine_windows_version="winxp"
-          - wine_release="devel"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE devel 64 Bit Python 3.7, Windows XP"
-      env:
-          - WINEPREFIX="${HOME}/wine/wine64"
-          - CMDPREFIX="wine"
-          - wine_windows_version="winxp"
-          - wine_release="devel"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE devel 32 Bit Python 3.7, Windows 10"
-      env:
-          - WINEARCH="win32"
-          - WINEPREFIX="${HOME}/wine/wine32"
-          - CMDPREFIX="wine"
-          - wine_windows_version="win10"
-          - wine_release="devel"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE devel 64 Bit Python 3.7, Windows 10"
-      env:
-          - WINEPREFIX="${HOME}/wine/wine64"
-          - CMDPREFIX="wine"
-          - wine_windows_version="win10"
-          - wine_release="devel"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE staging 32 Bit Python 3.7, Windows XP"
-      env:
-          - WINEARCH="win32"
-          - WINEPREFIX="${HOME}/wine/wine32"
-          - CMDPREFIX="wine"
-          - wine_windows_version="winxp"
-          - wine_release="staging"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE staging 64 Bit Python 3.7, Windows XP"
-      env:
-          - WINEPREFIX="${HOME}/wine/wine64"
-          - CMDPREFIX="wine"
-          - wine_windows_version="winxp"
-          - wine_release="staging"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE staging 32 Bit Python 3.7, Windows 10"
-      env:
-          - WINEARCH="win32"
-          - WINEPREFIX="${HOME}/wine/wine32"
-          - CMDPREFIX="wine"
-          - wine_windows_version="win10"
-          - wine_release="staging"
-          - wine_python_version="python3"
-
-    - os: linux
-      language: python
-      name: "WINE staging 64 Bit Python 3.7, Windows 10"
-      env:
-          - WINEPREFIX="${HOME}/wine/wine64"
-          - CMDPREFIX="wine"
-          - wine_windows_version="win10"
-          - wine_release="staging"
-          - wine_python_version="python3"
-
 
     - os: osx
       language: sh
-      name: "osX Python 3.8"
+      name: "macOS 10.15.4"
       python: "3.8"
-      osx_image: xcode11
+      osx_image: xcode11.5
       env:
         # on osx pip and python points to python 2.7 - therefore we have to use pip3 and python3 here
-        - pip_command="pip3"
         - python_command="python3"
+        - pip_command="python3 -m pip"
+
+
 
 
 install:
@@ -222,43 +99,30 @@ install:
     - export lib_bash_banner="/usr/local/lib_bash/lib_helpers.sh banner"
     - export lib_bash_banner_warning="/usr/local/lib_bash/lib_helpers.sh banner_warning"
     - export lib_bash_wine="/usr/local/lib_bash_wine"
+    - ${lib_bash_banner} "upgrading pip"; ${CMDPREFIX} ${python_command} -m pip install --upgrade pip;
+    - ${lib_bash_banner} "upgrading setuptools"; ${CMDPREFIX} ${python_command} -m pip install --upgrade setuptools;
+    - ${lib_bash_banner} "upgrading wheel"; ${CMDPREFIX} ${python_command} -m pip install --upgrade wheel;
 
-    - export REPOSITORY_NAME=${TRAVIS_REPO_SLUG#*/} && ${lib_bash_color} clr_bold clr_green "Export Repository Name ${REPOSITORY_NAME}"
+    - ${pip_command} install git+https://github.com/bitranox/lib_log_utils.git;
+    - ${pip_command} install git+https://github.com/bitranox/rst_include.git;
+
     - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/001_000_install_wine.sh ; fi
     - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/002_000_install_wine_machine.sh ; fi
     - if [[ ${wine_python_version} == "python3" ]]; then ${lib_bash_wine}/003_000_install_wine_python3_preinstalled.sh ; fi
     - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/004_000_install_wine_git_portable.sh ; fi
     - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/005_000_install_wine_powershell_core.sh ; fi
 
-    - ${lib_bash_banner} "upgrading pip"; ${CMDPREFIX} ${python_command} -m pip install --upgrade pip
-
     - if [[ ${build_docs} == "True" ]]; then
           ${lib_bash_banner} "install rst_include (Building Docs)";
           ${CMDPREFIX} ${pip_command} install git+https://github.com/bitranox/rst_include.git;
       fi
 
-    - if [[ -f ./setup.py ]]; then
-          ${lib_bash_banner} "setup.py found, Installing Application via pip install -e";
-          ${CMDPREFIX} ${pip_command} install -e . ;
-              if [[ $? -eq 0 ]]; then
-                  ${lib_bash_banner} "pip install -e - OK";
-              else
-                  ${lib_bash_banner_warning} "pip install -e - FAILED";
-                  exit 1;
-              fi
-
-      else
-          ${lib_bash_banner_warning} "no setup.py found, skipping Installation";
-      fi
-
 script:
     - if [[ -f ./setup.py ]]; then
-          ${lib_bash_banner} "Installing Pytest requirements";
-          ${CMDPREFIX} ${pip_command} install -r ./requirements_pytest.txt;
-          ${CMDPREFIX} ${pip_command} install codecov;
-          ${CMDPREFIX} ${pip_command} install pytest-cov;
+          ${lib_bash_banner} "Updating pytest-pycodestyle for Python Versions >= 3.5";
+          ${CMDPREFIX} ${pip_command} install --upgrade "pytest-pycodestyle; python_version >= \"3.5\"";
 
-          ${lib_bash_banner} "running setup.py test";
+          ${lib_bash_banner} "running 'setup.py test' - this automatically installs and uninstalls test requirements";
           ${CMDPREFIX} ${python_command} ./setup.py test;
               if [[ $? -eq 0 ]]; then
                   ${lib_bash_banner} "setup.py test - OK";
@@ -267,17 +131,20 @@ script:
                   exit 1;
               fi
 
-          ${lib_bash_banner} "running pip install --upgrade";
-          ${CMDPREFIX} ${pip_command} install ${github_master} --upgrade;
+          ${lib_bash_banner} "running pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git";
+          ${CMDPREFIX} ${pip_command} install --upgrade git+https://github.com/bitranox/lib_log_utils.git;
               if [[ $? -eq 0 ]]; then
-                  ${lib_bash_banner} "pip install --upgrade - OK";
+                  ${lib_bash_banner} "pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git - OK";
               else
-                  ${lib_bash_banner_warning} "pip install --upgrade - FAILED";
+                   ${lib_bash_banner_warning} "pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git - FAILED";
                   exit 1;
               fi
 
-          ${lib_bash_banner} "running pytest";
-          ${CMDPREFIX} ${python_command} -m pytest --cov;
+          ${lib_bash_banner} "running pytest-codecov only";
+          ${CMDPREFIX} ${pip_command} install --upgrade -r ./requirements_test.txt;
+          ${CMDPREFIX} ${pip_command} install --upgrade codecov;
+          ${CMDPREFIX} ${pip_command} install --upgrade pytest-cov;
+          ${CMDPREFIX} ${python_command} -m pytest --cov=lib_log_utils;
               if [[ $? -eq 0 ]]; then
                   ${lib_bash_banner} "pytest - OK";
               else
@@ -287,7 +154,7 @@ script:
 
           if [[ ${mypy_static_typecheck} == "True" ]]; then
               ${lib_bash_banner} "running mypy static typechecks --strict";
-              ${CMDPREFIX} ${python_command} -m mypy -p ${REPOSITORY_NAME} --strict --no-warn-unused-ignores;
+              ${CMDPREFIX} ${python_command} -m mypy -p lib_log_utils --strict --no-warn-unused-ignores;
                   if [[ $? -eq 0 ]]; then
                       ${lib_bash_banner} "mypy static typechecks --strict OK";
                   else
@@ -322,7 +189,7 @@ script:
     # Bild Docs
     - if [[ -f build_docs.py ]] && [[ "${build_docs}" == "True" ]]; then
           ${lib_bash_banner} "Building Docs";
-          ${CMDPREFIX} ${python_command} build_docs.py ${TRAVIS_REPO_SLUG};
+          ${CMDPREFIX} ${python_command} build_docs.py bitranox/lib_log_utils;
           if [[ $? -eq 0 ]]; then
               ${lib_bash_banner} "Building Docs OK";
           else
@@ -354,15 +221,16 @@ script:
 after_success:
     - ${CMDPREFIX} coverage report
     - ${CMDPREFIX} codecov
+    # codeclimate coverage upload
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
     # This works for sure - the Travis deploy is somehow buggy.
     # create the secret :
     # cd /<repository>
     # travis encrypt pypi_password=*****
-    # and put it under :
-    # env:
-    #   global:
-    #     -secure: *******
+    # copy and paste the encrypted password in the project_conf.py
     - if [[ ${deploy_on_pypi} == "True" ]] && [[ -n ${TRAVIS_TAG} ]]; then
           ${lib_bash_banner} "Deploy on PyPi";
           export travis_deploy="True";
@@ -374,10 +242,10 @@ after_success:
           ${CMDPREFIX} twine upload --repository-url https://upload.pypi.org/legacy/ -u bitranox -p ${pypi_password} dist/*;
       fi
 
-
 notifications:
   email:
     recipients:
         - rnowotny@rotek.at
     on_success: never # default: change
     on_failure: always # default: always
+

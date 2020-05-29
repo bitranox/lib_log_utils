@@ -1,11 +1,15 @@
-lib_log_utils
-=============
+{repository}
+{double_underline_repository}
 
-.. include:: ./badges_without_jupyter.rst
+.. include:: ./badges_project.rst
 
-some convenience functions for logging
+.. include:: ./description.rst
 
-supports python 3.7 and possibly other dialects.
+
+
+
+automated tests, Travis Matrix, Documentation, Badges for this Project are managed with `lib_travis_template <https://github
+.com/bitranox/lib_travis_template>`_ - check it out
 
 
 .. include:: ./tested_under.rst
@@ -13,7 +17,8 @@ supports python 3.7 and possibly other dialects.
 ----
 
 - `Installation and Upgrade`_
-- `Basic Usage`_
+- `Usage`_
+- `Usage from Commandline`_
 - `Requirements`_
 - `Acknowledgements`_
 - `Contribute`_
@@ -29,10 +34,13 @@ Installation and Upgrade
 ------------------------
 .. include:: ./installation.rst
 
-
-Basic Usage
+Usage
 -----------
-.. include:: ./basic_usage.rst
+.. include:: ./usage.rst
+
+Usage from Commandline
+------------------------
+.. include:: ./commandline_help.txt
 
 Requirements
 ------------
