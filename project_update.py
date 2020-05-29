@@ -10,9 +10,9 @@ import project_conf
 def format_commandline_help_file() -> None:
     source_file = pathlib.Path(__file__).parent / '.docs/commandline_help.txt'
     if source_file.is_file():
-        with open(str(source_file), 'r') as f_sourcefile:
+        with open(source_file, 'r') as f_sourcefile:
             commandline_help_txt_lines = f_sourcefile.readlines()
-        with open(str(source_file), 'w') as f_targetfile:
+        with open(source_file, 'w') as f_targetfile:
             target_lines = list()
             target_lines.append('.. code-block:: bash\n\n')
             target_lines.append('')
@@ -51,7 +51,7 @@ def create_init_config_file() -> None:
     shutil.copy(str(path_sourcefile), str(path_targetfile))
 
     # replace the markers
-    with open(str(path_targetfile), 'r') as f_targetfile:
+    with open(path_targetfile, 'r') as f_targetfile:
         text = f_targetfile.read()
     text = text.replace('{version}', project_conf.version)
     text = text.replace('{title}', project_conf.init_config_title)
@@ -60,7 +60,7 @@ def create_init_config_file() -> None:
     text = text.replace('{author}', project_conf.author)
     text = text.replace('{author_email}', project_conf.author_email)
     text = text.replace('{shell_command}', project_conf.shell_command)
-    with open(str(path_targetfile), 'w') as f_targetfile:
+    with open(path_targetfile, 'w') as f_targetfile:
         f_targetfile.write(text)
 
     # copy __init__.py if not there from template
@@ -225,7 +225,7 @@ def create_travis_file() -> None:
     text = text.replace('{travis_repo_slug}', project_conf.travis_repo_slug)
     text = text.replace('{github_master}', project_conf.github_master)
     target_file = path_base_dir / '.travis.yml'
-    with open(str(target_file), 'w') as f_target_file:
+    with open(target_file, 'w') as f_target_file:
         f_target_file.write(text)
 
     if not is_in_own_project_folder():
