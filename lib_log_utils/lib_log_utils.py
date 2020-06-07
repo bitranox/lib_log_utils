@@ -35,7 +35,6 @@ def set_options(docopt_args: Dict[str, Union[bool, str]]) -> None:
     >>> assert not BannerSettings.quiet
 
     >>> docopt_args['--wrap']=False
-    >>> docopt_args['--nowrap']=True
     >>> docopt_args['--log_console']=True
     >>> set_options(docopt_args)
     >>> assert not BannerSettings.wrap_text
