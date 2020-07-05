@@ -12,12 +12,14 @@ import sys
 try:
     from .__doc__ import __doc__
     from . import __init__conf__
-    from .log_banner import *       # type: ignore # pragma: no cover
+    from .log_banner import *
+    from .log_traceback import *
 except ImportError:
     # imports for doctest
     from __doc__ import __doc__     # type: ignore  # pragma: no cover
     import __init__conf__           # type: ignore  # pragma: no cover
     from log_banner import *        # type: ignore # pragma: no cover
+    from log_traceback import *     # type: ignore # pragma: no cover
 
 
 def set_options(docopt_args: Dict[str, Union[bool, str]]) -> None:
