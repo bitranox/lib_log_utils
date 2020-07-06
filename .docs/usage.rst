@@ -4,8 +4,8 @@
     in case of any questions the usage section might be expanded at a later time
 
 
-Usage from Commandline
-------------------------
+Commandline
+-----------
 
 .. code-block:: bash
 

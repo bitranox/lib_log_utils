@@ -16,7 +16,7 @@ import lib_parameter                # type: ignore
 try:
     from . import log_handlers
     from . import log_levels
-except ImportError:
+except ImportError:                 # pragma: no cover
     import log_handlers             # type: ignore # pragma: no cover
     import log_levels               # type: ignore # pragma: no cover
 
@@ -35,8 +35,8 @@ def get_number_of_terminal_colors() -> int:
             # colors = int(my_process.stdout)
             output = subprocess.check_output(['tput', 'colors'], stderr=subprocess.PIPE)
             colors = int(output)
-        except subprocess.CalledProcessError:
-            colors = 256
+        except subprocess.CalledProcessError:       # pragma: no cover
+            colors = 256                            # pragma: no cover
     else:
         colors = 256
     return colors
@@ -174,12 +174,22 @@ def banner_level(message: str,
     """
     >>> BannerSettings.called_via_commandline = True
     >>> # noinspection PyUnresolvedReferences
+    >>> banner_level('test')
     >>> banner_level('test', logging.SUCCESS, wrap_text=True)
     >>> banner_level('test', logging.ERROR, wrap_text=True)
     >>> banner_level('test', logging.ERROR, wrap_text=False)
     >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=True)
     >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=False)
-
+    >>> banner_spam('spam')
+    >>> banner_critical('critical')
+    >>> banner_debug('debug')
+    >>> banner_error('error')
+    >>> banner_info('info')
+    >>> banner_notice('notice')
+    >>> banner_spam('spam')
+    >>> banner_success('success')
+    >>> banner_verbose('verbose')
+    >>> banner_warning('warning')
     """
 
     level = int(lib_parameter.get_default_if_none(level, default=logging.INFO))
@@ -302,6 +312,26 @@ def log_level(message: str,
               quiet: Optional[bool] = None,
               ) -> None:
 
+    """
+    >>> log_level('test')
+    >>> log_level('test', logging.SUCCESS, wrap_text=True)
+    >>> log_level('test', logging.ERROR, wrap_text=True)
+    >>> log_level('test', logging.ERROR, wrap_text=False)
+    >>> log_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=True)
+    >>> log_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=False)
+    >>> log_spam('spam')
+    >>> log_critical('critical')
+    >>> log_debug('debug')
+    >>> log_error('error')
+    >>> log_info('info')
+    >>> log_notice('notice')
+    >>> log_spam('spam')
+    >>> log_success('success')
+    >>> log_verbose('verbose')
+    >>> log_warning('warning')
+
+    """
+
     level = int(lib_parameter.get_default_if_none(level, default=logging.INFO))
     banner_width = int(lib_parameter.get_default_if_none(banner_width, default=BannerSettings.banner_width))
     wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=BannerSettings.wrap_text))
@@ -332,6 +362,7 @@ def banner_color_test(quiet: bool = False) -> None:
     """ test banner colors
 
     >>> banner_color_test()
+    >>> banner_color_test(quiet=True)
 
     """
     if not quiet:
