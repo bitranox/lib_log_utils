@@ -1,280 +1,346 @@
 # STDLIB
-from docopt import docopt                   # type: ignore
-import errno
-from typing import Dict, Union
-# noinspection PyUnresolvedReferences
-import getpass
-# noinspection PyUnresolvedReferences
+from typing import Optional
+
 import logging
-import sys
+import logging.handlers
+import platform
+import subprocess
+import textwrap
+from typing import Any, Dict
+
+# OWN
+import lib_parameter                # type: ignore
 
 # PROJ
+# imports for local pytest
 try:
-    from .__doc__ import __doc__
-    from . import __init__conf__
-    from .log_banner import *
-    from .log_traceback import *
+    from . import log_handlers
+    from . import log_levels
 except ImportError:
-    # imports for doctest
-    from __doc__ import __doc__     # type: ignore  # pragma: no cover
-    import __init__conf__           # type: ignore  # pragma: no cover
-    from log_banner import *        # type: ignore # pragma: no cover
-    from log_traceback import *     # type: ignore # pragma: no cover
+    import log_handlers             # type: ignore # pragma: no cover
+    import log_levels               # type: ignore # pragma: no cover
 
 
-def set_options(docopt_args: Dict[str, Union[bool, str]]) -> None:
+def get_number_of_terminal_colors() -> int:
     """
-    >>> docopt_args = dict()
-    >>> docopt_args['--banner_width']='10'
-    >>> docopt_args['--wrap']=True
-    >>> docopt_args['--nowrap']=False
-    >>> docopt_args['--log_console']=False
-
-    >>> set_options(docopt_args)
-    >>> assert BannerSettings.banner_width == 10
-    >>> assert not BannerSettings.quiet
-    >>> assert BannerSettings.wrap_text
-    >>> assert not BannerSettings.quiet
-
-    >>> docopt_args['--wrap']=False
-    >>> docopt_args['--log_console']=True
-    >>> set_options(docopt_args)
-    >>> assert not BannerSettings.wrap_text
-    >>> assert not BannerSettings.quiet
-
-    >>> docopt_args['--log_console']='False'''
-    >>> set_options(docopt_args)
-    >>> assert BannerSettings.quiet
-
-    >>> docopt_args['--banner_width']='not_int_convertible'
-    >>> set_options(docopt_args)    # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-        ...
-    ValueError: Parameter "--width" needs to be convertible to integer
+    >>> if platform.system().lower() == 'windows':
+    ...     assert get_number_of_terminal_colors() == 256
+    ... else:
+    ...    assert get_number_of_terminal_colors() == 8 or get_number_of_terminal_colors() == 256
 
     """
-
-    if docopt_args['--banner_width']:
+    if platform.system().lower() != 'windows':
         try:
-            banner_width = int(docopt_args['--banner_width'])
-        except (ValueError, TypeError):
-            error_msg = 'Parameter "--width" needs to be convertible to integer'
-            log_critical(error_msg)
-            raise ValueError(error_msg)
-        BannerSettings.banner_width = banner_width
-
-    if docopt_args['--wrap']:
-        BannerSettings.wrap_text = True
-    elif docopt_args['--nowrap']:
-        BannerSettings.wrap_text = False
-
-    if docopt_args['--log_console']:
-        if str(docopt_args['--log_console']).lower() == 'false':
-            BannerSettings.quiet = True
+            # my_process = subprocess.run(['tput', 'colors'], check=True, capture_output=True)
+            # colors = int(my_process.stdout)
+            output = subprocess.check_output(['tput', 'colors'], stderr=subprocess.PIPE)
+            colors = int(output)
+        except subprocess.CalledProcessError:
+            colors = 256
+    else:
+        colors = 256
+    return colors
 
 
-# we might import this module and call main from another program and pass docopt args manually
-def main(docopt_args: Dict[str, Union[bool, str]]) -> None:
+class BannerSettings(object):
+    called_via_commandline = False
+    # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
+    fmt = '%(message)s'
+    datefmt = '%Y-%m-%d %H:%M:%S'
+    banner_width = 140
+    wrap_text = True
+    quiet = False
+
+    field_styles = {'asctime': {'color': 'green'},
+                    'hostname': {'color': 'green'},                         # 'hostname': {'color': 'magenta'},
+                    'levelname': {'color': 'yellow'},                       # 'levelname': {'color': 'black', 'bold': True},
+                    'name': {'color': 'blue'},
+                    'programname': {'color': 'cyan'}}                       # type: Dict[str, Dict[str, Any]]
+
+    level_styles_256 = {'spam': {'color': 'magenta', 'bright': True},                     # level 5   - SPAM
+                        'debug': {'color': 'blue', 'bright': True},                       # level 10  - DEBUG
+                        'verbose': {'color': 'yellow', 'bright': True},                   # level 15  - VERBOSE
+                        'info': {},                                                       # level 20  - INFO
+                        'notice': {'background': 'magenta', 'bright': True},              # level 25  - NOTICE
+                        'warning': {'color': 'red', 'bright': True},                      # level 30  - WARNING
+                        'success': {'color': 'green', 'bright': True},                    # level 35  - SUCCESS
+                        'error': {'background': 'red', 'bright': True},                   # level 40  - ERROR
+                        'critical': {'background': 'red'}}                                # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+
+    level_styles_8 = {'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
+                      'debug': {'color': 'blue', 'bold': True},                           # level 10  - DEBUG
+                      'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
+                      'info': {},                                                         # level 20  - INFO
+                      'notice': {'background': 'magenta', 'bold': True},                  # level 25  - NOTICE
+                      'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
+                      'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
+                      'error': {'background': 'red'},                                     # level 40  - ERROR
+                      'critical': {'background': 'red', 'bold': True}}                    # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+
+    if get_number_of_terminal_colors() == 8:
+        level_styles = level_styles_8
+    else:
+        level_styles = level_styles_256
+
+
+def banner_spam(message: str,
+                banner_width: Optional[int] = None,
+                wrap_text: Optional[bool] = None,
+                logger: Optional[logging.Logger] = None,
+                quiet: Optional[bool] = None,
+                ) -> None:
+    banner_level(message=message, level=log_levels.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_debug(message: str,
+                 banner_width: Optional[int] = None,
+                 wrap_text: Optional[bool] = None,
+                 logger: Optional[logging.Logger] = None,
+                 quiet: Optional[bool] = None,
+                 ) -> None:
+    banner_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_verbose(message: str,
+                   banner_width: Optional[int] = None,
+                   wrap_text: Optional[bool] = None,
+                   logger: Optional[logging.Logger] = None,
+                   quiet: Optional[bool] = None,
+                   ) -> None:
+    banner_level(message=message, level=log_levels.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_info(message: str,
+                banner_width: Optional[int] = None,
+                wrap_text: Optional[bool] = None,
+                logger: Optional[logging.Logger] = None,
+                quiet: Optional[bool] = None,
+                ) -> None:
+    banner_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_notice(message: str,
+                  banner_width: Optional[int] = None,
+                  wrap_text: Optional[bool] = None,
+                  logger: Optional[logging.Logger] = None,
+                  quiet: Optional[bool] = None,
+                  ) -> None:
+    banner_level(message=message, level=log_levels.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_success(message: str,
+                   banner_width: Optional[int] = None,
+                   wrap_text: Optional[bool] = None,
+                   logger: Optional[logging.Logger] = None,
+                   quiet: Optional[bool] = None,
+                   ) -> None:
+    banner_level(message=message, level=log_levels.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_warning(message: str,
+                   banner_width: Optional[int] = None,
+                   wrap_text: Optional[bool] = None,
+                   logger: Optional[logging.Logger] = None,
+                   quiet: Optional[bool] = None,
+                   ) -> None:
+    banner_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_error(message: str,
+                 banner_width: Optional[int] = None,
+                 wrap_text: Optional[bool] = None,
+                 logger: Optional[logging.Logger] = None,
+                 quiet: Optional[bool] = None,
+                 ) -> None:
+    banner_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_critical(message: str,
+                    banner_width: Optional[int] = None,
+                    wrap_text: Optional[bool] = None,
+                    logger: Optional[logging.Logger] = None,
+                    quiet: Optional[bool] = None,
+                    ) -> None:
+    banner_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def banner_level(message: str,
+                 level: Optional[int] = None,
+                 banner_width: Optional[int] = None,
+                 wrap_text: Optional[bool] = None,
+                 logger: Optional[logging.Logger] = None,
+                 quiet: Optional[bool] = None,
+                 ) -> None:
     """
-    >>> docopt_args = dict()
-
-    >>> docopt_args['<message>']='test'
-    >>> docopt_args['--banner_width']=False
-    >>> docopt_args['--wrap']=False
-    >>> docopt_args['--nowrap']=False
-    >>> docopt_args['--log_console']=False
-
-    >>> docopt_args['spam']=False
-    >>> docopt_args['debug']=False
-    >>> docopt_args['verbose']=False
-    >>> docopt_args['info']=False
-    >>> docopt_args['notice']=False
-    >>> docopt_args['success']=False
-    >>> docopt_args['warning']=False
-    >>> docopt_args['error']=False
-    >>> docopt_args['critical']=False
-    >>> docopt_args['banner_spam']=False
-    >>> docopt_args['banner_debug']=False
-    >>> docopt_args['banner_verbose']=False
-    >>> docopt_args['banner_info']=False
-    >>> docopt_args['banner_notice']=False
-    >>> docopt_args['banner_success']=False
-    >>> docopt_args['banner_warning']=False
-    >>> docopt_args['banner_error']=False
-    >>> docopt_args['banner_critical']=False
-    >>> docopt_args['color_test']=False
-
-    >>> docopt_args['--version'] = True
-    >>> docopt_args['--info'] = False
-    >>> main(docopt_args)   # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    version: ...
-
-    >>> docopt_args['--version'] = False
-    >>> docopt_args['--info'] = True
-    >>> main(docopt_args)   # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    information for ...
-
-    >>> docopt_args['--version'] = False
-    >>> docopt_args['--info'] = False
-    >>> main(docopt_args)
-
-    >>> docopt_args['color_test']=True
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_critical']=True
-    >>> docopt_args['<message>']='banner_critical'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_error']=False
-    >>> docopt_args['<message>']='banner_error'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_warning']=False
-    >>> docopt_args['<message>']='banner_warning'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_success']=False
-    >>> docopt_args['<message>']='banner_success'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_notice']=False
-    >>> docopt_args['<message>']='banner_notice'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_info']=False
-    >>> docopt_args['<message>']='banner_info'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_verbose']=False
-    >>> docopt_args['<message>']='banner_verbose'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_debug']=False
-    >>> docopt_args['<message>']='banner_debug'
-    >>> main(docopt_args)
-
-    >>> docopt_args['banner_spam']=False
-    >>> docopt_args['<message>']='banner_spam'
-    >>> main(docopt_args)
-
-    >>> docopt_args['critical']=False
-    >>> docopt_args['<message>']='critical'
-    >>> main(docopt_args)
-
-    >>> docopt_args['error']=False
-    >>> docopt_args['<message>']='error'
-    >>> main(docopt_args)
-
-    >>> docopt_args['warning']=False
-    >>> docopt_args['<message>']='warning'
-    >>> main(docopt_args)
-
-    >>> docopt_args['success']=False
-    >>> docopt_args['<message>']='success'
-    >>> main(docopt_args)
-
-    >>> docopt_args['notice']=False
-    >>> docopt_args['<message>']='notice'
-    >>> main(docopt_args)
-
-    >>> docopt_args['info']=False
-    >>> docopt_args['<message>']='info'
-    >>> main(docopt_args)
-
-    >>> docopt_args['verbose']=False
-    >>> docopt_args['<message>']='verbose'
-    >>> main(docopt_args)
-
-    >>> docopt_args['debug']=False
-    >>> docopt_args['<message>']='debug'
-    >>> main(docopt_args)
-
-    >>> docopt_args['spam']=False
-    >>> docopt_args['<message>']='spam'
-    >>> main(docopt_args)
-
-
-    """
-
-    if docopt_args['--version']:
-        __init__conf__.print_version()
-
-    if docopt_args['--info']:
-        __init__conf__.print_info()
-
-    set_options(docopt_args)
-
-    message = str(docopt_args['<message>'])
-
-    if docopt_args['spam']:
-        log_spam(message)
-    elif docopt_args['debug']:
-        log_debug(message)
-    elif docopt_args['verbose']:
-        log_verbose(message)
-    elif docopt_args['info']:
-        log_info(message)
-    elif docopt_args['notice']:
-        log_notice(message)
-    elif docopt_args['success']:
-        log_success(message)
-    elif docopt_args['warning']:
-        log_warning(message)
-    elif docopt_args['error']:
-        log_error(message)
-    elif docopt_args['critical']:
-        log_critical(message)
-
-    elif docopt_args['banner_spam']:
-        banner_spam(message)
-    elif docopt_args['banner_debug']:
-        banner_debug(message)
-    elif docopt_args['banner_verbose']:
-        banner_verbose(message)
-    elif docopt_args['banner_info']:
-        banner_info(message)
-    elif docopt_args['banner_notice']:
-        banner_notice(message)
-    elif docopt_args['banner_success']:
-        banner_success(message)
-    elif docopt_args['banner_warning']:
-        banner_warning(message)
-    elif docopt_args['banner_error']:
-        banner_error(message)
-    elif docopt_args['banner_critical']:
-        banner_critical(message)
-    elif docopt_args['color_test']:
-        banner_color_test()
-
-
-# entry point via commandline
-def main_commandline() -> None:
-    """
-    >>> main_commandline()  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-        ...
-    docopt.DocoptExit: ...
+    >>> BannerSettings.called_via_commandline = True
+    >>> # noinspection PyUnresolvedReferences
+    >>> banner_level('test', logging.SUCCESS, wrap_text=True)
+    >>> banner_level('test', logging.ERROR, wrap_text=True)
+    >>> banner_level('test', logging.ERROR, wrap_text=False)
+    >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=True)
+    >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=False)
 
     """
-    BannerSettings.called_via_commandline = True
-    docopt_args = docopt(__doc__)
-    main(docopt_args)               # pragma: no cover
+
+    level = int(lib_parameter.get_default_if_none(level, default=logging.INFO))
+    banner_width = int(lib_parameter.get_default_if_none(banner_width, default=BannerSettings.banner_width))
+    wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=BannerSettings.wrap_text))
+    quiet = bool(lib_parameter.get_default_if_none(quiet, default=BannerSettings.quiet))
+
+    if logger is None:
+        logger = logging.getLogger()
+
+    if not quiet:
+        message = str(message)
+        if BannerSettings.called_via_commandline:
+            log_handlers.add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt,
+                                                  field_styles=BannerSettings.field_styles, level_styles=BannerSettings.level_styles)
+        sep_line = '*' * banner_width
+        l_message = message.split('\n')
+        logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
+        for line in l_message:
+            if wrap_text:
+                l_wrapped_lines = textwrap.wrap(line, width=banner_width - 2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
+                for wrapped_line in l_wrapped_lines:
+                    msg_line = wrapped_line + (banner_width - len(wrapped_line) - 1) * ' ' + '*'
+                    logger.log(level=level, msg=msg_line)
+            else:
+                line = "* " + line.rstrip()
+                if len(line) < banner_width - 1:
+                    line = line + (banner_width - len(line) - 1) * ' ' + '*'
+                logger.log(level=level, msg=line)
+        logger.log(level=level, msg=sep_line)
 
 
-# entry point if main
-if __name__ == '__main__':
-    try:
-        main_commandline()
-    except FileNotFoundError:
-        # see https://www.thegeekstuff.com/2010/10/linux-error-codes for error codes
-        # No such file or directory
-        sys.exit(errno.ENOENT)      # pragma: no cover
-    except FileExistsError:
-        # File exists
-        sys.exit(errno.EEXIST)      # pragma: no cover
-    except TypeError:
-        # Invalid Argument
-        sys.exit(errno.EINVAL)      # pragma: no cover
-        # Invalid Argument
-    except ValueError:
-        sys.exit(errno.EINVAL)      # pragma: no cover
+def log_spam(message: str,
+             banner_width: Optional[int] = None,
+             wrap_text: Optional[bool] = None,
+             logger: Optional[logging.Logger] = None,
+             quiet: Optional[bool] = None,
+             ) -> None:
+
+    log_level(message=message, level=log_levels.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_debug(message: str,
+              banner_width: Optional[int] = None,
+              wrap_text: Optional[bool] = None,
+              logger: Optional[logging.Logger] = None,
+              quiet: Optional[bool] = None,
+              ) -> None:
+    log_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_verbose(message: str,
+                banner_width: Optional[int] = None,
+                wrap_text: Optional[bool] = None,
+                logger: Optional[logging.Logger] = None,
+                quiet: Optional[bool] = None,
+                ) -> None:
+    log_level(message=message, level=log_levels.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_info(message: str,
+             banner_width: Optional[int] = None,
+             wrap_text: Optional[bool] = None,
+             logger: Optional[logging.Logger] = None,
+             quiet: Optional[bool] = None,
+             ) -> None:
+    log_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_notice(message: str,
+               banner_width: Optional[int] = None,
+               wrap_text: Optional[bool] = None,
+               logger: Optional[logging.Logger] = None,
+               quiet: Optional[bool] = None,
+               ) -> None:
+    log_level(message=message, level=log_levels.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_success(message: str,
+                banner_width: Optional[int] = None,
+                wrap_text: Optional[bool] = None,
+                logger: Optional[logging.Logger] = None,
+                quiet: Optional[bool] = None,
+                ) -> None:
+    log_level(message=message, level=log_levels.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_warning(message: str,
+                banner_width: Optional[int] = None,
+                wrap_text: Optional[bool] = None,
+                logger: Optional[logging.Logger] = None,
+                quiet: Optional[bool] = None,
+                ) -> None:
+    log_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_error(message: str,
+              banner_width: Optional[int] = None,
+              wrap_text: Optional[bool] = None,
+              logger: Optional[logging.Logger] = None,
+              quiet: Optional[bool] = None,
+              ) -> None:
+    log_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_critical(message: str,
+                 banner_width: Optional[int] = None,
+                 wrap_text: Optional[bool] = None,
+                 logger: Optional[logging.Logger] = None,
+                 quiet: Optional[bool] = None,
+                 ) -> None:
+    log_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+
+
+def log_level(message: str,
+              level: Optional[int] = None,
+              banner_width: Optional[int] = None,
+              wrap_text: Optional[bool] = None,
+              logger: Optional[logging.Logger] = None,
+              quiet: Optional[bool] = None,
+              ) -> None:
+
+    level = int(lib_parameter.get_default_if_none(level, default=logging.INFO))
+    banner_width = int(lib_parameter.get_default_if_none(banner_width, default=BannerSettings.banner_width))
+    wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=BannerSettings.wrap_text))
+    quiet = bool(lib_parameter.get_default_if_none(quiet, default=BannerSettings.quiet))
+
+    if logger is None:
+        logger = logging.getLogger()
+
+    if not quiet:
+        message = str(message)
+
+        if BannerSettings.called_via_commandline:
+            log_handlers.add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt,
+                                                  field_styles=BannerSettings.field_styles, level_styles=BannerSettings.level_styles)
+
+        l_message = message.split('\n')
+        for line in l_message:
+            if wrap_text:
+                l_wrapped_lines = textwrap.wrap(line, width=banner_width, tabsize=4, replace_whitespace=False)
+                for msg_line in l_wrapped_lines:
+                    logger.log(level=level, msg=msg_line)
+            else:
+                msg_line = line.rstrip()
+                logger.log(level=level, msg=msg_line)
+
+
+def banner_color_test(quiet: bool = False) -> None:
+    """ test banner colors
+
+    >>> banner_color_test()
+
+    """
+    if not quiet:
+        banner_spam('test level spam')
+        banner_debug('test level debug')
+        banner_verbose('test level verbose')
+        banner_info('test level info')
+        banner_notice('test level notice')
+        banner_success('test level success')
+        banner_warning('test level warning')
+        banner_error('test level error')
+        banner_critical('test level critical')

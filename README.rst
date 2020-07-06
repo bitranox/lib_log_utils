@@ -1,40 +1,58 @@
 lib_log_utils
 =============
 
-|Pypi Status| |license| |maintenance|
+|travis_build| |license| |pypi|
 
-|Build Status| |Codecov Status| |Better Code| |code climate| |code climate coverage| |snyk security|
+|codecov| |better_code| |cc_maintain| |cc_issues| |cc_coverage| |snyk|
+
+
+.. |travis_build| image:: https://img.shields.io/travis/bitranox/lib_log_utils/master.svg
+   :target: https://travis-ci.org/bitranox/lib_log_utils
 
 .. |license| image:: https://img.shields.io/github/license/webcomics/pywine.svg
    :target: http://en.wikipedia.org/wiki/MIT_License
-.. |maintenance| image:: https://img.shields.io/maintenance/yes/2021.svg
-.. |Build Status| image:: https://travis-ci.org/bitranox/lib_log_utils.svg?branch=master
-   :target: https://travis-ci.org/bitranox/lib_log_utils
+
+.. |jupyter| image:: https://mybinder.org/badge.svg
+   :target: https://mybinder.org/v2/gh/bitranox/lib_log_utils/master?filepath=jupyter_test_lib_log_utils.ipynb
+
 .. for the pypi status link note the dashes, not the underscore !
-.. |Pypi Status| image:: https://badge.fury.io/py/lib-log-utils.svg
+.. |pypi| image:: https://img.shields.io/pypi/status/lib-log-utils?label=PyPI%20Package
    :target: https://badge.fury.io/py/lib_log_utils
-.. |Codecov Status| image:: https://codecov.io/gh/bitranox/lib_log_utils/branch/master/graph/badge.svg
+
+
+.. |codecov| image:: https://img.shields.io/codecov/c/github/bitranox/lib_log_utils
    :target: https://codecov.io/gh/bitranox/lib_log_utils
-.. |Better Code| image:: https://bettercodehub.com/edge/badge/bitranox/lib_log_utils?branch=master
+
+.. |better_code| image:: https://bettercodehub.com/edge/badge/bitranox/lib_log_utils?branch=master
    :target: https://bettercodehub.com/results/bitranox/lib_log_utils
-.. |snyk security| image:: https://snyk.io/test/github/bitranox/lib_log_utils/badge.svg
-   :target: https://snyk.io/test/github/bitranox/lib_log_utils
-.. |code climate| image:: https://api.codeclimate.com/v1/badges/fa8ed1c6aec724d3b4f7/maintainability
+
+.. |cc_maintain| image:: https://img.shields.io/codeclimate/maintainability-percentage/bitranox/lib_log_utils?label=CC%20maintainability
    :target: https://codeclimate.com/github/bitranox/lib_log_utils/maintainability
    :alt: Maintainability
-.. |code climate coverage| image:: https://api.codeclimate.com/v1/badges/fa8ed1c6aec724d3b4f7/test_coverage
+
+.. |cc_issues| image:: https://img.shields.io/codeclimate/issues/bitranox/lib_log_utils?label=CC%20issues
+   :target: https://codeclimate.com/github/bitranox/lib_log_utils/maintainability
+   :alt: Maintainability
+
+.. |cc_coverage| image:: https://img.shields.io/codeclimate/coverage/bitranox/lib_log_utils?label=CC%20coverage
    :target: https://codeclimate.com/github/bitranox/lib_log_utils/test_coverage
    :alt: Code Coverage
 
+.. |snyk| image:: https://img.shields.io/snyk/vulnerabilities/github/bitranox/lib_log_utils
+   :target: https://snyk.io/test/github/bitranox/lib_log_utils
+
 this library makes it easy to log colored messages from python and from the commandline. Text Wrapping is supported.
 
-automated tests, Travis Matrix, Documentation, Badges for this Project are managed with `lib_travis_template <https://github
-.com/bitranox/lib_travis_template>`_ - check it out
+----
 
-supports python 3.6-3.8, pypy3 and possibly other dialects.
+automated tests, Travis Matrix, Documentation, Badges, etc. are managed with `PizzaCutter <https://github
+.com/bitranox/PizzaCutter>`_ (cookiecutter on steroids)
 
-`100% code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, mypy static type checking, tested under `Linux, macOS, Windows and Wine <https://travis-ci
-.org/bitranox/lib_log_utils>`_, automatic daily builds  and monitoring
+Python version required: 3.6.0 or newer
+
+tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
+
+`100% code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, codestyle checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/lib_log_utils>`_, automatic daily builds and monitoring
 
 ----
 
@@ -52,63 +70,62 @@ supports python 3.6-3.8, pypy3 and possibly other dialects.
 
 ----
 
+
+
 Installation and Upgrade
 ------------------------
 
-Before You start, its highly recommended to update pip and setup tools:
+- Before You start, its highly recommended to update pip and setup tools:
 
 
 .. code-block:: bash
 
-    python3 -m pip --upgrade pip
-    python3 -m pip --upgrade setuptools
-    python3 -m pip --upgrade wheel
+    python -m pip --upgrade pip
+    python -m pip --upgrade setuptools
+    python -m pip --upgrade wheel
 
-
-install latest version with pip (recommended):
+- to install the latest release from PyPi via pip (recommended):
 
 .. code-block:: bash
 
-    # upgrade all dependencies regardless of version number (PREFERRED)
-    python3 -m pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git --upgrade-strategy eager
+    # install latest release from PyPi
+    python -m pip install --upgrade lib_log_utils
 
-    # test without installing (can be skipped)
-    python3 -m pip install git+https://github.com/bitranox/lib_log_utils.git --install-option test
+    # test latest release from PyPi without installing (can be skipped)
+    python -m pip install lib_log_utils --install-option test
+
+- to install the latest development version from github via pip:
+
+
+.. code-block:: bash
 
     # normal install
-    python3 -m pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git
+    python -m pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git
+
+    # to test without installing (can be skipped)
+    python -m pip install git+https://github.com/bitranox/lib_log_utils.git --install-option test
+
+    # to install and upgrade all dependencies regardless of version number
+    python -m pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git --upgrade-strategy eager
 
 
-install latest pypi Release (if there is any):
-
-.. code-block:: bash
-
-    # latest Release from pypi
-    python3 -m pip install --upgrade lib_log_utils
-
-    # test without installing (can be skipped)
-    python3 -m pip install lib_log_utils --install-option test
-
-    # normal install
-    python3 -m pip install --upgrade lib_log_utils
-
-
-
-include it into Your requirements.txt:
+- include it into Your requirements.txt:
 
 .. code-block:: bash
 
     # Insert following line in Your requirements.txt:
-    # for the latest Release on pypi (if any):
+    # for the latest Release on pypi:
     lib_log_utils
-    # for the latest Development Version :
+
+    # for the latest development version :
     lib_log_utils @ git+https://github.com/bitranox/lib_log_utils.git
 
     # to install and upgrade all modules mentioned in requirements.txt:
-    python3 -m pip install --upgrade -r /<path>/requirements.txt
+    python -m pip install --upgrade -r /<path>/requirements.txt
 
 
-Install from source code:
+
+- to install the latest development version from source code:
 
 .. code-block:: bash
 
@@ -116,17 +133,15 @@ Install from source code:
     $ git clone https://github.com/bitranox/lib_log_utils.git
     $ cd lib_log_utils
 
-    # test without installing (can be skipped)
-    python3 setup.py test
+    # to test without installing (can be skipped)
+    python setup.py test
 
     # normal install
-    python3 setup.py install
+    python setup.py install
 
-
-via makefile:
-
-if You are on linux, makefiles are a very convenient way to install. Here we can do much more, like installing virtual environment, clean caches and so on.
-This is still in development and not recommended / working at the moment:
+- via makefile:
+  makefiles are a very convenient way to install. Here we can do much more,
+  like installing virtual environments, clean caches and so on.
 
 .. code-block:: shell
 
@@ -153,6 +168,7 @@ Usage
 
     import the module and check the code - its easy and documented there, including doctest examples.
     in case of any questions the usage section might be expanded at a later time
+
 
 Usage from Commandline
 ------------------------
@@ -186,9 +202,14 @@ Usage from Commandline
        -v, --version       show version
        -i, --info          show Info
 
-   if parameter --log_console is anything else then "False" (not case sensitive), then it is considered as True.
-   if parameter --log_console is not present, it is also considered as True
-   This makes it possible to silence messages elegantly in a shellscript:
+
+if parameter *--log_console* is anything else then *False* (not case sensitive), then it is considered as True.
+
+if parameter *--log_console* is not present, it is also considered as True
+
+This makes it possible to silence messages elegantly in a shellscript:
+
+.. code-block:: bash
 
        #!/bin/bash
        debug_messages="False"
@@ -199,8 +220,40 @@ Usage from Commandline
        log_util info "some info message" --log_console=${info_messages}
        ...
 
+Usage from Commandline
+------------------------
 
-   this module exposes no other useful functions to the commandline
+.. code-block:: bash
+
+   Usage: log_util [OPTIONS] COMMAND [ARGS]...
+
+     colored log messages and banners from commandline and python
+
+   Options:
+     --version   Show the version and exit.
+     -h, --help  Show this message and exit.
+
+   Commands:
+     banner_critical  logs a critical message banner
+     banner_debug     logs a debug message banner
+     banner_error     logs a error message banner
+     banner_info      logs a info message banner
+     banner_notice    logs a notice message banner
+     banner_spam      logs a spam message banner
+     banner_success   logs a success message banner
+     banner_verbose   logs a verbose message banner
+     banner_warning   logs a warning message banner
+     color_test       prints a color test
+     critical         logs a critical message
+     debug            logs a debug message
+     error            logs a error message
+     info             logs a info message
+     notice           logs a notice message
+     program_info     get program informations
+     spam             logs a spam message
+     success          logs a success message
+     verbose          logs a verbose message
+     warning          logs a warning message
 
 Requirements
 ------------
@@ -209,9 +262,8 @@ following modules will be automatically installed :
 .. code-block:: bash
 
     ## Project Requirements
+    click
     coloredlogs
-    docopt
-    lib_doctest_pycharm @ git+https://github.com/bitranox/lib_doctest_pycharm.git
     lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
     lib_platform @ git+https://github.com/bitranox/lib_platform.git
     lib_programname @ git+https://github.com/bitranox/lib_programname.git

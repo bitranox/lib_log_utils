@@ -1,13 +1,18 @@
 import logging
 
+SPAM: int = 5
+VERBOSE: int = 15
+NOTICE: int = 25
+SUCCESS: int = 35
+
 # noinspection PyTypeHints
-logging.SPAM = 5                                        # type: ignore
+logging.SPAM = SPAM                                     # type: ignore
 # noinspection PyTypeHints
-logging.VERBOSE = 15                                    # type: ignore
+logging.VERBOSE = VERBOSE                               # type: ignore
 # noinspection PyTypeHints
-logging.NOTICE = 25                                     # type: ignore
+logging.NOTICE = NOTICE                                 # type: ignore
 # noinspection PyTypeHints
-logging.SUCCESS = 35                                    # type: ignore
+logging.SUCCESS = SUCCESS                               # type: ignore
 
 logging._levelToName[logging.SPAM] = 'SPAM'             # type: ignore
 logging._levelToName[logging.VERBOSE] = 'VERBOSE'       # type: ignore

@@ -5,17 +5,13 @@ sudo: true
 
 env:
     global:
-        - python_command="python"
-        - pip_command="python -m pip"
+        - cPREFIX=""				# prefix before commands - used for wine, there the prefix is "wine"
+        - cPYTHON="python"			# command to launch python interpreter (its different on macOs, there we need python3)
+        - cPIP="python -m pip"   	# command to launch pip (its different on macOs, there we need pip3)
         - WINEDEBUG=fixme-all       # switch off wine fix me messages
-        - CC_TEST_REPORTER_ID="cc62399f4be04b06102d2abf0d9093568122ae927cccd884c5cdc9b2e856c85f"
-        # pypi_password for lib_parameter
-        # This works for sure - the Travis deploy is somehow buggy.
-        # create the secret :
-        # cd /<repository>
-        # travis encrypt -r bitranox/lib_parameter pypi_password=*****
-        # copy and paste the encrypted password in the project_conf.py
-        - secure: "b/MeY1E7Ps+8bWyaUlMSXEcHpL16Q0sv16kRQ7W841GbBYruDq5YNt/u193gk67kHNPbkuVeKrtnpw8jfgT1ykiVI08vfqJKqGUBokhyFg0Tg0AwOgE49QQm6zFpZQ92QoFnEN2HDMgMts//XvF/fu6Phz6xTr4/rtyiLHXkVQ1UcAk+dmo9VG2AnCuPnDYr34gujJPj2N+3TAXZgbT+1IS9+yIIXelUphSMj4A1JuQlro7KAQuV2IuIaL88iiv8dsqJFcumQcBfYCSqZYhd8vRoRe3Io2G/q3nlrZp51Kr85eOfPHQI7QhPAiAweGRCZ31bc4rbZIj+orbcNncFB8kXThNzFq4v0/zaRkSIlnmwqkA4EU7mhm0z0m3FdAJ3hpi5Vcxpbj6juf5zzk6RZubmT6wdiW9F7vU9DT/j3cCk/C0vKw5bPt4uBikqYkwW1RKxZjUBPNJCfIwwuEuZciOS65lT2E9I8qxLUTWJAssNEjhnfHTkyXdiliQdFebRoyZrRG6YzrtWLTL+h5XNF6Vt8O9vCoOZPGPmYhz5EndjpEekN13tYxrrw0uLotxxdrDUfnc4GH0UwKMWVzjZBOf+4dm/+MoByOgmEwKR5MDnGrdkApj1CGM6LnCYiq1ad1m3Aa+AsqT914RFk1505v5WM+jgbl3KfmZYkGB2TB8="
+        - secure: "F6482Es6s3WaO9eSRhbhHRNAxeXFrEPAAFCkWAiYKC2GO/eXs440VeBV9nDjJuS7oK1Hw1RF2c0kHQ/zbSUdXMMKPBl8zMOKmsjQ7Grb8dZ5cVJVJ5uTlSr4R7J4hSI6bfCGkVv2xalY3BKC8tP4x2FgpRIQvazDHNnrC26rWo0OVbn6OxmlpBtHF+X06a8t/+9kIvAuef9ZnMoI588kXeL27BmOAZ6sp+QIYK/pxW7tlfgCqh6rXZ91XlmzdOieFOP0D3ZYx81R23zm6f86rW+b0SoAQdiYEJog1MAPL7pYytkW4NAGd1oFov/o1tWqCy+hpwSk9Sp5mhyZnVZdbhHkYCT6EeI0pMS+a6tX1RNt1S4xWY0c++UIdh1p2Bdl0nwZ5NTvRFvvRqtczQ9iti1N/sVnkumcqFQnOTVcIsgGoM4sHEiXwtqjqd53VEDY0zl9mLvGQt/HQl/nn4bT2aRbUJYZWZ8XONOAFgI6tDpUZttEyMuDboRcoCXPz4wgAff4mhdXuIfvbWaol12nitkN7DzqUZADXoA1gcTS5lLdfwdUQZSbEdizVBdF3hsX5BmCBZ6tcWX5jcW9F4TOszfD9nC6dvol0ue2RktS2nm/VQ85dWDupmuHV4CVjheZrkByeUEU/sxRSoVbnTtj7N+9/DmnZnBV6NSeNfIqnwY="  # CC_TEST_REPORTER_ID.secret
+        - secure: "JzwbmfimW5jmIDk5heBf5Vfs/pVnO5b2KqMcBBzhcP+teUYEwLNzM7wvcfSvqpjrfkTRbljUkMyzCasp7Tlss50rxOpqf0O3ksBXj3xD6XmFSDtKxqGSe1kPRSP59PABWQ6I7564svaHg0cXxyng3JTE81NF5HU4iY0fhVXoRq6jIaymIAqrt+lPmzvroRtqbNZLG3BtUO2pwZiPNLoPfJcrMVTuwI2xTYOxYgK4WQ6igyokPx4RrJbJb38f84erPFkCL04coCrh2QkkfVNL14YrqXNBKRMEg1hOhmklLqLeqAlHEGr/xTmT58ReDYO0aCUAurn25ZH7mIRJiKEeSjwCtV4eeJvsjxFNx7TVlX6DRaTY4t6DmcXOl3K6M0ME62wxFDPD3tsmyfbyan0JNOAYuoykdbZMPj/NCZwfuOI7+gDLfESzFQ/rLz7fzG4+TCtnfzvnzQXi3vWt5EVcUaTCW6lZBFzl9kHLBdxKuwREX2W/ukSkcLzfQbbHHVTFyTPFqEhEpDV2Bncob2JC7ugbeK8B4RgeIEWZO0vRZOtAuRxjTzBx3UY1TBoqtnZQohZvIwbKOAKPasib3i2xOrlug1SFsAOla0fnF0aqomZ2Uk2MTXzlvQ4mjIwn0t2px9EVTp1QkVHOBpR3LhT2JeiLWlalJg5hrggKWp6JdIw="  # pypi_password.secret
+
 
 addons:
     apt:
@@ -23,8 +19,8 @@ addons:
             - xvfb      # install xvfb virtual framebuffer - this we need for WINE
             - winbind   # needed for WINE
 
-services:   # start services
-  - xvfb    # is needed for WINE on headless installation
+services:   			# start services
+  - xvfb    			# is needed for WINE on headless installation
 
 
 matrix:
@@ -48,28 +44,47 @@ matrix:
 
     - os: linux
       language: python
-      python: '3.6'
+      python: "3.6"
+      before_install:
+          - export mypy_strict_typecheck="True"
+          - export build_docs="False"
+          - export deploy_on_pypi="False"
+
 
     - os: linux
       language: python
-      python: '3.7'
+      python: "3.7"
+      before_install:
+          - export mypy_strict_typecheck="True"
+          - export build_docs="False"
+          - export deploy_on_pypi="False"
+
 
     - os: linux
       language: python
-      python: '3.8'
+      python: "3.8"
       before_install:
           - export mypy_strict_typecheck="True"
           - export build_docs="True"
           - export deploy_on_pypi="True"
 
+
     - os: linux
       language: python
-      python: '3.8-dev'
+      python: "3.8-dev"
+      before_install:
+          - export mypy_strict_typecheck="True"
+          - export build_docs="False"
+          - export deploy_on_pypi="False"
 
 
     - os: linux
       language: python
-      python: 'pypy3'
+      python: "pypy3"
+      before_install:
+          - export mypy_strict_typecheck="True"
+          - export build_docs="False"
+          - export deploy_on_pypi="False"
 
 
     - os: osx
@@ -79,10 +94,9 @@ matrix:
       osx_image: xcode11.5
       env:
         # on osx pip and python points to python 2.7 - therefore we have to use pip3 and python3 here
-        - python_command="python3"
-        - pip_command="python3 -m pip"
-
-
+        - cPREFIX=""				# prefix before commands - used for wine, there the prefix is "wine"
+        - cPYTHON="python3"			# command to launch python interpreter (its different on macOs, there we need python3)
+        - cPIP="python3 -m pip"   	# command to launch pip (its different on macOs, there we need pip3)
 
 
 install:
@@ -95,55 +109,54 @@ install:
     - export lib_bash_banner="/usr/local/lib_bash/lib_helpers.sh banner"
     - export lib_bash_banner_warning="/usr/local/lib_bash/lib_helpers.sh banner_warning"
     - export lib_bash_wine="/usr/local/lib_bash_wine"
-    - ${lib_bash_banner} "upgrading pip"; ${CMDPREFIX} ${python_command} -m pip install --upgrade pip;
-    - ${lib_bash_banner} "upgrading setuptools"; ${CMDPREFIX} ${python_command} -m pip install --upgrade setuptools;
-    - ${lib_bash_banner} "upgrading wheel"; ${CMDPREFIX} ${python_command} -m pip install --upgrade wheel;
-    - ${lib_bash_banner} "upgrading pytest-pycodestyle"; ${CMDPREFIX} ${python_command} -m pip install --upgrade "pytest-pycodestyle; python_version >= \"3.5\"";
-    - ${lib_bash_banner} "installing lib_log_utils"; ${CMDPREFIX} ${python_command} -m pip install git+https://github.com/bitranox/lib_log_utils.git;
+    - ${lib_bash_banner} "upgrading pip"; ${cPREFIX} ${cPIP} install --upgrade pip
+    - ${lib_bash_banner} "upgrading setuptools"; ${cPREFIX} ${cPIP} install --upgrade setuptools
+    - ${lib_bash_banner} "upgrading wheel"; ${cPREFIX} ${cPIP} install --upgrade wheel
+    - ${lib_bash_banner} "upgrading pytest-pycodestyle"; ${cPREFIX} ${cPIP} install --upgrade "pytest-pycodestyle; python_version >= \"3.5\""
+    - ${lib_bash_banner} "installing lib_log_utils"; ${cPREFIX} ${cPIP} install git+https://github.com/bitranox/lib_log_utils.git
     - if [[ ${build_docs} == "True" ]]; then
-          ${lib_bash_banner} "installing rst_include"; ${CMDPREFIX} ${python_command} -m pip install git+https://github.com/bitranox/rst_include.git;
+          ${lib_bash_banner} "installing rst_include"; ${cPREFIX} ${cPIP} install git+https://github.com/bitranox/rst_include.git;
       fi
 
-    - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/001_000_install_wine.sh ; fi
-    - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/002_000_install_wine_machine.sh ; fi
+    - if [[ ${cPREFIX} == "wine" ]]; then ${lib_bash_wine}/001_000_install_wine.sh ; fi
+    - if [[ ${cPREFIX} == "wine" ]]; then ${lib_bash_wine}/002_000_install_wine_machine.sh ; fi
     - if [[ ${wine_python_version} == "python3" ]]; then ${lib_bash_wine}/003_000_install_wine_python3_preinstalled.sh ; fi
-    - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/004_000_install_wine_git_portable.sh ; fi
-    - if [[ ${CMDPREFIX} == "wine" ]]; then ${lib_bash_wine}/005_000_install_wine_powershell_core.sh ; fi
+    - if [[ ${cPREFIX} == "wine" ]]; then ${lib_bash_wine}/004_000_install_wine_git_portable.sh ; fi
+    - if [[ ${cPREFIX} == "wine" ]]; then ${lib_bash_wine}/005_000_install_wine_powershell_core.sh ; fi
 
 script:
 
     # setup.py test
-    - COMMAND="${CMDPREFIX} ${python_command} ./setup.py test"
-    - ${lib_bash_banner} "running '${COMMAND}'";
+    - COMMAND="${cPREFIX} ${cPYTHON} ./setup.py test"
+    - ${lib_bash_banner} "running '${COMMAND}'"
     - if ${COMMAND}; then ${lib_bash_banner} "'${COMMAND}' - OK"; else ${lib_bash_banner_warning} "'${COMMAND}' - FAILED" && exit 1; fi
 
     # pip install git+https://github.com/bitranox/lib_log_utils.git --install-option test
-    - COMMAND="${CMDPREFIX} ${python_command} -m pip install git+https://github.com/bitranox/lib_log_utils.git --install-option test"
-    - ${lib_bash_banner} "running '${COMMAND}'";
+    - COMMAND="${cPREFIX} ${cPIP} install git+https://github.com/bitranox/lib_log_utils.git --install-option test"
+    - ${lib_bash_banner} "running '${COMMAND}'"
     - if ${COMMAND}; then ${lib_bash_banner} "'${COMMAND}' - OK"; else ${lib_bash_banner_warning} "'${COMMAND}' - FAILED" && exit 1; fi
 
     # pip install git+https://github.com/bitranox/lib_log_utils.git
-    - COMMAND="${CMDPREFIX} ${python_command} -m pip install git+https://github.com/bitranox/lib_log_utils.git"
-    - ${lib_bash_banner} "running '${COMMAND}'";
+    - COMMAND="${cPREFIX} ${cPIP} install git+https://github.com/bitranox/lib_log_utils.git"
+    - ${lib_bash_banner} "running '${COMMAND}'"
     - if ${COMMAND}; then ${lib_bash_banner} "'${COMMAND}' - OK"; else ${lib_bash_banner_warning} "'${COMMAND}' - FAILED" && exit 1; fi
 
     # commandline registration check
-    - CMDLINE_COMMAND=$(${CMDPREFIX} ${python_command} ./project_update.py --get_registered_shell_command)
-    - COMMAND="${CMDPREFIX} ${CMDLINE_COMMAND} -v"
-    - ${lib_bash_banner} "running '${COMMAND}' (check commandline registration)";
+    - COMMAND="${cPREFIX} log_util --version"
+    - ${lib_bash_banner} "running '${COMMAND}' (check commandline registration)"
     - if ${COMMAND}; then ${lib_bash_banner} "'${COMMAND}' - OK"; else ${lib_bash_banner_warning} "'${COMMAND}' - FAILED" && exit 1; fi
 
     # pytest codecov only
-    - COMMAND="${CMDPREFIX} ${python_command} -m pytest --cov=lib_log_utils"
-    - ${lib_bash_banner} "running '${COMMAND}' - (coverage only)";
-    - ${CMDPREFIX} ${python_command} -m pip install --upgrade -r ./requirements_test.txt > /dev/null 2>&1;
-    - ${CMDPREFIX} ${python_command} -m pip install --upgrade codecov > /dev/null 2>&1;
-    - ${CMDPREFIX} ${python_command} -m pip install --upgrade pytest-cov > /dev/null 2>&1;
+    - COMMAND="${cPREFIX} ${cPYTHON} -m pytest --cov=lib_log_utils"
+    - ${lib_bash_banner} "running '${COMMAND}' - (coverage only)"
+    - ${cPREFIX} ${cPIP} install --upgrade -r ./requirements_test.txt > /dev/null 2>&1
+    - ${cPREFIX} ${cPIP} install --upgrade codecov > /dev/null 2>&1
+    - ${cPREFIX} ${cPIP} install --upgrade pytest-cov > /dev/null 2>&1
     - if ${COMMAND}; then ${lib_bash_banner} "'${COMMAND}' - OK"; else ${lib_bash_banner_warning} "'${COMMAND}' - FAILED" && exit 1; fi
 
     # mypy typecheck strict
     - if [[ ${mypy_strict_typecheck} == "True" ]]; then
-          COMMAND="${CMDPREFIX} ${python_command} -m mypy -p lib_log_utils --strict --no-warn-unused-ignores"
+          COMMAND="${cPREFIX} ${cPYTHON} -m mypy -p lib_log_utils --strict --warn-unused-ignores --implicit-reexport --follow-imports=silent"
           ${lib_bash_banner} "running '${COMMAND}'";
           if ${COMMAND}; then ${lib_bash_banner} "'${COMMAND}' - OK"; else ${lib_bash_banner_warning} "'${COMMAND}' - FAILED" && exit 1; fi
       else
@@ -151,8 +164,8 @@ script:
       fi
 
     # Bild Docs
-    - if [[ -f build_docs.py ]] && [[ "${build_docs}" == "True" ]]; then
-          COMMAND="${CMDPREFIX} ${python_command} build_docs.py bitranox/lib_log_utils"
+    - if [[ "${build_docs}" == "True" ]]; then
+          COMMAND="${cPREFIX}" rst_include include "./.docs/README_template.rst" "./README.rst";
           ${lib_bash_banner} "running '${COMMAND}' - rebuild README.rst";
           if ${COMMAND}; then ${lib_bash_banner} "'${COMMAND}' - OK"; else ${lib_bash_banner_warning} "'${COMMAND}' - FAILED" && exit 1; fi
       else
@@ -162,11 +175,11 @@ script:
     # Check if Deployment would work on non-tagged builds
     - if [[ -f setup.py ]] && [[ -z ${TRAVIS_TAG} ]] && [[ -f build_docs.py ]] && [[ ${build_docs} == "True" ]]; then
           ${lib_bash_banner} "Testing PyPi Deployment";
-          ${CMDPREFIX} ${python_command} -m pip install readme_renderer > /dev/null 2>&1;
-          ${CMDPREFIX} ${python_command} -m pip install --upgrade twine > /dev/null 2>&1;
-          ${CMDPREFIX} ${python_command} -m pip install wheel > /dev/null 2>&1;
-          ${CMDPREFIX} ${python_command} setup.py sdist bdist_wheel || ${lib_bash_banner_warning} "Building Wheels failed" 1>&2;
-          if ${CMDPREFIX} twine check dist/*; then
+          ${cPREFIX} ${cPIP} install readme_renderer > /dev/null 2>&1;
+          ${cPREFIX} ${cPIP} install --upgrade twine > /dev/null 2>&1;
+          ${cPREFIX} ${cPIP} install wheel > /dev/null 2>&1;
+          ${cPREFIX} ${cPYTHON} setup.py sdist bdist_wheel || ${lib_bash_banner_warning} "Building Wheels failed" 1>&2;
+          if ${cPREFIX} twine check dist/*; then
               ${lib_bash_banner} "PyPi Deployment would be OK";
           else
               ${lib_bash_banner_warning} "PyPi Deployment would fail";
@@ -177,33 +190,40 @@ script:
       fi
 
 after_success:
-    - ${CMDPREFIX} coverage report
-    - ${CMDPREFIX} codecov
-    # codeclimate coverage upload
-    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    - chmod +x ./cc-test-reporter
-    - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+    - ${cPREFIX} coverage report
+    - ${cPREFIX} codecov
+    # codeclimate coverage upload - TODO: check function on wine
+    - if [ "${TRAVIS_OS_NAME}" == 'windows' ]; then
+          CODECLIMATE_REPO_TOKEN="${CC_TEST_REPORTER_ID}";
+          ${cPREFIX} ${cPIP} install codeclimate-test-reporter;
+          ${cPREFIX} codeclimate-test-reporter;
+      else
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter;
+          chmod +x ./cc-test-reporter;
+          ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT;
+      fi
 
     # This works for sure - the Travis deploy is somehow buggy.
     # create the secret :
+    # pypi_password
+    # to create the secret :
     # cd /<repository>
-    # travis encrypt pypi_password=*****
-    # copy and paste the encrypted password in the project_conf.py
+    # sudo travis encrypt -r <github_account>/<repository> pypi_password=*****
+    # copy and paste the encrypted password in the PizzaCutter Config File
     - if [[ ${deploy_on_pypi} == "True" ]] && [[ -n ${TRAVIS_TAG} ]]; then
           ${lib_bash_banner} "Deploy on PyPi";
           export travis_deploy="True";
-          ${CMDPREFIX} ${python_command} -m pip install readme_renderer;
-          ${CMDPREFIX} ${python_command} -m pip install --upgrade twine;
-          ${CMDPREFIX} ${python_command} -m pip install wheel;
-          ${CMDPREFIX} ${python_command} setup.py sdist bdist_wheel;
-          ${CMDPREFIX} twine check dist/*;
-          ${CMDPREFIX} twine upload --repository-url https://upload.pypi.org/legacy/ -u bitranox -p ${pypi_password} dist/*;
+          ${cPREFIX} ${cPIP} install readme_renderer;
+          ${cPREFIX} ${cPIP} install --upgrade twine;
+          ${cPREFIX} ${cPIP} install wheel;
+          ${cPREFIX} ${cPYTHON} setup.py sdist bdist_wheel;
+          ${cPREFIX} twine check dist/*;
+          ${cPREFIX} twine upload --repository-url https://upload.pypi.org/legacy/ -u bitranox -p ${pypi_password} dist/*;
       fi
 
 notifications:
   email:
     recipients:
-        - rnowotny@rotek.at
+        - bitranox@gmail.com
     on_success: never # default: change
     on_failure: always # default: always
-

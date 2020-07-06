@@ -13,11 +13,11 @@ import lib_parameter                # type: ignore
 
 # PROJ
 try:
-    from . import log_banner        # type: ignore
-    from . import log_handlers      # type: ignore
-except ImportError:
-    import log_banner               # type: ignore
-    import log_handlers             # type: ignore
+    from . import lib_log_utils
+    from . import log_handlers
+except ImportError:                 # pragma: no cover
+    import lib_log_utils            # type: ignore  # pragma: no cover
+    import log_handlers             # type: ignore  # pragma: no cover
 
 
 def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
@@ -27,18 +27,18 @@ def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
     log_level_traceback = int(lib_parameter.get_default_if_none(log_level_traceback, log_level_exec_info))
 
     if s_error and log_level != logging.NOTSET:
-        log_banner.log_level(message=s_error, level=log_level)
+        lib_log_utils.log_level(message=s_error, level=log_level)
 
     if log_level_exec_info != logging.NOTSET:
         exc_info = sys.exc_info()[1]
         exc_info_type = type(exc_info).__name__
         exc_info_msg = exc_info_type + ': ' + str(exc_info)
-        log_banner.log_level(message=exc_info_msg, level=log_level_exec_info)
+        lib_log_utils.log_level(message=exc_info_msg, level=log_level_exec_info)
 
     if log_level_traceback != logging.NOTSET:
         s_traceback = 'Traceback Information : \n' + traceback.format_exc()
         s_traceback = s_traceback.rstrip('\n')
-        log_banner.log_level(message=s_traceback, level=log_level_traceback)
+        lib_log_utils.log_level(message=s_traceback, level=log_level_traceback)
 
     log_handlers.logger_flush_all_handlers()
     return s_error  # to use it as input for re-raising

@@ -1,22 +1,20 @@
 name = 'lib_log_utils'
-title = 'this library makes it easy to log colored messages and banners from python and from the commandline. text wrapping is supported.'
-version = '0.1.0'
+title = 'colored log messages and banners from commandline and python'
+version = '0.1.1'
 url = 'https://github.com/bitranox/lib_log_utils'
 author = 'Robert Nowotny'
-author_email = 'rnowotny1966@gmail.com'
+author_email = 'bitranox@gmail.com'
 shell_command = 'log_util'
 
 
-def print_version() -> None:
-    print('version: 0.1.0')
-
-
 def print_info() -> None:
-    print("""information for "lib_log_utils":
+    print("""\
 
-          this library makes it easy to log colored messages and banners from python and from the commandline. text wrapping is supported.
+Info for lib_log_utils:
 
-          Version      : 0.1.0
-          url          : https://github.com/bitranox/lib_log_utils
-          author       : Robert Nowotny
-          author_email : rnowotny1966@gmail.com""")
+    colored log messages and banners from commandline and python
+
+    Version : 0.1.1
+    Url     : https://github.com/bitranox/lib_log_utils
+    Author  : Robert Nowotny
+    Email   : bitranox@gmail.com""")
