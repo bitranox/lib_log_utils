@@ -9,7 +9,7 @@ import traceback
 from typing import Optional
 
 # OWN
-import lib_parameter                # type: ignore
+import lib_parameter
 
 # PROJ
 try:

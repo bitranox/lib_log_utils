@@ -9,7 +9,7 @@ import textwrap
 from typing import Any, Dict
 
 # OWN
-import lib_parameter                # type: ignore
+import lib_parameter
 
 # PROJ
 # imports for local pytest
@@ -51,31 +51,40 @@ class BannerSettings(object):
     wrap_text = True
     quiet = False
 
-    field_styles = {'asctime': {'color': 'green'},
-                    'hostname': {'color': 'green'},                         # 'hostname': {'color': 'magenta'},
-                    'levelname': {'color': 'yellow'},                       # 'levelname': {'color': 'black', 'bold': True},
-                    'name': {'color': 'blue'},
-                    'programname': {'color': 'cyan'}}                       # type: Dict[str, Dict[str, Any]]
+    field_styles: Dict[str, object] = \
+        {
+            'asctime': {'color': 'green'},
+            'hostname': {'color': 'green'},                                   # 'hostname': {'color': 'magenta'},
+            'levelname': {'color': 'yellow'},                                 # 'levelname': {'color': 'black', 'bold': True},
+            'name': {'color': 'blue'},
+            'programname': {'color': 'cyan'}
+        }
 
-    level_styles_256 = {'spam': {'color': 'magenta', 'bright': True},                     # level 5   - SPAM
-                        'debug': {'color': 'blue', 'bright': True},                       # level 10  - DEBUG
-                        'verbose': {'color': 'yellow', 'bright': True},                   # level 15  - VERBOSE
-                        'info': {},                                                       # level 20  - INFO
-                        'notice': {'background': 'magenta', 'bright': True},              # level 25  - NOTICE
-                        'warning': {'color': 'red', 'bright': True},                      # level 30  - WARNING
-                        'success': {'color': 'green', 'bright': True},                    # level 35  - SUCCESS
-                        'error': {'background': 'red', 'bright': True},                   # level 40  - ERROR
-                        'critical': {'background': 'red'}}                                # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+    level_styles_256: Dict[str, object] = \
+        {
+            'spam': {'color': 'magenta', 'bright': True},                     # level 5   - SPAM
+            'debug': {'color': 'blue', 'bright': True},                       # level 10  - DEBUG
+            'verbose': {'color': 'yellow', 'bright': True},                   # level 15  - VERBOSE
+            'info': {},                                                       # level 20  - INFO
+            'notice': {'background': 'magenta', 'bright': True},              # level 25  - NOTICE
+            'warning': {'color': 'red', 'bright': True},                      # level 30  - WARNING
+            'success': {'color': 'green', 'bright': True},                    # level 35  - SUCCESS
+            'error': {'background': 'red', 'bright': True},                   # level 40  - ERROR
+            'critical': {'background': 'red'}                                 # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+        }
 
-    level_styles_8 = {'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
-                      'debug': {'color': 'blue', 'bold': True},                           # level 10  - DEBUG
-                      'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
-                      'info': {},                                                         # level 20  - INFO
-                      'notice': {'background': 'magenta', 'bold': True},                  # level 25  - NOTICE
-                      'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
-                      'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
-                      'error': {'background': 'red'},                                     # level 40  - ERROR
-                      'critical': {'background': 'red', 'bold': True}}                    # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+    level_styles_8: Dict[str, object] = \
+        {
+            'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
+            'debug': {'color': 'blue', 'bold': True},                           # level 10  - DEBUG
+            'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
+            'info': {},                                                         # level 20  - INFO
+            'notice': {'background': 'magenta', 'bold': True},                  # level 25  - NOTICE
+            'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
+            'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
+            'error': {'background': 'red'},                                     # level 40  - ERROR
+            'critical': {'background': 'red', 'bold': True}                    # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+        }
 
     if get_number_of_terminal_colors() == 8:
         level_styles = level_styles_8
@@ -192,10 +201,10 @@ def banner_level(message: str,
     >>> banner_warning('warning')
     """
 
-    level = int(lib_parameter.get_default_if_none(level, default=logging.INFO))
-    banner_width = int(lib_parameter.get_default_if_none(banner_width, default=BannerSettings.banner_width))
-    wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=BannerSettings.wrap_text))
-    quiet = bool(lib_parameter.get_default_if_none(quiet, default=BannerSettings.quiet))
+    level = lib_parameter.get_default_if_none(level, default=logging.INFO)
+    banner_width = lib_parameter.get_default_if_none(banner_width, default=BannerSettings.banner_width)
+    wrap_text = lib_parameter.get_default_if_none(wrap_text, default=BannerSettings.wrap_text)
+    quiet = lib_parameter.get_default_if_none(quiet, default=BannerSettings.quiet)
 
     if logger is None:
         logger = logging.getLogger()

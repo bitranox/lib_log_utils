@@ -8,11 +8,11 @@ import sys
 from typing import Any, Dict, Optional
 
 # OWN
-import lib_platform     # type: ignore
-import lib_programname  # type: ignore
+import lib_platform
+import lib_programname
 
 # EXT
-import coloredlogs      # type: ignore
+import coloredlogs  # type: ignore
 
 
 # default_fmt_string = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'
@@ -78,7 +78,7 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
                              level: int = logging.INFO,
                              fmt: str = default_fmt,
                              datefmt: str = default_date_fmt,
-                             field_styles: Dict[str, Dict[str, Any]] = coloredlogs.DEFAULT_FIELD_STYLES,
+                             field_styles: Dict[str, object] = coloredlogs.DEFAULT_FIELD_STYLES,
                              level_styles: Dict[str, object] = coloredlogs.DEFAULT_LEVEL_STYLES,
                              remove_existing_handlers: bool = True) -> logging.Handler:
     """

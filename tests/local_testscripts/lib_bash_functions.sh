@@ -9,7 +9,35 @@ export NO_AT_BRIDGE=1                        # get rid of (ssh-askpass:25930): d
 
 tests_dir="$(dirname "${own_dir}")"          # one level up
 project_root_dir="$(dirname "${tests_dir}")" # one level up
-export PYTHONPATH="${project_root_dir}:/media/srv-main-softdev/rotek-apps/lib:${PYTHONPATH}"
+export PYTHONPATH="${PYTHONPATH}:${project_root_dir}"
+export PYTHONPATH="${PYTHONPATH}:/media/srv-main-softdev/rotek-apps/lib"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_parameter"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/wrapt_timeout_decorator"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/bash"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_path"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_ip"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/fingerprint"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_shell"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_path_tree"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_platform"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/PizzaCutter_backup"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_detect_encoding"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_programname"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_log_utils"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_registry"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/rst_include"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_cast"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/pizzacutter_default_python_template"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_csv"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/PizzaCutter"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/pizzacutter_configs"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_list"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_regexp"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/pathlib3x"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_fake_registry"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/wrapt_timeout_decorator_backup"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/Arpeggio"
+export MYPYPATH="${MYPYPATH}:/media/srv-main-softdev/rotek-apps/lib/bitranox/lib_doctest_pycharm"
 
 function install_or_update_lib_bash() {
   if [[ ! -f /usr/local/lib_bash/install_or_update.sh ]]; then
@@ -99,7 +127,7 @@ function cleanup() {
 function run_pytest() {
   # run pytest, accepts additional pytest parameters like --disable-warnings and so on
   my_banner "running pytest with settings from pytest.ini, mypy.ini and conftest.py"
-  if ! python3 -m pytest "${project_root_dir}" /media/srv-main-softdev/rotek-apps/lib/bitranox/pathlib3x/pathlib3x "$@"; then
+  if ! python3 -m pytest "${project_root_dir}" "$@"; then
     my_banner_warning "pytest ERROR"
     beep
     sleep "${sleeptime_on_error}"
@@ -109,8 +137,7 @@ function run_pytest() {
 
 function mypy_strict() {
   my_banner "mypy strict"
-  if ! python3 -m mypy "${project_root_dir}" /media/srv-main-softdev/rotek-apps/lib/bitranox/pathlib3x/pathlib3x \
-                       --strict --warn-unused-ignores --implicit-reexport --follow-imports=silent; then
+  if ! python3 -m mypy "${project_root_dir}" --strict --warn-unused-ignores --implicit-reexport --follow-imports=silent; then
     my_banner_warning "mypy strict ERROR"
     beep
     sleep "${sleeptime_on_error}"
@@ -120,8 +147,7 @@ function mypy_strict() {
 
 function mypy_strict_with_imports() {
   my_banner "mypy strict including imports"
-  if ! python3 -m mypy "${project_root_dir}" /media/srv-main-softdev/rotek-apps/lib/bitranox/pathlib3x/pathlib3x \
-                       --strict --warn-unused-ignores --implicit-reexport --follow-imports=normal; then
+  if ! python3 -m mypy "${project_root_dir}" --strict --warn-unused-ignores --implicit-reexport --follow-imports=normal; then
     my_banner_warning "mypy strict including imports ERROR"
     beep
     sleep "${sleeptime_on_error}"
