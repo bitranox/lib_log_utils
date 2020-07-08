@@ -5,7 +5,7 @@ import getpass
 import os
 import platform
 import sys
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 # OWN
 import lib_platform
@@ -78,8 +78,8 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
                              level: int = logging.INFO,
                              fmt: str = default_fmt,
                              datefmt: str = default_date_fmt,
-                             field_styles: Dict[str, object] = coloredlogs.DEFAULT_FIELD_STYLES,
-                             level_styles: Dict[str, object] = coloredlogs.DEFAULT_LEVEL_STYLES,
+                             field_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_FIELD_STYLES,
+                             level_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_LEVEL_STYLES,
                              remove_existing_handlers: bool = True) -> logging.Handler:
     """
     # https://coloredlogs.readthedocs.io/en/latest/api.html
@@ -159,7 +159,7 @@ def format_fmt(fmt: str) -> str:
     fmt = fmt.format(username=getpass.getuser(),
                      hostname_short=lib_platform.hostname_short,
                      hostname=lib_platform.hostname,
-                     program_name=lib_programname.get_programname_fullpath().stem)
+                     program_name=lib_programname.get_path_executed_script().stem)
     return fmt
 
 

@@ -1,5 +1,5 @@
 # STDLIB
-from typing import Optional
+from typing import Optional, Union
 
 import logging
 import logging.handlers
@@ -51,7 +51,7 @@ class BannerSettings(object):
     wrap_text = True
     quiet = False
 
-    field_styles: Dict[str, object] = \
+    field_styles: Dict[str, Dict[str, Union[str, bool]]] = \
         {
             'asctime': {'color': 'green'},
             'hostname': {'color': 'green'},                                   # 'hostname': {'color': 'magenta'},
@@ -60,7 +60,7 @@ class BannerSettings(object):
             'programname': {'color': 'cyan'}
         }
 
-    level_styles_256: Dict[str, object] = \
+    level_styles_256: Dict[str, Dict[str, Union[str, bool]]] = \
         {
             'spam': {'color': 'magenta', 'bright': True},                     # level 5   - SPAM
             'debug': {'color': 'blue', 'bright': True},                       # level 10  - DEBUG
@@ -73,7 +73,7 @@ class BannerSettings(object):
             'critical': {'background': 'red'}                                 # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
         }
 
-    level_styles_8: Dict[str, object] = \
+    level_styles_8: Dict[str, Dict[str, Union[str, bool]]] = \
         {
             'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
             'debug': {'color': 'blue', 'bold': True},                           # level 10  - DEBUG
