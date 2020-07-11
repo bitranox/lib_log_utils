@@ -54,13 +54,13 @@ def do_log(message: str, level: Optional[int] = None, banner_width: Optional[int
                       prog_name=__init__conf__.shell_command,
                       message='{} version %(version)s'.format(__init__conf__.shell_command))
 def cli_main() -> None:                     # pragma: no cover
-    pass                                    # pragma: no cover
+    pass
 
 
 @cli_main.command('program_info', context_settings=CLICK_CONTEXT_SETTINGS)
-def cli_program_info() -> None:             # pragma: no cover
+def cli_program_info() -> None:
     """ get program informations """
-    info()                                  # pragma: no cover
+    info()
 
 
 @cli_main.command('spam', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -71,10 +71,10 @@ def cli_program_info() -> None:             # pragma: no cover
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_spam(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                         # pragma: no cover
+def cli_spam(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a spam message """
-    level = log_levels.SPAM                                                                                                      # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = log_levels.SPAM
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('debug', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -85,10 +85,10 @@ def cli_spam(message: str, banner_width: Optional[int], wrap: Optional[bool], lo
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_debug(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                        # pragma: no cover
+def cli_debug(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a debug message """
-    level = logging.DEBUG                                                                                                        # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = logging.DEBUG
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('verbose', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -99,10 +99,10 @@ def cli_debug(message: str, banner_width: Optional[int], wrap: Optional[bool], l
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_verbose(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                      # pragma: no cover
+def cli_verbose(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a verbose message """
-    level = log_levels.VERBOSE                                                                                                   # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = log_levels.VERBOSE
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('info', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -113,10 +113,10 @@ def cli_verbose(message: str, banner_width: Optional[int], wrap: Optional[bool],
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_info(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                         # pragma: no cover
+def cli_info(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a info message """
-    level = logging.INFO                                                                                                         # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = logging.INFO
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('notice', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -127,10 +127,10 @@ def cli_info(message: str, banner_width: Optional[int], wrap: Optional[bool], lo
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_notice(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                       # pragma: no cover
+def cli_notice(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a notice message """
-    level = log_levels.NOTICE                                                                                                    # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = log_levels.NOTICE
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('success', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -141,10 +141,10 @@ def cli_notice(message: str, banner_width: Optional[int], wrap: Optional[bool], 
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_success(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                      # pragma: no cover
+def cli_success(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a success message """
-    level = log_levels.SUCCESS                                                                                                   # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = log_levels.SUCCESS
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('warning', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -155,10 +155,10 @@ def cli_success(message: str, banner_width: Optional[int], wrap: Optional[bool],
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_warning(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                      # pragma: no cover
+def cli_warning(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a warning message """
-    level = logging.WARNING                                                                                                      # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = logging.WARNING
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('error', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -169,10 +169,10 @@ def cli_warning(message: str, banner_width: Optional[int], wrap: Optional[bool],
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_error(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                        # pragma: no cover
+def cli_error(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a error message """
-    level = logging.ERROR                                                                                                        # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = logging.ERROR
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('critical', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -183,10 +183,10 @@ def cli_error(message: str, banner_width: Optional[int], wrap: Optional[bool], l
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_critical(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                     # pragma: no cover
+def cli_critical(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a critical message """
-    level = logging.CRITICAL                                                                                                     # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)                     # pragma: no cover
+    level = logging.CRITICAL
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console)
 
 
 @cli_main.command('banner_spam', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -197,10 +197,10 @@ def cli_critical(message: str, banner_width: Optional[int], wrap: Optional[bool]
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_spam(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                  # pragma: no cover
+def cli_banner_spam(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a spam message banner """
-    level = log_levels.SPAM                                                                                                      # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = log_levels.SPAM
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_debug', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -211,10 +211,10 @@ def cli_banner_spam(message: str, banner_width: Optional[int], wrap: Optional[bo
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_debug(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                 # pragma: no cover
+def cli_banner_debug(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a debug message banner """
-    level = logging.DEBUG                                                                                                        # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = logging.DEBUG
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_verbose', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -225,10 +225,10 @@ def cli_banner_debug(message: str, banner_width: Optional[int], wrap: Optional[b
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_verbose(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:               # pragma: no cover
+def cli_banner_verbose(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a verbose message banner"""
-    level = log_levels.VERBOSE                                                                                                   # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = log_levels.VERBOSE
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_info', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -239,10 +239,10 @@ def cli_banner_verbose(message: str, banner_width: Optional[int], wrap: Optional
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_info(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                  # pragma: no cover
+def cli_banner_info(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a info message banner """
-    level = logging.INFO                                                                                                         # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = logging.INFO
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_notice', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -253,10 +253,10 @@ def cli_banner_info(message: str, banner_width: Optional[int], wrap: Optional[bo
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_notice(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                # pragma: no cover
+def cli_banner_notice(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a notice message banner """
-    level = log_levels.NOTICE                                                                                                    # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = log_levels.NOTICE
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_success', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -267,10 +267,10 @@ def cli_banner_notice(message: str, banner_width: Optional[int], wrap: Optional[
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_success(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:               # pragma: no cover
+def cli_banner_success(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a success message banner """
-    level = log_levels.SUCCESS                                                                                                   # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = log_levels.SUCCESS
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_warning', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -281,10 +281,10 @@ def cli_banner_success(message: str, banner_width: Optional[int], wrap: Optional
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_warning(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:               # pragma: no cover
+def cli_banner_warning(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a warning message banner """
-    level = logging.WARNING                                                                                                      # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = logging.WARNING
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_error', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -295,10 +295,10 @@ def cli_banner_warning(message: str, banner_width: Optional[int], wrap: Optional
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_error(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:                 # pragma: no cover
+def cli_banner_error(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a error message banner """
-    level = logging.ERROR                                                                                                        # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = logging.ERROR
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('banner_critical', context_settings=CLICK_CONTEXT_SETTINGS)
@@ -309,14 +309,14 @@ def cli_banner_error(message: str, banner_width: Optional[int], wrap: Optional[b
 # if parameter --log_console is not present, it is also considered as True
 # This makes it possible to silence messages elegantly in a shellscript
 @click.option('--log_console', type=str, default='True', help='disable console logging if "False"')
-def cli_banner_critical(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:              # pragma: no cover
+def cli_banner_critical(message: str, banner_width: Optional[int], wrap: Optional[bool], log_console: str) -> None:
     """ logs a critical message banner"""
-    level = logging.CRITICAL                                                                                                     # pragma: no cover
-    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)        # pragma: no cover
+    level = logging.CRITICAL
+    do_log(message=message, level=level, banner_width=banner_width, wrap_text=wrap, log_console=log_console, banner=True)
 
 
 @cli_main.command('color_test', context_settings=CLICK_CONTEXT_SETTINGS)
-def cli_color_test() -> None:                                                                                                    # pragma: no cover
+def cli_color_test() -> None:
     """ prints a color test """
     lib_log_utils.banner_color_test()
 
