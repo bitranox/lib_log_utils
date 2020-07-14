@@ -6,13 +6,13 @@ NOTICE: int = 25
 SUCCESS: int = 35
 
 # noinspection PyTypeHints
-logging.SPAM = SPAM                                     # type: ignore
+logging.SPAM: int = SPAM                                     # type: ignore
 # noinspection PyTypeHints
-logging.VERBOSE = VERBOSE                               # type: ignore
+logging.VERBOSE: int = VERBOSE                               # type: ignore
 # noinspection PyTypeHints
-logging.NOTICE = NOTICE                                 # type: ignore
+logging.NOTICE: int = NOTICE                                 # type: ignore
 # noinspection PyTypeHints
-logging.SUCCESS = SUCCESS                               # type: ignore
+logging.SUCCESS: int = SUCCESS                               # type: ignore
 
 logging._levelToName[logging.SPAM] = 'SPAM'             # type: ignore
 logging._levelToName[logging.VERBOSE] = 'VERBOSE'       # type: ignore

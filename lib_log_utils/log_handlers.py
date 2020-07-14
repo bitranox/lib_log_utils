@@ -5,7 +5,7 @@ import getpass
 import os
 import platform
 import sys
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, TextIO
 
 # OWN
 import lib_platform
@@ -74,6 +74,7 @@ def add_stream_handler(logger: logging.Logger = logging.getLogger(),
 
 
 def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
+                             stream: TextIO = sys.stderr,
                              name: str = 'stream_handler_color',
                              level: int = logging.INFO,
                              fmt: str = default_fmt,
@@ -85,7 +86,7 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     # https://coloredlogs.readthedocs.io/en/latest/api.html
 
     >>> logger=logging.getLogger()
-    >>> handler = add_stream_handler_color()
+    >>> handler = add_stream_handler_color(logger)
     >>> logger.debug("DEBUG")
     >>> logger.info("INFO")
     >>> logger.warning("WARNING")
@@ -103,7 +104,14 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
         datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
         field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
         level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
-        coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True)
+        coloredlogs.install(logger=logger,
+                            level=level,
+                            fmt=fmt,
+                            datefmt=datefmt,
+                            field_styles=field_styles,
+                            level_styles=level_styles,
+                            stream=stream,
+                            isatty=True)
         logger.handlers[-1].name = name
         handler = logger.handlers[-1]
     else:
@@ -189,6 +197,21 @@ def remove_all_handlers(logger: logging.Logger = logging.getLogger()) -> None:
     handlers = logger.handlers
     for handler in handlers:
         logger.removeHandler(handler)
+
+
+def remove_handler_by_type(logger: logging.Logger, handler_type: logging.Handler) -> None:
+    """
+    >>> logger = logging.getLogger()
+    >>> logging.basicConfig()
+    >>> remove_handler_by_type(logger, logging.StreamHandler)
+
+    """
+
+    handlers = logger.handlers
+    for handler in handlers:
+        # noinspection PyTypeChecker
+        if isinstance(handler, handler_type):   # type: ignore  # noqa
+            logger.removeHandler(handler)
 
 
 def exists_handler_with_name(name: str) -> bool:

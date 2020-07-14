@@ -5,8 +5,9 @@ import logging
 import logging.handlers
 import platform
 import subprocess
+import sys
 import textwrap
-from typing import Any, Dict
+from typing import Dict
 
 # OWN
 import lib_parameter
@@ -16,9 +17,11 @@ import lib_parameter
 try:
     from . import log_handlers
     from . import log_levels
+    from . import log_traceback
 except ImportError:                 # pragma: no cover
     import log_handlers             # type: ignore # pragma: no cover
     import log_levels               # type: ignore # pragma: no cover
+    import log_traceback            # type: ignore # pragma: no cover
 
 
 def get_number_of_terminal_colors() -> int:
@@ -42,14 +45,20 @@ def get_number_of_terminal_colors() -> int:
     return colors
 
 
-class BannerSettings(object):
-    called_via_commandline = False
+class LogSettings(object):
+    add_streamhandler_color = False
     # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
     fmt = '%(message)s'
     datefmt = '%Y-%m-%d %H:%M:%S'
     banner_width = 140
     wrap_text = True
     quiet = False
+    # if there is no logger set, we set up a new logger with level new_logger_level
+    new_logger_level = logging.INFO
+    # default the stream_handler will take everything
+    stream_handler_log_level = 1
+    # default is logging to sys.stderr
+    stream = sys.stderr
 
     field_styles: Dict[str, Dict[str, Union[str, bool]]] = \
         {
@@ -181,14 +190,16 @@ def banner_level(message: str,
                  quiet: Optional[bool] = None,
                  ) -> None:
     """
-    >>> BannerSettings.called_via_commandline = True
+    >>> LogSettings.add_streamhandler_color = True
     >>> # noinspection PyUnresolvedReferences
     >>> banner_level('test')
-    >>> banner_level('test', logging.SUCCESS, wrap_text=True)
+    >>> banner_level('test', logging.SUCCESS, wrap_text=True)  # noqa
     >>> banner_level('test', logging.ERROR, wrap_text=True)
     >>> banner_level('test', logging.ERROR, wrap_text=False)
-    >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=True)
-    >>> banner_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=False)
+    >>> banner_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
+                     logging.ERROR, banner_width=10, wrap_text=True)
+    >>> banner_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
+                     logging.ERROR, banner_width=10, wrap_text=False)
     >>> banner_spam('spam')
     >>> banner_critical('critical')
     >>> banner_debug('debug')
@@ -201,34 +212,43 @@ def banner_level(message: str,
     >>> banner_warning('warning')
     """
 
-    level = lib_parameter.get_default_if_none(level, default=logging.INFO)
-    banner_width = lib_parameter.get_default_if_none(banner_width, default=BannerSettings.banner_width)
-    wrap_text = lib_parameter.get_default_if_none(wrap_text, default=BannerSettings.wrap_text)
-    quiet = lib_parameter.get_default_if_none(quiet, default=BannerSettings.quiet)
+    quiet = lib_parameter.get_default_if_none(quiet, default=LogSettings.quiet)
+
+    if quiet:
+        return
 
     if logger is None:
         logger = logging.getLogger()
+        logger.level = LogSettings.new_logger_level
 
-    if not quiet:
-        message = str(message)
-        if BannerSettings.called_via_commandline:
-            log_handlers.add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt,
-                                                  field_styles=BannerSettings.field_styles, level_styles=BannerSettings.level_styles)
-        sep_line = '*' * banner_width
-        l_message = message.split('\n')
-        logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
-        for line in l_message:
-            if wrap_text:
-                l_wrapped_lines = textwrap.wrap(line, width=banner_width - 2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
-                for wrapped_line in l_wrapped_lines:
-                    msg_line = wrapped_line + (banner_width - len(wrapped_line) - 1) * ' ' + '*'
-                    logger.log(level=level, msg=msg_line)
-            else:
-                line = "* " + line.rstrip()
-                if len(line) < banner_width - 1:
-                    line = line + (banner_width - len(line) - 1) * ' ' + '*'
-                logger.log(level=level, msg=line)
-        logger.log(level=level, msg=sep_line)
+    message = str(message)
+    if LogSettings.add_streamhandler_color:
+        log_handlers.add_stream_handler_color(level=LogSettings.stream_handler_log_level,
+                                              fmt=LogSettings.fmt,
+                                              datefmt=LogSettings.datefmt,
+                                              field_styles=LogSettings.field_styles,
+                                              level_styles=LogSettings.level_styles,
+                                              stream=LogSettings.stream)
+
+    level = lib_parameter.get_default_if_none(level, default=logging.INFO)
+    banner_width = lib_parameter.get_default_if_none(banner_width, default=LogSettings.banner_width)
+    wrap_text = lib_parameter.get_default_if_none(wrap_text, default=LogSettings.wrap_text)
+
+    sep_line = '*' * banner_width
+    l_message = message.split('\n')
+    logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
+    for line in l_message:
+        if wrap_text:
+            l_wrapped_lines = textwrap.wrap(line, width=banner_width - 2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
+            for wrapped_line in l_wrapped_lines:
+                msg_line = wrapped_line + (banner_width - len(wrapped_line) - 1) * ' ' + '*'
+                logger.log(level=level, msg=msg_line)
+        else:
+            line = "* " + line.rstrip()
+            if len(line) < banner_width - 1:
+                line = line + (banner_width - len(line) - 1) * ' ' + '*'
+            logger.log(level=level, msg=line)
+    logger.log(level=level, msg=sep_line)
 
 
 def log_spam(message: str,
@@ -323,11 +343,13 @@ def log_level(message: str,
 
     """
     >>> log_level('test')
-    >>> log_level('test', logging.SUCCESS, wrap_text=True)
+    >>> log_level('test', logging.SUCCESS, wrap_text=True)  # noqa
     >>> log_level('test', logging.ERROR, wrap_text=True)
     >>> log_level('test', logging.ERROR, wrap_text=False)
-    >>> log_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=True)
-    >>> log_level('das is\\ndas ist\\ndas ist   ein   test\\ndas ist   ein   weiterer test', logging.ERROR, banner_width=10, wrap_text=False)
+    >>> log_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
+                   logging.ERROR, banner_width=10, wrap_text=True)
+    >>> log_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
+                   logging.ERROR, banner_width=10, wrap_text=False)
     >>> log_spam('spam')
     >>> log_critical('critical')
     >>> log_debug('debug')
@@ -341,20 +363,21 @@ def log_level(message: str,
 
     """
 
-    level = int(lib_parameter.get_default_if_none(level, default=logging.INFO))
-    banner_width = int(lib_parameter.get_default_if_none(banner_width, default=BannerSettings.banner_width))
-    wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=BannerSettings.wrap_text))
-    quiet = bool(lib_parameter.get_default_if_none(quiet, default=BannerSettings.quiet))
+    level = int(lib_parameter.get_default_if_none(level, default=LogSettings.new_logger_level))
+    banner_width = int(lib_parameter.get_default_if_none(banner_width, default=LogSettings.banner_width))
+    wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=LogSettings.wrap_text))
+    quiet = bool(lib_parameter.get_default_if_none(quiet, default=LogSettings.quiet))
 
     if logger is None:
         logger = logging.getLogger()
+        logger.level = LogSettings.new_logger_level
 
     if not quiet:
         message = str(message)
 
-        if BannerSettings.called_via_commandline:
-            log_handlers.add_stream_handler_color(level=level, fmt=BannerSettings.fmt, datefmt=BannerSettings.datefmt,
-                                                  field_styles=BannerSettings.field_styles, level_styles=BannerSettings.level_styles)
+        if LogSettings.add_streamhandler_color:
+            log_handlers.add_stream_handler_color(level=level, fmt=LogSettings.fmt, datefmt=LogSettings.datefmt,
+                                                  field_styles=LogSettings.field_styles, level_styles=LogSettings.level_styles)
 
         l_message = message.split('\n')
         for line in l_message:
@@ -370,8 +393,15 @@ def log_level(message: str,
 def banner_color_test(quiet: bool = False) -> None:
     """ test banner colors
 
+    >>> LogSettings.add_streamhandler_color=True
+    >>> LogSettings.new_logger_level = 1
+    >>> LogSettings.stream_handler_log_level = 1
+    >>> LogSettings.stream = sys.stdout
     >>> banner_color_test()
+    ***...***
     >>> banner_color_test(quiet=True)
+    >>> # TearDown
+    >>> LogSettings.stream = sys.stderr
 
     """
     if not quiet:

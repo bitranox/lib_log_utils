@@ -1,4 +1,6 @@
 # STDLIB
+import os
+import sys
 from typing import Optional
 
 # EXT
@@ -47,6 +49,37 @@ def do_log(message: str, level: Optional[int] = None, banner_width: Optional[int
         lib_log_utils.banner_level(message=message, level=level, banner_width=banner_width, wrap_text=wrap_text, logger=None, quiet=quiet)
     else:
         lib_log_utils.log_level(message=message, level=level, banner_width=banner_width, wrap_text=wrap_text, logger=None, quiet=quiet)
+
+
+def get_env_settings() -> None:
+    if 'log_utils_level' in os.environ:
+        lib_log_utils.LogSettings.new_logger_level = int(os.environ['log_utils_level'])
+
+    if 'log_utils_fmt' in os.environ:
+        lib_log_utils.LogSettings.fmt = os.environ['log_utils_fmt']
+
+    if 'log_utils_banner_width' in os.environ:
+        lib_log_utils.LogSettings.banner_width = int(os.environ['log_utils_banner_width'])
+
+    if 'log_utils_wrap_text' in os.environ:
+        if os.environ['log_utils_wrap_text'].lower() == 'true':
+            lib_log_utils.LogSettings.wrap_text = True
+        else:
+            lib_log_utils.LogSettings.wrap_text = False
+
+    if 'log_utils_quiet' in os.environ:
+        if os.environ['log_utils_quiet'].lower() == 'true':
+            lib_log_utils.LogSettings.quiet = True
+        else:
+            lib_log_utils.LogSettings.quiet = False
+
+    if 'log_utils_stream' in os.environ:
+        if os.environ['log_utils_stream'].lower().startswith('stdout'):
+            lib_log_utils.LogSettings.stream = sys.stdout
+        elif os.environ['log_utils_stream'].lower().startswith('stderr'):
+            lib_log_utils.LogSettings.stream = sys.stderr
+        else:
+            raise ValueError('invalid setting for stream')
 
 
 @click.group(help=__init__conf__.title, context_settings=CLICK_CONTEXT_SETTINGS)
@@ -323,5 +356,5 @@ def cli_color_test() -> None:
 
 # entry point if main
 if __name__ == '__main__':
-    lib_log_utils.BannerSettings.called_via_commandline = True
+    lib_log_utils.LogSettings.add_streamhandler_color = True
     cli_main()
