@@ -293,9 +293,15 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.1.2
+-----
+2020-07-14: feature release
+    - cleanup
+    - release on pypi
+
 0.1.1
 -----
-2020-07-06 : patch release
+2020-07-06: patch release
     - new click cli
     - use PizzaCutter Template
 
