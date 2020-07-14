@@ -1,7 +1,7 @@
 lib_log_utils
 =============
 
-|travis_build| |license| |pypi|
+|travis_build| |license| |jupyter| |pypi|
 
 |codecov| |better_code| |cc_maintain| |cc_issues| |cc_coverage| |snyk|
 
@@ -51,10 +51,11 @@ Python version required: 3.6.0 or newer
 
 tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
 
-`100% code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, codestyle checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/lib_log_utils>`_, automatic daily builds and monitoring
+`good code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, codestyle checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/lib_log_utils>`_, automatic daily builds and monitoring
 
 ----
 
+- `Try it Online`_
 - `Installation and Upgrade`_
 - `Usage`_
 - `Usage from Commandline`_
@@ -69,7 +70,11 @@ tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
 
 ----
 
+Try it Online
+-------------
 
+You might try it right away in Jupyter Notebook by using the "launch binder" badge, or click `here <https://mybinder.org/v2/gh/{{rst_include.
+repository_slug}}/master?filepath=lib_log_utils.ipynb>`_
 
 Installation and Upgrade
 ------------------------
