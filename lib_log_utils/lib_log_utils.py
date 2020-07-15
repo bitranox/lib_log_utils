@@ -46,18 +46,26 @@ def get_number_of_terminal_colors() -> int:
 
 
 class LogSettings(object):
-    add_streamhandler_color = False
+    """ this holds all the Logger Settings - You can overwrite that values as needed from Your module """
+
+    use_colored_stream_handler = False
+
+    # the format of the log message, for instance :
     # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
     fmt = '%(message)s'
+    # that date format
     datefmt = '%Y-%m-%d %H:%M:%S'
+    # the banner width
     banner_width = 140
+    # if text should be wrapped
     wrap_text = True
+    # if console logging should be skipped
     quiet = False
     # if there is no logger set, we set up a new logger with level new_logger_level
     new_logger_level = logging.INFO
-    # default the stream_handler will take everything
-    stream_handler_log_level = 1
-    # default is logging to sys.stderr
+    # default log_level of the stream_handler that will be added, 0 = NOTSET = every message will be taken
+    stream_handler_log_level = 0
+    # the stream the stream_handler should use
     stream = sys.stderr
 
     field_styles: Dict[str, Dict[str, Union[str, bool]]] = \
@@ -107,6 +115,7 @@ def banner_spam(message: str,
                 logger: Optional[logging.Logger] = None,
                 quiet: Optional[bool] = None,
                 ) -> None:
+    """ logs a banner SPAM """
     banner_level(message=message, level=log_levels.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -116,6 +125,7 @@ def banner_debug(message: str,
                  logger: Optional[logging.Logger] = None,
                  quiet: Optional[bool] = None,
                  ) -> None:
+    """ logs a banner DEBUG """
     banner_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -125,6 +135,7 @@ def banner_verbose(message: str,
                    logger: Optional[logging.Logger] = None,
                    quiet: Optional[bool] = None,
                    ) -> None:
+    """ logs a banner VERBOSE """
     banner_level(message=message, level=log_levels.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -134,6 +145,7 @@ def banner_info(message: str,
                 logger: Optional[logging.Logger] = None,
                 quiet: Optional[bool] = None,
                 ) -> None:
+    """ logs a banner INFO """
     banner_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -143,6 +155,7 @@ def banner_notice(message: str,
                   logger: Optional[logging.Logger] = None,
                   quiet: Optional[bool] = None,
                   ) -> None:
+    """ logs a banner NOTICE """
     banner_level(message=message, level=log_levels.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -152,6 +165,7 @@ def banner_success(message: str,
                    logger: Optional[logging.Logger] = None,
                    quiet: Optional[bool] = None,
                    ) -> None:
+    """ logs a banner SUCCESS """
     banner_level(message=message, level=log_levels.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -161,6 +175,7 @@ def banner_warning(message: str,
                    logger: Optional[logging.Logger] = None,
                    quiet: Optional[bool] = None,
                    ) -> None:
+    """ logs a banner WARNING """
     banner_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -170,6 +185,7 @@ def banner_error(message: str,
                  logger: Optional[logging.Logger] = None,
                  quiet: Optional[bool] = None,
                  ) -> None:
+    """ logs a banner ERROR """
     banner_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -179,6 +195,7 @@ def banner_critical(message: str,
                     logger: Optional[logging.Logger] = None,
                     quiet: Optional[bool] = None,
                     ) -> None:
+    """ logs a banner CRITICAL """
     banner_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
@@ -190,7 +207,14 @@ def banner_level(message: str,
                  quiet: Optional[bool] = None,
                  ) -> None:
     """
-    >>> LogSettings.add_streamhandler_color = True
+    logs a banner LEVEL
+
+
+
+    Examples
+    --------
+
+    >>> LogSettings.use_colored_stream_handler = True
     >>> # noinspection PyUnresolvedReferences
     >>> banner_level('test')
     >>> banner_level('test', logging.SUCCESS, wrap_text=True)  # noqa
@@ -217,18 +241,12 @@ def banner_level(message: str,
     if quiet:
         return
 
+    message = str(message)
+
     if logger is None:
         logger = logging.getLogger()
         logger.level = LogSettings.new_logger_level
-
-    message = str(message)
-    if LogSettings.add_streamhandler_color:
-        log_handlers.add_stream_handler_color(level=LogSettings.stream_handler_log_level,
-                                              fmt=LogSettings.fmt,
-                                              datefmt=LogSettings.datefmt,
-                                              field_styles=LogSettings.field_styles,
-                                              level_styles=LogSettings.level_styles,
-                                              stream=LogSettings.stream)
+        setup_handler(logger)
 
     level = lib_parameter.get_default_if_none(level, default=logging.INFO)
     banner_width = lib_parameter.get_default_if_none(banner_width, default=LogSettings.banner_width)
@@ -363,43 +381,43 @@ def log_level(message: str,
 
     """
 
+    quiet = bool(lib_parameter.get_default_if_none(quiet, default=LogSettings.quiet))
+
+    if quiet:
+        return
+
     level = int(lib_parameter.get_default_if_none(level, default=LogSettings.new_logger_level))
     banner_width = int(lib_parameter.get_default_if_none(banner_width, default=LogSettings.banner_width))
     wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=LogSettings.wrap_text))
-    quiet = bool(lib_parameter.get_default_if_none(quiet, default=LogSettings.quiet))
 
     if logger is None:
         logger = logging.getLogger()
         logger.level = LogSettings.new_logger_level
+        setup_handler(logger)
 
-    if not quiet:
-        message = str(message)
+    message = str(message)
 
-        if LogSettings.add_streamhandler_color:
-            log_handlers.add_stream_handler_color(level=level, fmt=LogSettings.fmt, datefmt=LogSettings.datefmt,
-                                                  field_styles=LogSettings.field_styles, level_styles=LogSettings.level_styles)
-
-        l_message = message.split('\n')
-        for line in l_message:
-            if wrap_text:
-                l_wrapped_lines = textwrap.wrap(line, width=banner_width, tabsize=4, replace_whitespace=False)
-                for msg_line in l_wrapped_lines:
-                    logger.log(level=level, msg=msg_line)
-            else:
-                msg_line = line.rstrip()
+    l_message = message.split('\n')
+    for line in l_message:
+        if wrap_text:
+            l_wrapped_lines = textwrap.wrap(line, width=banner_width, tabsize=4, replace_whitespace=False)
+            for msg_line in l_wrapped_lines:
                 logger.log(level=level, msg=msg_line)
+        else:
+            msg_line = line.rstrip()
+            logger.log(level=level, msg=msg_line)
 
 
-def banner_color_test(quiet: bool = False) -> None:
+def colortest(quiet: bool = False) -> None:
     """ test banner colors
 
-    >>> LogSettings.add_streamhandler_color=True
-    >>> LogSettings.new_logger_level = 1
-    >>> LogSettings.stream_handler_log_level = 1
+    >>> LogSettings.use_colored_stream_handler=True
+    >>> LogSettings.new_logger_level = 0
+    >>> LogSettings.stream_handler_log_level = 0
     >>> LogSettings.stream = sys.stdout
-    >>> banner_color_test()
+    >>> colortest()
     ***...***
-    >>> banner_color_test(quiet=True)
+    >>> colortest(quiet=True)
     >>> # TearDown
     >>> LogSettings.stream = sys.stderr
 
@@ -414,3 +432,22 @@ def banner_color_test(quiet: bool = False) -> None:
         banner_warning('test level warning')
         banner_error('test level error')
         banner_critical('test level critical')
+
+
+def setup_handler(logger: logging.Logger) -> None:
+    if LogSettings.use_colored_stream_handler:
+        log_handlers.set_stream_handler_color(logger=logger,
+                                              level=LogSettings.stream_handler_log_level,
+                                              fmt=LogSettings.fmt,
+                                              datefmt=LogSettings.datefmt,
+                                              field_styles=LogSettings.field_styles,
+                                              level_styles=LogSettings.level_styles,
+                                              stream=LogSettings.stream,
+                                              remove_existing_stream_handlers=False)
+    else:
+        log_handlers.set_stream_handler(logger=logger,
+                                        level=LogSettings.stream_handler_log_level,
+                                        fmt=LogSettings.fmt,
+                                        datefmt=LogSettings.datefmt,
+                                        stream=LogSettings.stream,
+                                        remove_existing_stream_handlers=False)
