@@ -1,32 +1,38 @@
-# EXT
-from click.testing import CliRunner
+# STDLIB
+import logging
+import pathlib
+import subprocess
+import sys
 
-# OWN
-import lib_log_utils.lib_log_utils_cli as lib_log_utils_cli
+logger = logging.getLogger()
+package_dir = 'lib_log_utils'
+cli_filename = 'lib_log_utils_cli.py'
 
-runner = CliRunner()
-runner.invoke(lib_log_utils_cli.cli_main, ['--version'])
-runner.invoke(lib_log_utils_cli.cli_main, ['-h'])
-runner.invoke(lib_log_utils_cli.cli_main, ['program_info'])
+path_cli_command = pathlib.Path(__file__).resolve().parent.parent / package_dir / cli_filename
 
-runner.invoke(lib_log_utils_cli.cli_main, ['spam', 'test spam'])
-runner.invoke(lib_log_utils_cli.cli_main, ['debug', 'test debug'])
-runner.invoke(lib_log_utils_cli.cli_main, ['verbose', 'test verbose'])
-runner.invoke(lib_log_utils_cli.cli_main, ['info', 'test info'])
-runner.invoke(lib_log_utils_cli.cli_main, ['notice', 'test notice'])
-runner.invoke(lib_log_utils_cli.cli_main, ['success', 'test success'])
-runner.invoke(lib_log_utils_cli.cli_main, ['warning', 'test warning'])
-runner.invoke(lib_log_utils_cli.cli_main, ['error', 'test error'])
-runner.invoke(lib_log_utils_cli.cli_main, ['critical', 'test critical'])
 
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_spam', 'test banner_spam'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_debug', 'test banner_debug'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_verbose', 'test banner_verbose'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_info', 'test banner_info'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_notice', 'test banner_notice'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_success', 'test banner_success'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_warning', 'test banner_warning'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_error', 'test banner_error'])
-runner.invoke(lib_log_utils_cli.cli_main, ['banner_critical', 'test banner_critical'])
+def call_cli_command(commandline_args: str = '', log: bool = True) -> bool:
+    command = ' '.join([sys.executable, str(path_cli_command), commandline_args])
+    result = subprocess.run(command, shell=True, capture_output=True)
+    if result.returncode == 0:
+        return True
+    else:
+        if log:
+            # You need to enable --log-cli-level=CRITICAL to see that output in pytest
+            logger.critical('\n'.join(['STDOUT for {}:'.format(command), result.stdout.decode()]))
+            logger.critical('\n'.join(['STDOUT for {}:'.format(command), result.stderr.decode()]))
+        return False
 
-runner.invoke(lib_log_utils_cli.cli_main, ['color_test'])
+
+def test_cli_commands():
+    assert not call_cli_command('--unknown_option', log=False)
+    assert call_cli_command('')
+    assert call_cli_command('--version')
+    assert call_cli_command('-h')
+    assert call_cli_command('--program_info')
+    assert call_cli_command('-c')
+    assert call_cli_command('--colortest')
+    assert not call_cli_command('unquoted string', log=False)
+    assert call_cli_command('"log default level"')
+    assert call_cli_command('-l error "log default level"')
+    assert call_cli_command('"log default level" -l error')

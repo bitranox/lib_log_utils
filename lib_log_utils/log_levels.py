@@ -23,3 +23,30 @@ logging._nameToLevel['SPAM'] = logging.SPAM             # type: ignore
 logging._nameToLevel['VERBOSE'] = logging.VERBOSE       # type: ignore
 logging._nameToLevel['NOTICE'] = logging.NOTICE         # type: ignore
 logging._nameToLevel['SUCCESS'] = logging.SUCCESS       # type: ignore
+
+
+def get_log_level_from_str(log_level_str: str) -> int:
+    """
+    gets the log level as integer from a string
+
+
+    >>> assert get_log_level_from_str('42') == 42
+    >>> assert get_log_level_from_str('info') == 20
+    >>> get_log_level_from_str('unknown')
+    Traceback (most recent call last):
+        ...
+    ValueError: can not detect log level from string "unknown"
+
+    """
+
+    try:
+        log_level = int(log_level_str)
+        return log_level
+    except ValueError:
+        pass
+
+    try:
+        log_level = logging._nameToLevel[log_level_str.upper()]
+        return log_level
+    except KeyError:
+        raise ValueError('can not detect log level from string "{}"'.format(log_level_str))

@@ -32,9 +32,9 @@ class HostnameFilter(logging.Filter):
         return True
 
 
-def add_file_handler(filename: str,
+def set_file_handler(filename: str,
                      logger: logging.Logger = logging.getLogger(),
-                     name: str = '',
+                     name: str = 'file_handler',
                      level: int = logging.INFO,
                      fmt: str = default_fmt,
                      datefmt: str = default_date_fmt,
@@ -67,10 +67,10 @@ def set_stream_handler(logger: logging.Logger = logging.getLogger(),
                        level: int = logging.INFO,
                        fmt: str = default_fmt,
                        datefmt: str = default_date_fmt,
-                       remove_existing_stream_handlers: bool = True) -> logging.Handler:
+                       remove_existing_stream_handlers: bool = False) -> logging.Handler:
 
     """
-    Sets a Stream Handler. A Handler with the same name will be replaced.
+    Sets a Stream Handler. A Handler with the same name will be replaced (with a warning)
 
 
     >>> logger = logging.getLogger('test_add_streamhandler')
@@ -99,9 +99,9 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
                              datefmt: str = default_date_fmt,
                              field_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_FIELD_STYLES,
                              level_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_LEVEL_STYLES,
-                             remove_existing_stream_handlers: bool = True) -> logging.Handler:
+                             remove_existing_stream_handlers: bool = False) -> logging.Handler:
     """
-    # https://coloredlogs.readthedocs.io/en/latest/api.html
+    Sets a Colored Stream Handler. A Handler with the same name will be replaced (with a warning)
 
     >>> logger=logging.getLogger()
     >>> handler = set_stream_handler_color(logger)
@@ -112,6 +112,7 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     >>> logger.critical("CRITICAL")
 
     """
+
     if remove_existing_stream_handlers:
         remove_handler_by_type(logger=logger, handler_type=logging.StreamHandler)
 
@@ -126,6 +127,8 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
     field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
     level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
+
+    # https://coloredlogs.readthedocs.io/en/latest/api.html
     coloredlogs.install(logger=logger,
                         level=level,
                         fmt=fmt,
@@ -157,7 +160,7 @@ def override_style_via_environment(original_value: Any, environment_variable: st
 
 def _set_handler(handler: logging.Handler,
                  logger: logging.Logger = logging.getLogger(),
-                 name: str = 'stream_handler',
+                 name: str = 'log_handler',
                  level: int = logging.INFO,
                  fmt: str = default_fmt,
                  datefmt: str = default_date_fmt) -> logging.Handler:
@@ -170,6 +173,7 @@ def _set_handler(handler: logging.Handler,
 
     try:
         remove_handler_by_name(name)
+        logger.warning('Warning: the existing log handler "{}" was removed and re-added'.format(name))
     except ValueError:
         pass
     handler.addFilter(HostnameFilter())

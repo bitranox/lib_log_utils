@@ -56,7 +56,7 @@ class LogSettings(object):
     # that date format
     datefmt = '%Y-%m-%d %H:%M:%S'
     # the banner width
-    banner_width = 140
+    width = 140
     # if text should be wrapped
     wrap_text = True
     # if console logging should be skipped
@@ -116,7 +116,7 @@ def banner_spam(message: str,
                 quiet: Optional[bool] = None,
                 ) -> None:
     """ logs a banner SPAM """
-    banner_level(message=message, level=log_levels.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=log_levels.SPAM, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_debug(message: str,
@@ -126,7 +126,7 @@ def banner_debug(message: str,
                  quiet: Optional[bool] = None,
                  ) -> None:
     """ logs a banner DEBUG """
-    banner_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=logging.DEBUG, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_verbose(message: str,
@@ -136,7 +136,7 @@ def banner_verbose(message: str,
                    quiet: Optional[bool] = None,
                    ) -> None:
     """ logs a banner VERBOSE """
-    banner_level(message=message, level=log_levels.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=log_levels.VERBOSE, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_info(message: str,
@@ -146,7 +146,7 @@ def banner_info(message: str,
                 quiet: Optional[bool] = None,
                 ) -> None:
     """ logs a banner INFO """
-    banner_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=logging.INFO, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_notice(message: str,
@@ -156,7 +156,7 @@ def banner_notice(message: str,
                   quiet: Optional[bool] = None,
                   ) -> None:
     """ logs a banner NOTICE """
-    banner_level(message=message, level=log_levels.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=log_levels.NOTICE, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_success(message: str,
@@ -166,7 +166,7 @@ def banner_success(message: str,
                    quiet: Optional[bool] = None,
                    ) -> None:
     """ logs a banner SUCCESS """
-    banner_level(message=message, level=log_levels.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=log_levels.SUCCESS, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_warning(message: str,
@@ -176,7 +176,7 @@ def banner_warning(message: str,
                    quiet: Optional[bool] = None,
                    ) -> None:
     """ logs a banner WARNING """
-    banner_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=logging.WARNING, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_error(message: str,
@@ -186,7 +186,7 @@ def banner_error(message: str,
                  quiet: Optional[bool] = None,
                  ) -> None:
     """ logs a banner ERROR """
-    banner_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    log_level(message=message, level=logging.ERROR, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def banner_critical(message: str,
@@ -196,77 +196,7 @@ def banner_critical(message: str,
                     quiet: Optional[bool] = None,
                     ) -> None:
     """ logs a banner CRITICAL """
-    banner_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
-
-
-def banner_level(message: str,
-                 level: Optional[int] = None,
-                 banner_width: Optional[int] = None,
-                 wrap_text: Optional[bool] = None,
-                 logger: Optional[logging.Logger] = None,
-                 quiet: Optional[bool] = None,
-                 ) -> None:
-    """
-    logs a banner LEVEL
-
-
-
-    Examples
-    --------
-
-    >>> LogSettings.use_colored_stream_handler = True
-    >>> # noinspection PyUnresolvedReferences
-    >>> banner_level('test')
-    >>> banner_level('test', logging.SUCCESS, wrap_text=True)  # noqa
-    >>> banner_level('test', logging.ERROR, wrap_text=True)
-    >>> banner_level('test', logging.ERROR, wrap_text=False)
-    >>> banner_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
-                     logging.ERROR, banner_width=10, wrap_text=True)
-    >>> banner_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
-                     logging.ERROR, banner_width=10, wrap_text=False)
-    >>> banner_spam('spam')
-    >>> banner_critical('critical')
-    >>> banner_debug('debug')
-    >>> banner_error('error')
-    >>> banner_info('info')
-    >>> banner_notice('notice')
-    >>> banner_spam('spam')
-    >>> banner_success('success')
-    >>> banner_verbose('verbose')
-    >>> banner_warning('warning')
-    """
-
-    quiet = lib_parameter.get_default_if_none(quiet, default=LogSettings.quiet)
-
-    if quiet:
-        return
-
-    message = str(message)
-
-    if logger is None:
-        logger = logging.getLogger()
-        logger.level = LogSettings.new_logger_level
-        setup_handler(logger)
-
-    level = lib_parameter.get_default_if_none(level, default=logging.INFO)
-    banner_width = lib_parameter.get_default_if_none(banner_width, default=LogSettings.banner_width)
-    wrap_text = lib_parameter.get_default_if_none(wrap_text, default=LogSettings.wrap_text)
-
-    sep_line = '*' * banner_width
-    l_message = message.split('\n')
-    logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
-    for line in l_message:
-        if wrap_text:
-            l_wrapped_lines = textwrap.wrap(line, width=banner_width - 2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
-            for wrapped_line in l_wrapped_lines:
-                msg_line = wrapped_line + (banner_width - len(wrapped_line) - 1) * ' ' + '*'
-                logger.log(level=level, msg=msg_line)
-        else:
-            line = "* " + line.rstrip()
-            if len(line) < banner_width - 1:
-                line = line + (banner_width - len(line) - 1) * ' ' + '*'
-            logger.log(level=level, msg=line)
-    logger.log(level=level, msg=sep_line)
+    log_level(message=message, level=logging.CRITICAL, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet, banner=True)
 
 
 def log_spam(message: str,
@@ -275,8 +205,8 @@ def log_spam(message: str,
              logger: Optional[logging.Logger] = None,
              quiet: Optional[bool] = None,
              ) -> None:
-
-    log_level(message=message, level=log_levels.SPAM, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs SPAM """
+    log_level(message=message, level=log_levels.SPAM, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_debug(message: str,
@@ -285,7 +215,8 @@ def log_debug(message: str,
               logger: Optional[logging.Logger] = None,
               quiet: Optional[bool] = None,
               ) -> None:
-    log_level(message=message, level=logging.DEBUG, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs DEBUG """
+    log_level(message=message, level=logging.DEBUG, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_verbose(message: str,
@@ -294,7 +225,8 @@ def log_verbose(message: str,
                 logger: Optional[logging.Logger] = None,
                 quiet: Optional[bool] = None,
                 ) -> None:
-    log_level(message=message, level=log_levels.VERBOSE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs VERBOSE """
+    log_level(message=message, level=log_levels.VERBOSE, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_info(message: str,
@@ -303,7 +235,8 @@ def log_info(message: str,
              logger: Optional[logging.Logger] = None,
              quiet: Optional[bool] = None,
              ) -> None:
-    log_level(message=message, level=logging.INFO, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs INFO """
+    log_level(message=message, level=logging.INFO, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_notice(message: str,
@@ -312,7 +245,8 @@ def log_notice(message: str,
                logger: Optional[logging.Logger] = None,
                quiet: Optional[bool] = None,
                ) -> None:
-    log_level(message=message, level=log_levels.NOTICE, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs NOTICE """
+    log_level(message=message, level=log_levels.NOTICE, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_success(message: str,
@@ -321,7 +255,8 @@ def log_success(message: str,
                 logger: Optional[logging.Logger] = None,
                 quiet: Optional[bool] = None,
                 ) -> None:
-    log_level(message=message, level=log_levels.SUCCESS, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs SUCCESS """
+    log_level(message=message, level=log_levels.SUCCESS, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_warning(message: str,
@@ -330,7 +265,8 @@ def log_warning(message: str,
                 logger: Optional[logging.Logger] = None,
                 quiet: Optional[bool] = None,
                 ) -> None:
-    log_level(message=message, level=logging.WARNING, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs WARNING """
+    log_level(message=message, level=logging.WARNING, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_error(message: str,
@@ -339,7 +275,8 @@ def log_error(message: str,
               logger: Optional[logging.Logger] = None,
               quiet: Optional[bool] = None,
               ) -> None:
-    log_level(message=message, level=logging.ERROR, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs ERROR """
+    log_level(message=message, level=logging.ERROR, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_critical(message: str,
@@ -348,26 +285,33 @@ def log_critical(message: str,
                  logger: Optional[logging.Logger] = None,
                  quiet: Optional[bool] = None,
                  ) -> None:
-    log_level(message=message, level=logging.CRITICAL, banner_width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
+    """ logs CRITICAL """
+    log_level(message=message, level=logging.CRITICAL, width=banner_width, wrap_text=wrap_text, logger=logger, quiet=quiet)
 
 
 def log_level(message: str,
               level: Optional[int] = None,
-              banner_width: Optional[int] = None,
+              width: Optional[int] = None,
               wrap_text: Optional[bool] = None,
               logger: Optional[logging.Logger] = None,
               quiet: Optional[bool] = None,
+              banner: bool = False
               ) -> None:
-
     """
+    logs a message
+
+    if there is no logger passed, the root logger will be used.
+
+
+
     >>> log_level('test')
     >>> log_level('test', logging.SUCCESS, wrap_text=True)  # noqa
     >>> log_level('test', logging.ERROR, wrap_text=True)
     >>> log_level('test', logging.ERROR, wrap_text=False)
     >>> log_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
-                   logging.ERROR, banner_width=10, wrap_text=True)
+                   logging.ERROR, width=10, wrap_text=True)
     >>> log_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
-                   logging.ERROR, banner_width=10, wrap_text=False)
+                   logging.ERROR, width=10, wrap_text=False)
     >>> log_spam('spam')
     >>> log_critical('critical')
     >>> log_debug('debug')
@@ -386,8 +330,10 @@ def log_level(message: str,
     if quiet:
         return
 
+    message = str(message)
+
     level = int(lib_parameter.get_default_if_none(level, default=LogSettings.new_logger_level))
-    banner_width = int(lib_parameter.get_default_if_none(banner_width, default=LogSettings.banner_width))
+    width = int(lib_parameter.get_default_if_none(width, default=LogSettings.width))
     wrap_text = bool(lib_parameter.get_default_if_none(wrap_text, default=LogSettings.wrap_text))
 
     if logger is None:
@@ -395,17 +341,32 @@ def log_level(message: str,
         logger.level = LogSettings.new_logger_level
         setup_handler(logger)
 
-    message = str(message)
-
     l_message = message.split('\n')
-    for line in l_message:
-        if wrap_text:
-            l_wrapped_lines = textwrap.wrap(line, width=banner_width, tabsize=4, replace_whitespace=False)
-            for msg_line in l_wrapped_lines:
+
+    if banner:
+        sep_line = '*' * width
+        logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
+        for line in l_message:
+            if wrap_text:
+                l_wrapped_lines = textwrap.wrap(line, width=width - 2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
+                for wrapped_line in l_wrapped_lines:
+                    msg_line = wrapped_line + (width - len(wrapped_line) - 1) * ' ' + '*'
+                    logger.log(level=level, msg=msg_line)
+            else:
+                line = "* " + line.rstrip()
+                if len(line) < width - 1:
+                    line = line + (width - len(line) - 1) * ' ' + '*'
+                logger.log(level=level, msg=line)
+        logger.log(level=level, msg=sep_line)
+    else:
+        for line in l_message:
+            if wrap_text:
+                l_wrapped_lines = textwrap.wrap(line, width=width, tabsize=4, replace_whitespace=False)
+                for msg_line in l_wrapped_lines:
+                    logger.log(level=level, msg=msg_line)
+            else:
+                msg_line = line.rstrip()
                 logger.log(level=level, msg=msg_line)
-        else:
-            msg_line = line.rstrip()
-            logger.log(level=level, msg=msg_line)
 
 
 def colortest(quiet: bool = False) -> None:
