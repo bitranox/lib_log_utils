@@ -33,7 +33,8 @@ def cli_info() -> None:
 
 
 def do_log(message: str, level_str: str = 'info', banner: bool = False, width: Optional[int] = None,
-           wrap: Optional[bool] = None, silent: Optional[str] = None, quiet: Optional[bool] = None, force: bool = False) -> None:
+           wrap: Optional[bool] = None, silent: Optional[str] = None, quiet: Optional[bool] = None,
+           force: bool = False, colortest: bool = False) -> None:
 
     """
     >>> do_log('test', banner=False)
@@ -52,7 +53,10 @@ def do_log(message: str, level_str: str = 'info', banner: bool = False, width: O
     set_width_from_env(width, force)
     set_wrap_from_env(wrap, force)
     set_quiet_from_env(quiet, force)
-    lib_log_utils.log_level(message=message, level=level, banner=banner)
+    if colortest:
+        lib_log_utils.colortest()
+    else:
+        lib_log_utils.log_level(message=message, level=level, banner=banner)
 
 
 def set_logger_level_from_env() -> None:
@@ -290,10 +294,8 @@ def cli_main(message: str, level: str, banner: bool, width: Optional[int], wrap:
         cli_exit_tools.config.traceback = traceback
     if program_info:
         cli_info()
-    elif colortest:
-        lib_log_utils.colortest()
     else:
-        do_log(message=message, level_str=level, banner=banner, width=width, wrap=wrap, silent=silent, quiet=quiet, force=force)
+        do_log(message=message, level_str=level, banner=banner, width=width, wrap=wrap, silent=silent, quiet=quiet, force=force, colortest=colortest)
 
 
 # entry point if main
