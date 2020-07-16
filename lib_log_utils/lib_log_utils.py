@@ -374,6 +374,7 @@ def colortest(quiet: bool = False) -> None:
     >>> LogSettings.new_logger_level = 0
     >>> LogSettings.stream_handler_log_level = 0
     >>> LogSettings.stream = sys.stdout
+    >>> setup_handler()
     >>> colortest()
     ***...***
     >>> colortest(quiet=True)
