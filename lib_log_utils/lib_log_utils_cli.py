@@ -262,16 +262,16 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 
     """
 
-    if 'log_utils_quiet' in os.environ:
+    if 'LOG_UTIL_QUIET' in os.environ:
         if quiet is not None and force:
             lib_log_utils.LogSettings.quiet = quiet
         else:
-            if os.environ['log_utils_quiet'].lower().startswith('false'):
+            if os.environ['LOG_UTIL_QUIET'].lower().startswith('false'):
                 lib_log_utils.LogSettings.quiet = False
-            elif os.environ['log_utils_quiet'].lower().startswith('true'):
+            elif os.environ['LOG_UTIL_QUIET'].lower().startswith('true'):
                 lib_log_utils.LogSettings.quiet = True
             else:
-                raise ValueError('invalid environment setting for "log_utils_quiet", must be "True" or "False"')
+                raise ValueError('invalid environment setting for "LOG_UTIL_QUIET", must be "True" or "False"')
     else:
         if quiet is not None:
             lib_log_utils.LogSettings.quiet = quiet
