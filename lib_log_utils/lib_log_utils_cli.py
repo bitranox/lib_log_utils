@@ -1,7 +1,7 @@
 # STDLIB
 import os
 import sys
-from typing import List, Optional
+from typing import Optional
 
 # EXT
 import click    # noqa
