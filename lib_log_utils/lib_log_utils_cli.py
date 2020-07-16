@@ -299,7 +299,6 @@ def cli_main(message: str, level: str, banner: bool, width: Optional[int], wrap:
 # entry point if main
 if __name__ == '__main__':
     try:
-        lib_log_utils.LogSettings.use_colored_stream_handler = True
         cli_main()
     except Exception as exc:
         cli_exit_tools.print_exception_message()
