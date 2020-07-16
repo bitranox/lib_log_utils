@@ -260,10 +260,10 @@ Environment Settings
 ======================  =======================================================================================
 environment variable    function
 ======================  =======================================================================================
-log_utils_log_level     the level of the logger, one of the predefined log levels, or "0" - "50", default = 0
-log_utils_banner_width  the banner width if text wrap is used, must be >="10", default = 140
-log_utils_wrap_text     if text wrap should be used, must be True or False (not case sensitive), default = True
-log_utils_quiet         if the logger is used at all - must be True or False (not case sensitive), default = False
+LOG_UTIL_LEVEL          the level of the logger, one of the predefined log levels, or "0" - "50", default = 0
+LOG_UTIL_WIDTH          the banner width if text wrap is used, must be >="10", default = 140
+LOG_UTIL_WRAP           if text wrap should be used, must be True or False (not case sensitive), default = True
+LOG_UTIL_QUIET          if the logger is used at all - must be True or False (not case sensitive), default = False
 ======================  =======================================================================================
 
 environment settings take precedence over commandline arguments, unless --force is passed to the commandline

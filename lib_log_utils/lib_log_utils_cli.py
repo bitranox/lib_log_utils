@@ -69,28 +69,28 @@ def set_logger_level_from_env() -> None:
     >>> assert lib_log_utils.LogSettings.new_logger_level == log_level_default
 
     >>> # env Set spam
-    >>> os.environ['log_utils_log_level']='spam'
+    >>> os.environ['LOG_UTIL_LEVEL']='spam'
     >>> set_logger_level_from_env()
     >>> assert lib_log_utils.LogSettings.new_logger_level == 5
 
     >>> # env Set unknown
-    >>> os.environ['log_utils_log_level']='unknown'
+    >>> os.environ['LOG_UTIL_LEVEL']='unknown'
     >>> set_logger_level_from_env()
     Traceback (most recent call last):
         ...
-    ValueError: the environment setting "log_utils_log_level" has to be from ...
+    ValueError: the environment setting "LOG_UTIL_LEVEL" has to be from ...
 
     >>> # Teardown
-    >>> del os.environ['log_utils_log_level']
+    >>> del os.environ['LOG_UTIL_LEVEL']
     >>> lib_log_utils.LogSettings.new_logger_level = log_level_default
 
     """
 
-    if 'log_utils_log_level' in os.environ:
+    if 'LOG_UTIL_LEVEL' in os.environ:
         try:
-            lib_log_utils.LogSettings.new_logger_level = log_levels.get_log_level_from_str(os.environ['log_utils_log_level'])
+            lib_log_utils.LogSettings.new_logger_level = log_levels.get_log_level_from_str(os.environ['LOG_UTIL_LEVEL'])
         except ValueError:
-            raise ValueError('the environment setting "log_utils_log_level" has to be from 0-50 or one of the predefined logging levels')
+            raise ValueError('the environment setting "LOG_UTIL_LEVEL" has to be from 0-50 or one of the predefined logging levels')
 
 
 def set_width_from_env(width: Optional[int] = None, force: bool = False) -> None:
@@ -108,12 +108,12 @@ def set_width_from_env(width: Optional[int] = None, force: bool = False) -> None
     >>> assert lib_log_utils.LogSettings.width == default_banner_width + 1
 
     >>> # Env Setting = default + 2, width=None
-    >>> os.environ['log_utils_width'] = str(default_banner_width + 2)
+    >>> os.environ['LOG_UTIL_WIDTH'] = str(default_banner_width + 2)
     >>> set_width_from_env()
     >>> assert lib_log_utils.LogSettings.width == default_banner_width + 2
 
     >>> # Env Setting = default + 3, width=default (env has precedence)
-    >>> os.environ['log_utils_width'] = str(default_banner_width + 3)
+    >>> os.environ['LOG_UTIL_WIDTH'] = str(default_banner_width + 3)
     >>> set_width_from_env(default_banner_width)
     >>> assert lib_log_utils.LogSettings.width == default_banner_width + 3
 
@@ -122,32 +122,32 @@ def set_width_from_env(width: Optional[int] = None, force: bool = False) -> None
     >>> assert lib_log_utils.LogSettings.width == default_banner_width + 4
 
     >>> # provoke Error wrong type
-    >>> os.environ['log_utils_width'] = 'abc'
+    >>> os.environ['LOG_UTIL_WIDTH'] = 'abc'
     >>> set_width_from_env()
     Traceback (most recent call last):
         ...
-    ValueError: invalid environment setting for "log_utils_width", must be numerical and >= 10
+    ValueError: invalid environment setting for "LOG_UTIL_WIDTH", must be numerical and >= 10
 
     >>> # provoke Error too small
-    >>> os.environ['log_utils_width'] = '9'
+    >>> os.environ['LOG_UTIL_WIDTH'] = '9'
     >>> set_width_from_env()
     Traceback (most recent call last):
         ...
-    ValueError: invalid environment setting for "log_utils_width", must be numerical and >= 10
+    ValueError: invalid environment setting for "LOG_UTIL_WIDTH", must be numerical and >= 10
 
     >>> # Teardown
     >>> lib_log_utils.LogSettings.width = default_banner_width
-    >>> del os.environ['log_utils_width']
+    >>> del os.environ['LOG_UTIL_WIDTH']
 
     """
 
-    if 'log_utils_width' in os.environ:
+    if 'LOG_UTIL_WIDTH' in os.environ:
         if width is not None and force:
             lib_log_utils.LogSettings.width = width
         else:
-            s_error = 'invalid environment setting for "log_utils_width", must be numerical and >= 10'
+            s_error = 'invalid environment setting for "LOG_UTIL_WIDTH", must be numerical and >= 10'
             try:
-                width = int(os.environ['log_utils_width'])
+                width = int(os.environ['LOG_UTIL_WIDTH'])
             except ValueError:
                 raise ValueError(s_error)
             if width < 10:
@@ -173,12 +173,12 @@ def set_wrap_from_env(wrap_text: Optional[bool] = None, force: bool = False) -> 
     >>> assert lib_log_utils.LogSettings.wrap_text != default_wrap_text
 
     >>> # Env Setting = not default_wrap_text, wrap_text=None
-    >>> os.environ['log_utils_wrap_text'] = str(not default_wrap_text)
+    >>> os.environ['LOG_UTIL_WRAP'] = str(not default_wrap_text)
     >>> set_wrap_from_env()
     >>> assert lib_log_utils.LogSettings.wrap_text != default_wrap_text
 
     >>> # Env Setting = not default_wrap_text, wrap_text=default_wrap_text (env has precedence)
-    >>> os.environ['log_utils_wrap_text'] = str(not default_wrap_text)
+    >>> os.environ['LOG_UTIL_WRAP'] = str(not default_wrap_text)
     >>> set_wrap_from_env(default_wrap_text)
     >>> assert lib_log_utils.LogSettings.wrap_text != default_wrap_text
 
@@ -187,27 +187,27 @@ def set_wrap_from_env(wrap_text: Optional[bool] = None, force: bool = False) -> 
     >>> assert lib_log_utils.LogSettings.wrap_text == default_wrap_text
 
     >>> # provoke Error
-    >>> os.environ['log_utils_wrap_text'] = 'something'
+    >>> os.environ['LOG_UTIL_WRAP'] = 'something'
     >>> set_wrap_from_env()
     Traceback (most recent call last):
         ...
-    ValueError: invalid environment setting for "log_utils_wrap_text", must be "True" or "False"
+    ValueError: invalid environment setting for "LOG_UTIL_WRAP", must be "True" or "False"
 
     >>> # Teardown
     >>> lib_log_utils.LogSettings.wrap_text = default_wrap_text
-    >>> del os.environ['log_utils_wrap_text']
+    >>> del os.environ['LOG_UTIL_WRAP']
 
     """
-    if 'log_utils_wrap_text' in os.environ:
+    if 'LOG_UTIL_WRAP' in os.environ:
         if wrap_text is not None and force:
             lib_log_utils.LogSettings.wrap_text = wrap_text
         else:
-            if os.environ['log_utils_wrap_text'].lower().startswith('false'):
+            if os.environ['LOG_UTIL_WRAP'].lower().startswith('false'):
                 lib_log_utils.LogSettings.wrap_text = False
-            elif os.environ['log_utils_wrap_text'].lower().startswith('true'):
+            elif os.environ['LOG_UTIL_WRAP'].lower().startswith('true'):
                 lib_log_utils.LogSettings.wrap_text = True
             else:
-                raise ValueError('invalid environment setting for "log_utils_wrap_text", must be "True" or "False"')
+                raise ValueError('invalid environment setting for "LOG_UTIL_WRAP", must be "True" or "False"')
     else:
         if wrap_text is not None:
             lib_log_utils.LogSettings.wrap_text = wrap_text
@@ -229,12 +229,12 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
     >>> assert lib_log_utils.LogSettings.quiet != default_quiet
 
     >>> # Env Setting = not default_quiet, log_console=None
-    >>> os.environ['log_utils_quiet'] = str(not default_quiet)
+    >>> os.environ['LOG_UTIL_QUIET'] = str(not default_quiet)
     >>> set_quiet_from_env()
     >>> assert lib_log_utils.LogSettings.quiet != default_quiet
 
     >>> # Env Setting = not default_quiet, log_console=not default_quiet (env has precedence)
-    >>> os.environ['log_utils_quiet'] = str(not default_quiet)
+    >>> os.environ['LOG_UTIL_QUIET'] = str(not default_quiet)
     >>> set_quiet_from_env(default_quiet)
     >>> assert lib_log_utils.LogSettings.quiet != default_quiet
 
@@ -243,15 +243,15 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
     >>> assert lib_log_utils.LogSettings.quiet == default_quiet
 
     >>> # provoke Error
-    >>> os.environ['log_utils_quiet'] = 'something'
+    >>> os.environ['LOG_UTIL_QUIET'] = 'something'
     >>> set_quiet_from_env()
     Traceback (most recent call last):
         ...
-    ValueError: invalid environment setting for "log_utils_quiet", must be "True" or "False"
+    ValueError: invalid environment setting for "LOG_UTIL_QUIET", must be "True" or "False"
 
     >>> # Teardown
     >>> lib_log_utils.LogSettings.quiet = default_quiet
-    >>> del os.environ['log_utils_quiet']
+    >>> del os.environ['LOG_UTIL_QUIET']
 
     """
 
