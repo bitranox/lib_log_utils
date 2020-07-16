@@ -393,7 +393,7 @@ def colortest(quiet: bool = False) -> None:
         banner_critical('test level critical')
 
 
-def setup_handler(logger: logging.Logger, remove_existing_stream_handlers: bool = False) -> None:
+def setup_handler(logger: logging.Logger = logging.getLogger(), remove_existing_stream_handlers: bool = False) -> None:
     if LogSettings.use_colored_stream_handler:
         log_handlers.set_stream_handler_color(logger=logger,
                                               level=LogSettings.stream_handler_log_level,
