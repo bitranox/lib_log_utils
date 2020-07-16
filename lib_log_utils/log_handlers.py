@@ -56,7 +56,7 @@ def set_file_handler(filename: str,
         remove_handler_by_type(logger, logging.FileHandler)
 
     file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)  # type: logging.Handler
-    file_handler = _set_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt,
+    file_handler = _add_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt,
                                 datefmt=datefmt)
     return file_handler
 
@@ -83,11 +83,14 @@ def set_stream_handler(logger: logging.Logger = logging.getLogger(),
     """
 
     if remove_existing_stream_handlers:
-        remove_handler_by_type(logger, logging.StreamHandler)
+        try:
+            remove_handler_by_type(logger=logger, handler_type=logging.StreamHandler)
+            remove_handler_by_name(name)
+        except ValueError:
+            pass
 
     stream_handler: logging.Handler = logging.StreamHandler(stream=stream)
-    stream_handler = _set_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt,
-                                  datefmt=datefmt)
+    stream_handler = _add_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt, datefmt=datefmt)
     return stream_handler
 
 
@@ -102,6 +105,7 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
                              remove_existing_stream_handlers: bool = False) -> logging.Handler:
     """
     Sets a Colored Stream Handler. A Handler with the same name will be replaced (with a warning)
+    if remove_existing_stream_handlers is set, otgerwise it will be reconfigured
 
     >>> logger=logging.getLogger()
     >>> handler = set_stream_handler_color(logger)
@@ -114,12 +118,11 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     """
 
     if remove_existing_stream_handlers:
-        remove_handler_by_type(logger=logger, handler_type=logging.StreamHandler)
-
-    try:
-        remove_handler_by_name(name)
-    except ValueError:
-        pass
+        try:
+            remove_handler_by_type(logger=logger, handler_type=logging.StreamHandler)
+            remove_handler_by_name(name)
+        except ValueError:
+            pass
 
     fmt = override_fmt_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
     if hasattr(fmt, 'format'):
@@ -158,7 +161,7 @@ def override_style_via_environment(original_value: Any, environment_variable: st
     return return_value
 
 
-def _set_handler(handler: logging.Handler,
+def _add_handler(handler: logging.Handler,
                  logger: logging.Logger = logging.getLogger(),
                  name: str = 'log_handler',
                  level: int = logging.INFO,
@@ -171,11 +174,6 @@ def _set_handler(handler: logging.Handler,
 
     """
 
-    try:
-        remove_handler_by_name(name)
-        logger.warning('Warning: the existing log handler "{}" was removed and re-added'.format(name))
-    except ValueError:
-        pass
     handler.addFilter(HostnameFilter())
     fmt = format_fmt(fmt)
     formatter = logging.Formatter(fmt, datefmt)

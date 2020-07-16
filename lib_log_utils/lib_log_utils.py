@@ -48,7 +48,7 @@ def get_number_of_terminal_colors() -> int:
 class LogSettings(object):
     """ this holds all the Logger Settings - You can overwrite that values as needed from Your module """
 
-    use_colored_stream_handler = False
+    use_colored_stream_handler = True
 
     # the format of the log message, for instance :
     # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
@@ -395,7 +395,7 @@ def colortest(quiet: bool = False) -> None:
         banner_critical('test level critical')
 
 
-def setup_handler(logger: logging.Logger) -> None:
+def setup_handler(logger: logging.Logger, remove_existing_stream_handlers: bool = False) -> None:
     if LogSettings.use_colored_stream_handler:
         log_handlers.set_stream_handler_color(logger=logger,
                                               level=LogSettings.stream_handler_log_level,
@@ -404,11 +404,11 @@ def setup_handler(logger: logging.Logger) -> None:
                                               field_styles=LogSettings.field_styles,
                                               level_styles=LogSettings.level_styles,
                                               stream=LogSettings.stream,
-                                              remove_existing_stream_handlers=False)
+                                              remove_existing_stream_handlers=remove_existing_stream_handlers)
     else:
         log_handlers.set_stream_handler(logger=logger,
                                         level=LogSettings.stream_handler_log_level,
                                         fmt=LogSettings.fmt,
                                         datefmt=LogSettings.datefmt,
                                         stream=LogSettings.stream,
-                                        remove_existing_stream_handlers=False)
+                                        remove_existing_stream_handlers=remove_existing_stream_handlers)
