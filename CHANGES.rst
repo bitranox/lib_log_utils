@@ -13,7 +13,6 @@ Changelog
     - default log level for commandline ?
     - default width 115 chars (get terminal width otherwise?) in jupyter ?
     - colored output in jupyter should work !
-
     - cleanup
     - release on pypi
 
