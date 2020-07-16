@@ -370,15 +370,18 @@ def log_level(message: str,
 def colortest(quiet: bool = False) -> None:
     """ test banner colors
 
+    >>> # Setup
     >>> LogSettings.use_colored_stream_handler=True
     >>> LogSettings.new_logger_level = 0
     >>> LogSettings.stream_handler_log_level = 0
     >>> LogSettings.stream = sys.stdout
+    >>> setup_handler()
     >>> colortest()
     ***...***
     >>> colortest(quiet=True)
     >>> # TearDown
     >>> LogSettings.stream = sys.stderr
+    >>> setup_handler(remove_existing_stream_handlers=True)
 
     """
     if not quiet:
