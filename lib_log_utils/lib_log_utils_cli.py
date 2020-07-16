@@ -1,4 +1,5 @@
 # STDLIB
+import logging
 import os
 import sys
 from typing import Optional
@@ -8,6 +9,8 @@ import click    # noqa
 
 # CONSTANTS
 CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+logger = logging.getLogger()
 
 # PROJ
 try:
@@ -53,6 +56,10 @@ def do_log(message: str, level_str: str = 'info', banner: bool = False, width: O
     set_width_from_env(width, force)
     set_wrap_from_env(wrap, force)
     set_quiet_from_env(quiet, force)
+
+    logger.level = lib_log_utils.LogSettings.new_logger_level
+    lib_log_utils.setup_handler(logger)
+
     if colortest:
         lib_log_utils.colortest()
     else:
@@ -162,29 +169,29 @@ def set_wrap_from_env(wrap_text: Optional[bool] = None, force: bool = False) -> 
     # env settings have precedence, unless force=True - if nothing is passed, the default value will be used
     """
     >>> # Setup
-    >>> default_wrap_text = lib_log_utils.LogSettings.wrap_text
+    >>> default_wrap_text = lib_log_utils.LogSettings.wrap
 
-    >>> # No env Setting, wrap_text=None
+    >>> # No env Setting, wrap=None
     >>> set_wrap_from_env()
-    >>> assert lib_log_utils.LogSettings.wrap_text == default_wrap_text
+    >>> assert lib_log_utils.LogSettings.wrap == default_wrap_text
 
-    >>> # No env Setting, wrap_text = not default_wrap_text
+    >>> # No env Setting, wrap = not default_wrap_text
     >>> set_wrap_from_env(not default_wrap_text)
-    >>> assert lib_log_utils.LogSettings.wrap_text != default_wrap_text
+    >>> assert lib_log_utils.LogSettings.wrap != default_wrap_text
 
-    >>> # Env Setting = not default_wrap_text, wrap_text=None
+    >>> # Env Setting = not default_wrap_text, wrap=None
     >>> os.environ['LOG_UTIL_WRAP'] = str(not default_wrap_text)
     >>> set_wrap_from_env()
-    >>> assert lib_log_utils.LogSettings.wrap_text != default_wrap_text
+    >>> assert lib_log_utils.LogSettings.wrap != default_wrap_text
 
-    >>> # Env Setting = not default_wrap_text, wrap_text=default_wrap_text (env has precedence)
+    >>> # Env Setting = not default_wrap_text, wrap=default_wrap_text (env has precedence)
     >>> os.environ['LOG_UTIL_WRAP'] = str(not default_wrap_text)
     >>> set_wrap_from_env(default_wrap_text)
-    >>> assert lib_log_utils.LogSettings.wrap_text != default_wrap_text
+    >>> assert lib_log_utils.LogSettings.wrap != default_wrap_text
 
-    >>> # Env Setting = not default_wrap_text, wrap_text=default_wrap_text (parameter has precedence)
+    >>> # Env Setting = not default_wrap_text, wrap=default_wrap_text (parameter has precedence)
     >>> set_wrap_from_env(default_wrap_text, True)
-    >>> assert lib_log_utils.LogSettings.wrap_text == default_wrap_text
+    >>> assert lib_log_utils.LogSettings.wrap == default_wrap_text
 
     >>> # provoke Error
     >>> os.environ['LOG_UTIL_WRAP'] = 'something'
@@ -194,23 +201,23 @@ def set_wrap_from_env(wrap_text: Optional[bool] = None, force: bool = False) -> 
     ValueError: invalid environment setting for "LOG_UTIL_WRAP", must be "True" or "False"
 
     >>> # Teardown
-    >>> lib_log_utils.LogSettings.wrap_text = default_wrap_text
+    >>> lib_log_utils.LogSettings.wrap = default_wrap_text
     >>> del os.environ['LOG_UTIL_WRAP']
 
     """
     if 'LOG_UTIL_WRAP' in os.environ:
         if wrap_text is not None and force:
-            lib_log_utils.LogSettings.wrap_text = wrap_text
+            lib_log_utils.LogSettings.wrap = wrap_text
         else:
             if os.environ['LOG_UTIL_WRAP'].lower().startswith('false'):
-                lib_log_utils.LogSettings.wrap_text = False
+                lib_log_utils.LogSettings.wrap = False
             elif os.environ['LOG_UTIL_WRAP'].lower().startswith('true'):
-                lib_log_utils.LogSettings.wrap_text = True
+                lib_log_utils.LogSettings.wrap = True
             else:
                 raise ValueError('invalid environment setting for "LOG_UTIL_WRAP", must be "True" or "False"')
     else:
         if wrap_text is not None:
-            lib_log_utils.LogSettings.wrap_text = wrap_text
+            lib_log_utils.LogSettings.wrap = wrap_text
 
 
 def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> None:

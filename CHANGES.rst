@@ -14,6 +14,7 @@ Changelog
     - release on pypi
     - fix cli test
     - enable traceback option on cli errors
+    - jupyter notebook
 
 0.1.1
 -----
