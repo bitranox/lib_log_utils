@@ -5,7 +5,10 @@ import getpass
 import os
 import platform
 import sys
-from typing import Any, Dict, Optional, Union
+from types import TracebackType
+from typing import Any, Dict, Optional, Tuple, Union, TextIO, Type
+
+LogHandler = Union[type, Tuple[Union[type, Tuple[Any, ...]], ...]]
 
 # OWN
 import lib_platform
@@ -29,16 +32,15 @@ class HostnameFilter(logging.Filter):
         return True
 
 
-def add_file_handler(filename: str,
+def set_file_handler(filename: str,
                      logger: logging.Logger = logging.getLogger(),
-                     name: str = '',
+                     name: str = 'file_handler',
                      level: int = logging.INFO,
                      fmt: str = default_fmt,
                      datefmt: str = default_date_fmt,
-                     remove_existing_handlers: bool = False,
+                     remove_existing_file_handlers: bool = False,
                      mode: str = 'a',
                      encoding: str = 'utf-8',
-
                      delay: bool = True) -> logging.Handler:
     """
     name: the name of the file handler. if name = '', name = filename
@@ -50,42 +52,59 @@ def add_file_handler(filename: str,
     delay: If delay is true, then file opening is deferred until the first call to emit(). By default, the file grows indefinitely.
     """
 
+    if remove_existing_file_handlers:
+        remove_handler_by_type(logger, logging.FileHandler)
+
     file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)  # type: logging.Handler
-    file_handler = _add_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt,
-                                datefmt=datefmt, remove_existing_handlers=remove_existing_handlers)
+    file_handler = _set_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt,
+                                datefmt=datefmt)
     return file_handler
 
 
-def add_stream_handler(logger: logging.Logger = logging.getLogger(),
+def set_stream_handler(logger: logging.Logger = logging.getLogger(),
+                       stream: TextIO = sys.stderr,
                        name: str = 'stream_handler',
                        level: int = logging.INFO,
                        fmt: str = default_fmt,
                        datefmt: str = default_date_fmt,
-                       remove_existing_handlers: bool = True) -> logging.Handler:
+                       remove_existing_stream_handlers: bool = False) -> logging.Handler:
 
     """
-    >>> result = add_stream_handler()
+    Sets a Stream Handler. A Handler with the same name will be replaced (with a warning)
+
+
+    >>> logger = logging.getLogger('test_add_streamhandler')
+    >>> set_stream_handler(logger, remove_existing_stream_handlers=True)
+    <StreamHandler ...
+    >>> set_stream_handler(logger, name='test', remove_existing_stream_handlers=False)
+    <StreamHandler ...
+    >>> assert len(logger.handlers) == 2
 
     """
-    stream_handler = logging.StreamHandler(stream=sys.stderr)  # type: logging.Handler
-    stream_handler = _add_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt,
-                                  datefmt=datefmt, remove_existing_handlers=remove_existing_handlers)
+
+    if remove_existing_stream_handlers:
+        remove_handler_by_type(logger, logging.StreamHandler)
+
+    stream_handler: logging.Handler = logging.StreamHandler(stream=stream)
+    stream_handler = _set_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt,
+                                  datefmt=datefmt)
     return stream_handler
 
 
-def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
+def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
+                             stream: TextIO = sys.stderr,
                              name: str = 'stream_handler_color',
                              level: int = logging.INFO,
                              fmt: str = default_fmt,
                              datefmt: str = default_date_fmt,
                              field_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_FIELD_STYLES,
                              level_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_LEVEL_STYLES,
-                             remove_existing_handlers: bool = True) -> logging.Handler:
+                             remove_existing_stream_handlers: bool = False) -> logging.Handler:
     """
-    # https://coloredlogs.readthedocs.io/en/latest/api.html
+    Sets a Colored Stream Handler. A Handler with the same name will be replaced (with a warning)
 
     >>> logger=logging.getLogger()
-    >>> handler = add_stream_handler_color()
+    >>> handler = set_stream_handler_color(logger)
     >>> logger.debug("DEBUG")
     >>> logger.info("INFO")
     >>> logger.warning("WARNING")
@@ -93,21 +112,33 @@ def add_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     >>> logger.critical("CRITICAL")
 
     """
-    if remove_existing_handlers:
-        remove_all_handlers(logger=logger)
 
-    if not exists_handler_with_name(name):
-        fmt = override_fmt_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
-        if hasattr(fmt, 'format'):
-            fmt = format_fmt(fmt)
-        datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
-        field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
-        level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
-        coloredlogs.install(logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, isatty=True)
-        logger.handlers[-1].name = name
-        handler = logger.handlers[-1]
-    else:
-        handler = get_handler_by_name(name=name)
+    if remove_existing_stream_handlers:
+        remove_handler_by_type(logger=logger, handler_type=logging.StreamHandler)
+
+    try:
+        remove_handler_by_name(name)
+    except ValueError:
+        pass
+
+    fmt = override_fmt_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
+    if hasattr(fmt, 'format'):
+        fmt = format_fmt(fmt)
+    datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
+    field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
+    level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
+
+    # https://coloredlogs.readthedocs.io/en/latest/api.html
+    coloredlogs.install(logger=logger,
+                        level=level,
+                        fmt=fmt,
+                        datefmt=datefmt,
+                        field_styles=field_styles,
+                        level_styles=level_styles,
+                        stream=stream,
+                        isatty=True)
+    logger.handlers[-1].name = name
+    handler = logger.handlers[-1]
     return handler
 
 
@@ -127,32 +158,32 @@ def override_style_via_environment(original_value: Any, environment_variable: st
     return return_value
 
 
-def _add_handler(handler: logging.Handler,
+def _set_handler(handler: logging.Handler,
                  logger: logging.Logger = logging.getLogger(),
-                 name: str = 'stream_handler',
+                 name: str = 'log_handler',
                  level: int = logging.INFO,
                  fmt: str = default_fmt,
-                 datefmt: str = default_date_fmt,
-                 remove_existing_handlers: bool = True) -> logging.Handler:
+                 datefmt: str = default_date_fmt) -> logging.Handler:
 
     """
-    >>> result = add_stream_handler()
+    >>> result = set_stream_handler()
+    >>> result2 = set_stream_handler()
 
     """
-    if remove_existing_handlers:
-        remove_all_handlers(logger=logger)
 
-    if not exists_handler_with_name(name):
-        handler.addFilter(HostnameFilter())
-        fmt = format_fmt(fmt)
-        formatter = logging.Formatter(fmt, datefmt)
-        handler.setFormatter(formatter)
-        handler.setLevel(level)
-        handler.name = name
-        logger.addHandler(handler)
-        return handler
-    else:
-        raise ValueError('Handler "{name}" already exists'.format(name=name))
+    try:
+        remove_handler_by_name(name)
+        logger.warning('Warning: the existing log handler "{}" was removed and re-added'.format(name))
+    except ValueError:
+        pass
+    handler.addFilter(HostnameFilter())
+    fmt = format_fmt(fmt)
+    formatter = logging.Formatter(fmt, datefmt)
+    handler.setFormatter(formatter)
+    handler.setLevel(level)
+    handler.name = name
+    logger.addHandler(handler)
+    return handler
 
 
 def format_fmt(fmt: str) -> str:
@@ -166,7 +197,7 @@ def format_fmt(fmt: str) -> str:
 def get_handler_by_name(name: str) -> logging.Handler:
     """
     >>> import unittest
-    >>> logger = add_stream_handler()
+    >>> logger = set_stream_handler()
     >>> unittest.TestCase().assertIsNotNone(get_handler_by_name, ['console_handler'])
     >>> unittest.TestCase().assertRaises(ValueError, get_handler_by_name, ['unknown_handler'])
 
@@ -189,6 +220,21 @@ def remove_all_handlers(logger: logging.Logger = logging.getLogger()) -> None:
     handlers = logger.handlers
     for handler in handlers:
         logger.removeHandler(handler)
+
+
+def remove_handler_by_type(logger: logging.Logger, handler_type: LogHandler) -> None:
+    """
+    >>> logger = logging.getLogger()
+    >>> logging.basicConfig()
+    >>> remove_handler_by_type(logger, logging.StreamHandler)
+
+    """
+
+    handlers = logger.handlers
+    for handler in handlers:
+        # noinspection PyTypeChecker
+        if isinstance(handler, handler_type):
+            logger.removeHandler(handler)
 
 
 def exists_handler_with_name(name: str) -> bool:
@@ -242,15 +288,13 @@ class SaveLogHandlerFormatter(object):
 
     def __init__(self, handler: logging.Handler):
         self._handler = handler
-        self._formatter = None          # type:  Optional[logging.Formatter]
+        self._formatter: Optional[logging.Formatter] = None
         self.save()
 
     def __enter__(self) -> 'SaveLogHandlerFormatter':
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):              # type: ignore
-        # correct typing, but does not work under python 3.5 under xenial
-        # def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
         self.restore()
         self.close()
 

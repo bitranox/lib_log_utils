@@ -45,7 +45,6 @@ def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
 
 
 def print_exception_traceback(s_error: str) -> str:
-    print(s_error)
     exc_info = sys.exc_info()[1]
     exc_info_type = type(exc_info).__name__
     exc_info_msg = exc_info_type + ': ' + str(exc_info)

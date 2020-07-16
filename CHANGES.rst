@@ -6,9 +6,21 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.1.2
+-----
+2020-07-14: feature release
+    - store settings in environment for commandline use
+    - default log level for commandline ?
+    - default width 115 chars (get terminal width otherwise?) in jupyter ?
+    - colored output in jupyter should work !
+
+    - cleanup
+    - release on pypi
+
+
 0.1.1
 -----
-2020-07-06 : patch release
+2020-07-06: patch release
     - new click cli
     - use PizzaCutter Template
 

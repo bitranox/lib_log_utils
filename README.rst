@@ -1,7 +1,7 @@
 lib_log_utils
 =============
 
-|travis_build| |license| |pypi|
+|travis_build| |license| |jupyter| |pypi|
 
 |codecov| |better_code| |cc_maintain| |cc_issues| |cc_coverage| |snyk|
 
@@ -51,10 +51,11 @@ Python version required: 3.6.0 or newer
 
 tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
 
-`100% code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, codestyle checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/lib_log_utils>`_, automatic daily builds and monitoring
+`good code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, codestyle checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/lib_log_utils>`_, automatic daily builds and monitoring
 
 ----
 
+- `Try it Online`_
 - `Installation and Upgrade`_
 - `Usage`_
 - `Usage from Commandline`_
@@ -69,7 +70,11 @@ tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.8-dev, pypy3
 
 ----
 
+Try it Online
+-------------
 
+You might try it right away in Jupyter Notebook by using the "launch binder" badge, or click `here <https://mybinder.org/v2/gh/{{rst_include.
+repository_slug}}/master?filepath=lib_log_utils.ipynb>`_
 
 Installation and Upgrade
 ------------------------
@@ -163,10 +168,13 @@ Installation and Upgrade
 Usage
 -----------
 
-.. code-block::
+Python
+-----------
 
-    import the module and check the code - its easy and documented there, including doctest examples.
-    in case of any questions the usage section might be expanded at a later time
+
+import the module and check the code - it is very easy and documented there
+
+as soon as I have some time, this will be completed (help welcome)
 
 
 Commandline
@@ -175,84 +183,132 @@ Commandline
 .. code-block:: bash
 
    Usage:
-       log_util (-h | -v | -i)
-       log_util spam            <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util debug           <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util verbose         <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util info            <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util notice          <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util success         <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util warning         <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util error           <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util critical        <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_spam     <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_debug    <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_verbose  <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_info     <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_notice   <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_success  <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_warning  <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_error    <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util banner_critical <message> [ --banner_width=<bw>, (--wrap | --nowrap), --log_console=(True|False) ]
-       log_util color_test      [ --quiet=(True|False) ]
+
+        log_util (-h | --version | --program_info)
+        log_util [Options] "<message>"
+        log_util "<message>" [Options]
 
    Options:
-       -h, --help          show help
-       -v, --version       show version
-       -i, --info          show Info
+        -h, --help          show help
+        --version           show version
+        --program_info      show Program Info
 
 
-if parameter *--log_console* is anything else then *False* (not case sensitive), then it is considered as True.
+Arguments
+---------
 
-if parameter *--log_console* is not present, it is also considered as True
+message
+    the message to log
 
-This makes it possible to silence messages elegantly in a shellscript:
+
+
+Options
+-------
+
+===========================  ====================================================================================
+option                       description
+===========================  ====================================================================================
+-l --level <level>           the log level as number or predefined value, default = INFO
+-b --banner                  log as banner
+-w --width <width>           the width of the message or the banner, if text wrap is used, default = 140
+-s --silent <True|False> **  disables the output if set to "True" (not case sensitive)**, default = False
+-q --quiet                   disables the output (as flag), default = False
+-f --force                   take precedence over environment settings, default = False
+--wrap --nowrap              use text wrap (this is the default value), default = True
+--traceback --no-traceback   show traceback on commandline error, default = False
+===========================  ====================================================================================
+
+
+\**This makes it possible to silence messages elegantly in a shellscript:
 
 .. code-block:: bash
 
-       #!/bin/bash
-       debug_messages="False"
-       info_messages="True"
+        #!/bin/bash
+
+        # disable deprecation messages
+        DEP_MSG_OFF="True"
+
        ...
        ...
-       log_util debug "some debug message ${IFS}and here the second line" --log_console=${debug_messages}
-       log_util info "some info message" --log_console=${info_messages}
+       log_util -l warning "some deprecation message" --silent=${DEP_MSG_OFF}
+       log_util -l info "another deprecation message" --silent=${DEP_MSG_OFF}
        ...
+
+
+log levels
+--------------------
+
+=========   ===========
+Text        Integer
+=========   ===========
+NOTSET      0
+SPAM        5
+DEBUG       10
+VERBOSE     15
+INFO        20
+NOTICE      25
+WARNING     30
+SUCCESS     35
+ERROR       40
+CRITICAL    50
+=========   ===========
+
+
+Environment Settings
+--------------------
+
+======================  =======================================================================================
+environment variable    function
+======================  =======================================================================================
+log_utils_log_level     the level of the logger, one of the predefined log levels, or "0" - "50", default = 0
+log_utils_banner_width  the banner width if text wrap is used, must be >="10", default = 140
+log_utils_wrap_text     if text wrap should be used, must be True or False (not case sensitive), default = True
+log_utils_quiet         if the logger is used at all - must be True or False (not case sensitive), default = False
+======================  =======================================================================================
+
+environment settings take precedence over commandline arguments, unless --force is passed to the commandline
+
+
+EXAMPLES
+--------
+
+
+.. code-block:: bash
+
+    # multi-line banner
+    log_util -l warning "Line1${IFS}Line2${IFS}Line3"
+
+    # use log_level
+    export log_utils_log_level=WARNING
+
+    log_util -l info   "spam"   # this is not shown
+    log_util -l error  "ham"    # this is shown
+
+    # disable log_level
+    unset log_utils_log_level
 
 Usage from Commandline
 ------------------------
 
 .. code-block:: bash
 
-   Usage: log_util [OPTIONS] COMMAND [ARGS]...
+   Usage: log_util [OPTIONS] [MESSAGE]
 
      colored log messages and banners from commandline and python
 
    Options:
-     --version   Show the version and exit.
-     -h, --help  Show this message and exit.
-
-   Commands:
-     banner_critical  logs a critical message banner
-     banner_debug     logs a debug message banner
-     banner_error     logs a error message banner
-     banner_info      logs a info message banner
-     banner_notice    logs a notice message banner
-     banner_spam      logs a spam message banner
-     banner_success   logs a success message banner
-     banner_verbose   logs a verbose message banner
-     banner_warning   logs a warning message banner
-     color_test       prints a color test
-     critical         logs a critical message
-     debug            logs a debug message
-     error            logs a error message
-     info             logs a info message
-     notice           logs a notice message
-     program_info     get program informations
-     spam             logs a spam message
-     success          logs a success message
-     verbose          logs a verbose message
-     warning          logs a warning message
+     --version                     Show the version and exit.
+     -b, --banner                  log as banner
+     -w, --width INTEGER           wrap width, default=140
+     --wrap / --nowrap             wrap text
+     -s, --silent TEXT             disable logging if "True"
+     -q, --quiet                   disable logging as flag
+     -f, --force                   take precedence over environment settings
+     -l, --level TEXT              log level as number or predefined Level
+     --program_info                get program info
+     -c, --colortest               color test
+     --traceback / --no-traceback  return traceback information on cli
+     -h, --help                    Show this message and exit.
 
 Requirements
 ------------
@@ -293,9 +349,21 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.1.2
+-----
+2020-07-14: feature release
+    - store settings in environment for commandline use
+    - default log level for commandline ?
+    - default width 115 chars (get terminal width otherwise?) in jupyter ?
+    - colored output in jupyter should work !
+
+    - cleanup
+    - release on pypi
+
+
 0.1.1
 -----
-2020-07-06 : patch release
+2020-07-06: patch release
     - new click cli
     - use PizzaCutter Template
 

@@ -20,7 +20,7 @@ Python version required: 3.6.0 or newer
 
 ----
 
-
+.. include:: ./try_in_jupyter.rst
 
 Installation and Upgrade
 ------------------------
