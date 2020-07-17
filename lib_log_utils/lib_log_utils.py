@@ -56,6 +56,7 @@ def get_number_of_terminal_colors() -> int:
     if 'TRAVIS' in os.environ:
         if os.environ['TRAVIS'].lower() == 'true':
             colors = 8
+            LogSettings.stream = sys.stdout
             return colors
 
     if platform.system().lower() != 'windows':
@@ -383,6 +384,7 @@ def log_level(message: str,
                     line = line + (width - len(line) - 1) * ' ' + '*'
                 logger.log(level=level, msg=line)
         logger.log(level=level, msg=sep_line)
+        log_handlers.logger_flush_all_handlers(logger)
     else:
         for line in l_message:
             if wrap:
@@ -392,6 +394,7 @@ def log_level(message: str,
             else:
                 msg_line = line.rstrip()
                 logger.log(level=level, msg=msg_line)
+                log_handlers.logger_flush_all_handlers(logger)
 
 
 def colortest(quiet: bool = False) -> None:

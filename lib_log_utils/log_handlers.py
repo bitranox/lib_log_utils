@@ -244,13 +244,12 @@ def exists_handler_with_name(name: str) -> bool:
     return False
 
 
-def logger_flush_all_handlers() -> None:
+def logger_flush_all_handlers(logger: logging.Logger = logging.getLogger()) -> None:
     """
     >>> logger_flush_all_handlers()
 
     """
-    flush_logger = logging.getLogger()
-    for handler in flush_logger.handlers:
+    for handler in logger.handlers:
         if hasattr(handler, 'flush'):
             handler.flush()
 
