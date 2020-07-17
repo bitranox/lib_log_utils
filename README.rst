@@ -335,7 +335,7 @@ following modules will be automatically installed :
 
     ## Project Requirements
     click
-    coloredlogs
+    coloredlogs @ git+https://github.com/bitranox/python-coloredlogs.git
     lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
     lib_platform @ git+https://github.com/bitranox/lib_platform.git
     lib_programname @ git+https://github.com/bitranox/lib_programname.git
