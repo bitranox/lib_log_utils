@@ -139,6 +139,17 @@ class LogSettings(object):
         level_styles = level_styles_256
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 def banner_spam(message: str,
                 width: Optional[int] = None,
                 wrap: Optional[bool] = None,
@@ -151,6 +162,9 @@ def banner_spam(message: str,
     >>> banner_spam('spam')
 
     """
+    test = bcolors.WARNING + "SOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TEST" + bcolors.ENDC
+    sys.stdout.write(test)
+    print(test)
     log_level(message=message, level=log_levels.SPAM, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=True)
 
 
