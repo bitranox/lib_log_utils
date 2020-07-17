@@ -5,7 +5,8 @@ import sys
 from typing import Optional
 
 # EXT
-import click    # noqa
+import click                # noqa
+
 
 # CONSTANTS
 CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])

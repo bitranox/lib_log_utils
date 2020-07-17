@@ -1,3 +1,7 @@
+Version 0.1.3 as of 2020-07-17, see changelog_
+
+=======================================================
+
 lib_log_utils
 =============
 
@@ -216,6 +220,7 @@ option                       description
 -f --force                   take precedence over environment settings, default = False
 --wrap --nowrap              use text wrap (this is the default value), default = True
 --traceback --no-traceback   show traceback on commandline error, default = False
+-c --colortest               color test
 ===========================  ====================================================================================
 
 
@@ -257,14 +262,18 @@ CRITICAL    50
 Environment Settings
 --------------------
 
-======================  =======================================================================================
-environment variable    function
-======================  =======================================================================================
-LOG_UTIL_LEVEL          the level of the logger, one of the predefined log levels, or "0" - "50", default = 0
-LOG_UTIL_WIDTH          the banner width if text wrap is used, must be >="10", default = 140
-LOG_UTIL_WRAP           if text wrap should be used, must be True or False (not case sensitive), default = True
-LOG_UTIL_QUIET          if the logger is used at all - must be True or False (not case sensitive), default = False
-======================  =======================================================================================
+========================  =======================================================================================
+environment variable      function
+========================  =======================================================================================
+LOG_UTIL_LEVEL            the level of the logger, one of the predefined log levels, or "0" - "50", default = 0
+LOG_UTIL_WIDTH            the banner width if text wrap is used, must be >="10", default = 140
+LOG_UTIL_WRAP             if text wrap should be used, must be True or False (not case sensitive), default = True
+LOG_UTIL_QUIET            if the logger is used at all - must be True or False (not case sensitive), default = False
+COLOREDLOGS_LOG_FORMAT    `as described in coloredlogs <https://coloredlogs.readthedocs.io/en/latest/api.html#environment-variables>`_
+COLOREDLOGS_DATE_FORMAT   `as described in coloredlogs <https://coloredlogs.readthedocs.io/en/latest/api.html#environment-variables>`_
+COLOREDLOGS_FIELD_STYLES  `as described in coloredlogs <https://coloredlogs.readthedocs.io/en/latest/api.html#environment-variables>`_
+COLOREDLOGS_LEVEL_STYLES  `as described in coloredlogs <https://coloredlogs.readthedocs.io/en/latest/api.html#environment-variables>`_
+========================  =======================================================================================
 
 environment settings take precedence over commandline arguments, unless --force is passed to the commandline
 
@@ -351,8 +360,9 @@ Changelog
 
 0.1.3
 -----
-2020-07-16: development
-    -
+2020-07-17: feature release
+    - comprehensive *--colortest*
+    - automatically select 8 colors profile for travis
 
 0.1.2
 -----

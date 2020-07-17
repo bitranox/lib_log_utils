@@ -8,8 +8,9 @@ Changelog
 
 0.1.3
 -----
-2020-07-16: development
-    -
+2020-07-17: feature release
+    - comprehensive *--colortest*
+    - automatically select 8 colors profile for travis
 
 0.1.2
 -----
