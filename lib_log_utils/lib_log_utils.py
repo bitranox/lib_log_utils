@@ -3,11 +3,15 @@ from typing import Optional, Union
 
 import logging
 import logging.handlers
+import os
 import platform
 import subprocess
 import sys
 import textwrap
 from typing import Dict
+
+# EXT
+import humanfriendly.cli            # type: ignore
 
 # OWN
 import lib_parameter
@@ -26,14 +30,37 @@ except ImportError:                 # pragma: no cover
 
 def get_number_of_terminal_colors() -> int:
     """
+    tries to detect the number of colors - selects 8 colors for travis automatically
+
+    >>> # test Windows / Linux
     >>> if platform.system().lower() == 'windows':
-    ...     assert get_number_of_terminal_colors() == 256
+    ...     assert get_number_of_terminal_colors() > 0
     ... else:
-    ...    assert get_number_of_terminal_colors() == 8 or get_number_of_terminal_colors() == 256
+    ...     assert get_number_of_terminal_colors() > 0
+
+    >>> # Test Travis
+    >>> if 'TRAVIS' in os.environ:
+    ...    assert get_number_of_terminal_colors() > 0
+    ...    save_travis_env = os.environ['TRAVIS']
+    ...    discard = os.environ.pop('TRAVIS', None)
+    ...    assert get_number_of_terminal_colors() > 0
+    ...    os.environ['TRAVIS'] = save_travis_env
+    ... else:
+    ...    os.environ['TRAVIS'] = 'true'
+    ...    assert get_number_of_terminal_colors() == 8
+    ...    discard = os.environ.pop('TRAVIS', None)
+
+
 
     """
+    if 'TRAVIS' in os.environ:
+        if os.environ['TRAVIS'].lower() == 'true':
+            colors = 8
+            return colors
+
     if platform.system().lower() != 'windows':
         try:
+            # capture_output not under python 3.6 !
             # my_process = subprocess.run(['tput', 'colors'], check=True, capture_output=True)
             # colors = int(my_process.stdout)
             output = subprocess.check_output(['tput', 'colors'], stderr=subprocess.PIPE)
@@ -100,7 +127,7 @@ class LogSettings(object):
             'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
             'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
             'error': {'background': 'red'},                                     # level 40  - ERROR
-            'critical': {'background': 'red', 'bold': True}                    # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+            'critical': {'background': 'red', 'bold': True}                     # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
         }
 
     if get_number_of_terminal_colors() == 8:
@@ -377,7 +404,7 @@ def colortest(quiet: bool = False) -> None:
     >>> LogSettings.stream = sys.stdout
     >>> setup_handler()
     >>> colortest()
-    ***...***
+    test ...
     >>> colortest(quiet=True)
     >>> # TearDown
     >>> LogSettings.stream = sys.stderr
@@ -385,15 +412,16 @@ def colortest(quiet: bool = False) -> None:
 
     """
     if not quiet:
-        banner_spam('test level spam')
-        banner_debug('test level debug')
-        banner_verbose('test level verbose')
-        banner_info('test level info')
-        banner_notice('test level notice')
-        banner_success('test level success')
-        banner_warning('test level warning')
-        banner_error('test level error')
-        banner_critical('test level critical')
+        log_spam('test level spam')
+        log_debug('test level debug')
+        log_verbose('test level verbose')
+        log_info('test level info')
+        log_notice('test level notice')
+        log_success('test level success')
+        log_warning('test level warning')
+        log_error('test level error')
+        log_critical('test level critical')
+        humanfriendly.cli.demonstrate_ansi_formatting()
 
 
 def setup_handler(logger: logging.Logger = logging.getLogger(), remove_existing_stream_handlers: bool = False) -> None:
