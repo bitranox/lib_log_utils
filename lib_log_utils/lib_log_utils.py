@@ -43,14 +43,13 @@ def get_number_of_terminal_colors() -> int:
     ...    assert get_number_of_terminal_colors() > 0
     ...    save_travis_env = os.environ['TRAVIS']
     ...    discard = os.environ.pop('TRAVIS', None)
-    ...    assert get_number_of_terminal_colors() == 8
+    ...    assert get_number_of_terminal_colors() > 0
     ...    os.environ['TRAVIS'] = save_travis_env
     ... else:
     ...    os.environ['TRAVIS'] = 'true'
     ...    assert get_number_of_terminal_colors() == 8
     ...    discard = os.environ.pop('TRAVIS', None)
 
-    >>>
 
 
     """
