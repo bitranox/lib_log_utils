@@ -162,9 +162,6 @@ def banner_spam(message: str,
     >>> banner_spam('spam')
 
     """
-    test = bcolors.WARNING + "SOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TEST" + bcolors.ENDC
-    sys.stdout.write(test)
-    print(test)
     log_level(message=message, level=log_levels.SPAM, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=True)
 
 
@@ -454,6 +451,10 @@ def log_level(message: str,
     >>> log_level('this is\\none nice piece of ham\\none nice piece of spam\\none more piece of wonderful spam', \
                    logging.ERROR, width=10, wrap=False, banner = True)
     """
+
+    test = bcolors.WARNING + "SOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TESTSOME TEST" + bcolors.ENDC
+    sys.stdout.write(test)
+    print(test)
 
     quiet = bool(lib_parameter.get_default_if_none(quiet, default=LogSettings.quiet))
 
