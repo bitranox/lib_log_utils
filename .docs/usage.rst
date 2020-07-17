@@ -121,3 +121,11 @@ EXAMPLES
 
     # disable log_level
     unset log_utils_log_level
+
+
+Notes
+-----
+
+colored output will not work on TRAVIS as soon as You put some secrets in the yaml file, because in that case the output will be filtered
+
+see : https://travis-ci.community/t/ansi-colors-in-console-does-not-work-anymore/6608

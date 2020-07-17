@@ -1,4 +1,4 @@
-Version 0.1.4a0 as of 2020-07-17, see changelog_
+Version 0.1.4 as of 2020-07-17, see changelog_
 
 =======================================================
 
@@ -296,6 +296,14 @@ EXAMPLES
     # disable log_level
     unset log_utils_log_level
 
+
+Notes
+-----
+
+colored output will not work on TRAVIS as soon as You put some secrets in the yaml file, because in that case the output will be filtered
+
+see : https://travis-ci.community/t/ansi-colors-in-console-does-not-work-anymore/6608
+
 Usage from Commandline
 ------------------------
 
@@ -358,10 +366,10 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
-0.1.4a0
+0.1.4
 -------
 2020-07-17: development
-    -
+    - bump coverage
 
 0.1.3
 -----
