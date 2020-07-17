@@ -93,10 +93,7 @@ class LogSettings(object):
     # default log_level of the stream_handler that will be added, 0 = NOTSET = every message will be taken
     stream_handler_log_level = 0
     # the stream the stream_handler should use
-    if os.environ['TRAVIS'].lower() == 'true':
-        stream = sys.stdout
-    else:
-        stream = sys.stderr
+    stream = sys.stderr
 
     field_styles: Dict[str, Dict[str, Union[str, bool]]] = \
         {
@@ -120,6 +117,19 @@ class LogSettings(object):
             'critical': {'background': 'red'}                                 # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
         }
 
+    level_styles_travis: Dict[str, Dict[str, Union[str, bool]]] = \
+        {
+            'spam': {'color': 'magenta'},                         # level 5   - SPAM
+            'debug': {'color': 'blue'},                           # level 10  - DEBUG
+            'verbose': {'color': 'yellow'},                       # level 15  - VERBOSE
+            'info': {},                                                         # level 20  - INFO
+            'notice': {'color': 'magenta'},                  # level 25  - NOTICE
+            'warning': {'color': 'red'},                          # level 30  - WARNING
+            'success': {'color': 'green'},                        # level 35  - SUCCESS
+            'error': {'color': 'red'},                                     # level 40  - ERROR
+            'critical': {'color': 'red'}                     # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+        }
+
     level_styles_8: Dict[str, Dict[str, Union[str, bool]]] = \
         {
             'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
@@ -137,6 +147,10 @@ class LogSettings(object):
         level_styles = level_styles_8
     else:
         level_styles = level_styles_256
+
+    if 'TRAVIS' in os.environ:
+        if os.environ['TRAVIS'].lower() == 'true':
+            level_styles = level_styles_travis
 
 
 def banner_spam(message: str,
