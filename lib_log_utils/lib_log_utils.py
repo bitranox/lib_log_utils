@@ -56,7 +56,6 @@ def get_number_of_terminal_colors() -> int:
     if 'TRAVIS' in os.environ:
         if os.environ['TRAVIS'].lower() == 'true':
             colors = 8
-            LogSettings.stream = sys.stdout
             return colors
 
     if platform.system().lower() != 'windows':
@@ -94,7 +93,10 @@ class LogSettings(object):
     # default log_level of the stream_handler that will be added, 0 = NOTSET = every message will be taken
     stream_handler_log_level = 0
     # the stream the stream_handler should use
-    stream = sys.stderr
+    if os.environ['TRAVIS'].lower() == 'true':
+        stream = sys.stdout
+    else:
+        stream = sys.stderr
 
     field_styles: Dict[str, Dict[str, Union[str, bool]]] = \
         {
