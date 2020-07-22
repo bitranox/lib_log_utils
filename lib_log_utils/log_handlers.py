@@ -11,11 +11,15 @@ from typing import Any, Dict, Optional, Tuple, Union, TextIO, Type
 LogHandler = Union[type, Tuple[Union[type, Tuple[Any, ...]], ...]]
 
 # OWN
+import lib_parameter
 import lib_platform
 import lib_programname
 
 # EXT
-import coloredlogs  # type: ignore
+import bitranox_coloredlogs as coloredlogs
+
+# Custom Types
+FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]
 
 
 # default_fmt_string = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'
@@ -100,8 +104,8 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
                              level: int = logging.INFO,
                              fmt: str = default_fmt,
                              datefmt: str = default_date_fmt,
-                             field_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_FIELD_STYLES,
-                             level_styles: Dict[str, Dict[str, Union[str, bool]]] = coloredlogs.DEFAULT_LEVEL_STYLES,
+                             field_styles: Optional[FieldAndLevelStyles] = None,
+                             level_styles: Optional[FieldAndLevelStyles] = None,
                              remove_existing_stream_handlers: bool = False) -> logging.Handler:
     """
     Sets a Colored Stream Handler. A Handler with the same name will be replaced (with a warning)
@@ -116,6 +120,9 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
     >>> logger.critical("CRITICAL")
 
     """
+
+    field_styles = lib_parameter.get_default_if_none(field_styles, coloredlogs.DEFAULT_FIELD_STYLES)
+    level_styles = lib_parameter.get_default_if_none(level_styles, coloredlogs.DEFAULT_LEVEL_STYLES)
 
     if remove_existing_stream_handlers:
         try:

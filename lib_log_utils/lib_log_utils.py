@@ -3,9 +3,6 @@ from typing import Optional, Union
 
 import logging
 import logging.handlers
-import os
-import platform
-import subprocess
 import sys
 import textwrap
 from typing import Dict
@@ -19,124 +16,19 @@ import lib_parameter
 # PROJ
 # imports for local pytest
 try:
+    from .log_config import log_settings
     from . import log_handlers
     from . import log_levels
     from . import log_traceback
-except ImportError:                 # pragma: no cover
-    import log_handlers             # type: ignore # pragma: no cover
-    import log_levels               # type: ignore # pragma: no cover
-    import log_traceback            # type: ignore # pragma: no cover
+except ImportError:                         # pragma: no cover
+    from log_config import log_settings     # type: ignore # pragma: no cover
+    import log_handlers                     # type: ignore # pragma: no cover
+    import log_levels                       # type: ignore # pragma: no cover
+    import log_traceback                    # type: ignore # pragma: no cover
 
 
-def get_number_of_terminal_colors() -> int:
-    """
-    tries to detect the number of colors - selects 8 colors for travis automatically
-
-    >>> # test Windows / Linux
-    >>> if platform.system().lower() == 'windows':
-    ...     assert get_number_of_terminal_colors() > 0
-    ... else:
-    ...     assert get_number_of_terminal_colors() > 0
-
-    >>> # Test Travis
-    >>> if 'TRAVIS' in os.environ:
-    ...    assert get_number_of_terminal_colors() > 0
-    ...    save_travis_env = os.environ['TRAVIS']
-    ...    discard = os.environ.pop('TRAVIS', None)
-    ...    assert get_number_of_terminal_colors() > 0
-    ...    os.environ['TRAVIS'] = save_travis_env
-    ... else:
-    ...    os.environ['TRAVIS'] = 'true'
-    ...    assert get_number_of_terminal_colors() == 8
-    ...    discard = os.environ.pop('TRAVIS', None)
-
-
-
-    """
-    if 'TRAVIS' in os.environ:
-        # note that there will be no colored output on travis, as soon as
-        # a secret is in travis.yaml, since then the output is filtered.
-        # see also : https://travis-ci.community/t/ansi-colors-in-console-does-not-work-anymore/6608
-        if os.environ['TRAVIS'].lower() == 'true':
-            colors = 8
-            return colors
-
-    if platform.system().lower() != 'windows':
-        try:
-            # capture_output not under python 3.6 !
-            # my_process = subprocess.run(['tput', 'colors'], check=True, capture_output=True)
-            # colors = int(my_process.stdout)
-            output = subprocess.check_output(['tput', 'colors'], stderr=subprocess.PIPE)
-            colors = int(output)
-        except subprocess.CalledProcessError:       # pragma: no cover
-            colors = 256                            # pragma: no cover
-    else:
-        colors = 256
-    return colors
-
-
-class LogSettings(object):
-    """ this holds all the Logger Settings - You can overwrite that values as needed from Your module """
-
-    use_colored_stream_handler = True
-
-    # the format of the log message, for instance :
-    # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
-    fmt = '%(message)s'
-    # that date format
-    datefmt = '%Y-%m-%d %H:%M:%S'
-    # the banner width
-    width = 140
-    # if text should be wrapped
-    wrap = True
-    # if console logging should be skipped
-    quiet = False
-    # if there is no logger set, we set up a new logger with level new_logger_level
-    new_logger_level = logging.INFO
-    # default log_level of the stream_handler that will be added, 0 = NOTSET = every message will be taken
-    stream_handler_log_level = 0
-    # the stream the stream_handler should use
-    stream = sys.stderr
-
-    field_styles: Dict[str, Dict[str, Union[str, bool]]] = \
-        {
-            'asctime': {'color': 'green'},
-            'hostname': {'color': 'green'},                                   # 'hostname': {'color': 'magenta'},
-            'levelname': {'color': 'yellow'},                                 # 'levelname': {'color': 'black', 'bold': True},
-            'name': {'color': 'blue'},
-            'programname': {'color': 'cyan'}
-        }
-
-    level_styles_256: Dict[str, Dict[str, Union[str, bool]]] = \
-        {
-            'spam': {'color': 'magenta', 'bright': True},                     # level 5   - SPAM
-            'debug': {'color': 'blue', 'bright': True},                       # level 10  - DEBUG
-            'verbose': {'color': 'yellow', 'bright': True},                   # level 15  - VERBOSE
-            'info': {},                                                       # level 20  - INFO
-            'notice': {'background': 'magenta', 'bright': True},              # level 25  - NOTICE
-            'warning': {'color': 'red', 'bright': True},                      # level 30  - WARNING
-            'success': {'color': 'green', 'bright': True},                    # level 35  - SUCCESS
-            'error': {'background': 'red', 'bright': True},                   # level 40  - ERROR
-            'critical': {'background': 'red'}                                 # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
-        }
-
-    level_styles_8: Dict[str, Dict[str, Union[str, bool]]] = \
-        {
-            'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
-            'debug': {'color': 'blue', 'bold': True},                           # level 10  - DEBUG
-            'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
-            'info': {},                                                         # level 20  - INFO
-            'notice': {'background': 'magenta', 'bold': True},                  # level 25  - NOTICE
-            'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
-            'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
-            'error': {'background': 'red'},                                     # level 40  - ERROR
-            'critical': {'background': 'red', 'bold': True}                     # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
-        }
-
-    if get_number_of_terminal_colors() == 8:
-        level_styles = level_styles_8
-    else:
-        level_styles = level_styles_256
+# Custom Types
+FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]
 
 
 def banner_spam(message: str,
@@ -441,16 +333,16 @@ def log_level(message: str,
                    logging.ERROR, width=10, wrap=False, banner = True)
     """
 
-    quiet = bool(lib_parameter.get_default_if_none(quiet, default=LogSettings.quiet))
+    quiet = bool(lib_parameter.get_default_if_none(quiet, default=log_settings.quiet))
 
     if quiet:
         return
 
     message = str(message)
 
-    level = int(lib_parameter.get_default_if_none(level, default=LogSettings.new_logger_level))
-    width = int(lib_parameter.get_default_if_none(width, default=LogSettings.width))
-    wrap = bool(lib_parameter.get_default_if_none(wrap, default=LogSettings.wrap))
+    level = int(lib_parameter.get_default_if_none(level, default=log_settings.new_logger_level))
+    width = int(lib_parameter.get_default_if_none(width, default=log_settings.width))
+    wrap = bool(lib_parameter.get_default_if_none(wrap, default=log_settings.wrap))
 
     if logger is None:
         logger = logging.getLogger()
@@ -489,16 +381,17 @@ def colortest(quiet: bool = False) -> None:
     """ test banner colors
 
     >>> # Setup
-    >>> LogSettings.use_colored_stream_handler=True
-    >>> LogSettings.new_logger_level = 0
-    >>> LogSettings.stream_handler_log_level = 0
-    >>> LogSettings.stream = sys.stdout
+    >>> log_settings.use_colored_stream_handler=True
+    >>> log_settings.new_logger_level = 0
+    >>> log_settings.stream_handler_log_level = 0
+    >>> log_settings.stream = sys.stdout
     >>> setup_handler()
     >>> colortest()
-    test ...
+    <BLANKLINE>
+        ...test ...
     >>> colortest(quiet=True)
     >>> # TearDown
-    >>> LogSettings.stream = sys.stderr
+    >>> log_settings.stream = sys.stderr
     >>> setup_handler(remove_existing_stream_handlers=True)
 
     """
@@ -516,19 +409,19 @@ def colortest(quiet: bool = False) -> None:
 
 
 def setup_handler(logger: logging.Logger = logging.getLogger(), remove_existing_stream_handlers: bool = False) -> None:
-    if LogSettings.use_colored_stream_handler:
+    if log_settings.use_colored_stream_handler:
         log_handlers.set_stream_handler_color(logger=logger,
-                                              level=LogSettings.stream_handler_log_level,
-                                              fmt=LogSettings.fmt,
-                                              datefmt=LogSettings.datefmt,
-                                              field_styles=LogSettings.field_styles,
-                                              level_styles=LogSettings.level_styles,
-                                              stream=LogSettings.stream,
+                                              level=log_settings.stream_handler_log_level,
+                                              fmt=log_settings.fmt,
+                                              datefmt=log_settings.datefmt,
+                                              field_styles=log_settings.field_styles,
+                                              level_styles=log_settings.level_styles,
+                                              stream=log_settings.stream,
                                               remove_existing_stream_handlers=remove_existing_stream_handlers)
     else:
         log_handlers.set_stream_handler(logger=logger,
-                                        level=LogSettings.stream_handler_log_level,
-                                        fmt=LogSettings.fmt,
-                                        datefmt=LogSettings.datefmt,
-                                        stream=LogSettings.stream,
+                                        level=log_settings.stream_handler_log_level,
+                                        fmt=log_settings.fmt,
+                                        datefmt=log_settings.datefmt,
+                                        stream=log_settings.stream,
                                         remove_existing_stream_handlers=remove_existing_stream_handlers)
