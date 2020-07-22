@@ -37,11 +37,11 @@ def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
         lib_log_utils.log_level(message=exc_info_msg, level=log_level_exec_info)
 
         if hasattr(exc_info, 'stdout'):
-            assert isinstance(exc_info.stdout, bytes)
-            lib_log_utils.log_level(message='STDOUT: ' + exc_info.stdout.decode(encoding), level=log_level_exec_info)
+            assert isinstance(exc_info.stdout, bytes)   # type: ignore
+            lib_log_utils.log_level(message='STDOUT: ' + exc_info.stdout.decode(encoding), level=log_level_exec_info)   # type: ignore
         if hasattr(exc_info, 'stderr'):
-            assert isinstance(exc_info.stderr, bytes)
-            lib_log_utils.log_level(message='STDERR: ' + exc_info.stderr.decode(encoding), level=log_level_exec_info)
+            assert isinstance(exc_info.stderr, bytes)   # type: ignore
+            lib_log_utils.log_level(message='STDERR: ' + exc_info.stderr.decode(encoding), level=log_level_exec_info)   # type: ignore
 
     if log_level_traceback != logging.NOTSET:
         s_traceback = 'Traceback Information : \n' + traceback.format_exc()
@@ -61,11 +61,11 @@ def print_exception_traceback(s_error: str) -> str:
     encoding = sys.getdefaultencoding()     # todo, use lib_encoding as soon as avail
 
     if hasattr(exc_info, 'stdout'):
-        assert isinstance(exc_info.stdout, bytes)
-        print('STDOUT: ' + exc_info.stdout.decode(encoding))
+        assert isinstance(exc_info.stdout, bytes)                  # type: ignore
+        print('STDOUT: ' + exc_info.stdout.decode(encoding))       # type: ignore
     if hasattr(exc_info, 'stderr'):
-        assert isinstance(exc_info.stderr, bytes)
-        print('STDERR: ' + exc_info.stderr.decode(encoding))
+        assert isinstance(exc_info.stderr, bytes)                  # type: ignore
+        print('STDERR: ' + exc_info.stderr.decode(encoding))       # type: ignore
 
     s_traceback = 'Traceback Information : \n' + traceback.format_exc()
     s_traceback = s_traceback.rstrip('\n')

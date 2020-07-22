@@ -1,4 +1,4 @@
-Version 0.2.0 as of 2020-07-22, see changelog_
+Version 0.3.0 as of 2020-07-22, see changelog_
 
 =======================================================
 
@@ -335,7 +335,7 @@ following modules will be automatically installed :
 
     ## Project Requirements
     click
-    coloredlogs @ git+https://github.com/bitranox/python-coloredlogs.git
+    bitranox_coloredlogs @ git+https://github.com/bitranox/bitranox_coloredlogs.git
     lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
     lib_platform @ git+https://github.com/bitranox/lib_platform.git
     lib_programname @ git+https://github.com/bitranox/lib_programname.git
@@ -365,6 +365,12 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
+
+0.3.0
+------
+2020-07-22: feature release
+    - autodetect travis settings
+    - autodetect binder/jupyter settings
 
 0.2.0
 ------

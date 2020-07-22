@@ -6,6 +6,12 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.3.0
+------
+2020-07-22: feature release
+    - autodetect travis settings
+    - autodetect binder/jupyter settings
+
 0.2.0
 ------
 2020-07-22: feature release
