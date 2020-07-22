@@ -6,10 +6,10 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
-0.1.5a
+0.2.0
 ------
-2020-07-17: development
-    -
+2020-07-22: feature release
+    - log_exception_traceback and print_exception_traceback will also report stdout, stderr if present
 
 
 0.1.4
