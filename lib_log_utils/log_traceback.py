@@ -74,10 +74,6 @@ def print_exception_traceback(s_error: str) -> str:
     ...     raise FileNotFoundError('test')
     ... except Exception:       # noqa
     ...     assert print_exception_traceback('test') == 'test'
-    FileNotFoundError: test
-    Traceback (most recent call last):
-        ...
-    FileNotFoundError: test
 
     >>> # test with subprocess to get stdout, stderr
     >>> import subprocess
@@ -85,20 +81,18 @@ def print_exception_traceback(s_error: str) -> str:
     ...     discard=subprocess.run('unknown_command', shell=True, check=True)
     ... except subprocess.CalledProcessError:
     ...     assert print_exception_traceback('test') == 'test'
-    CalledProcessError: Command 'unknown_command' returned non-zero exit status 127.
-        ...
-    subprocess.CalledProcessError: Command 'unknown_command' returned non-zero exit status 127.
 
     """
 
     exc_info = sys.exc_info()[1]
     if exc_info is not None:
+        encoding = sys.getdefaultencoding()
         exc_info_type = type(exc_info).__name__
         exc_info_msg = exc_info_type + ': ' + str(exc_info)
-        print(exc_info_msg)
+        print(exc_info_msg.encode(encoding), file=sys.stderr)
         print_stdout(exc_info)
         print_stderr(exc_info)
-        print(traceback.format_exc().rstrip('\n'))
+        print(traceback.format_exc().rstrip('\n').encode(encoding), file=sys.stderr)
     return s_error  # to use it as input for re-raising
 
 
@@ -119,14 +113,13 @@ def print_stdout(exc_info: Any) -> None:
     >>> # test stdout
     >>> exc_info.stdout=b'test'
     >>> print_stdout(exc_info)
-    STDOUT: test
 
     """
     encoding = sys.getdefaultencoding()
     if hasattr(exc_info, 'stdout'):
         if exc_info.stdout is not None:
             assert isinstance(exc_info.stdout, bytes)
-            print('STDOUT: ' + exc_info.stdout.decode(encoding))
+            print(b'STDOUT: ' + exc_info.stdout, file=sys.stderr)
 
 
 def print_stderr(exc_info: Any) -> None:
@@ -146,14 +139,13 @@ def print_stderr(exc_info: Any) -> None:
     >>> # test stdout
     >>> exc_info.stderr=b'test'
     >>> print_stderr(exc_info)
-    STDERR: test
 
     """
     encoding = sys.getdefaultencoding()
     if hasattr(exc_info, 'stderr'):
         if exc_info.stderr is not None:
             assert isinstance(exc_info.stderr, bytes)
-            print('STDERR: ' + exc_info.stderr.decode(encoding))
+            print(b'STDERR: ' + exc_info.stderr, file=sys.stderr)
 
 
 def log_stdout(exc_info: Any, log_level_exec_info: int) -> None:
