@@ -371,8 +371,8 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 @click.version_option(version=__init__conf__.version,
                       prog_name=__init__conf__.shell_command,
                       message='{} version %(version)s'.format(__init__conf__.shell_command))
-@click.option('-e, --extended', is_flag=True, type=bool, default=None, help='extended log format')
-@click.option('-p, --plain', is_flag=True, type=bool, default=None, help='plain log format')
+@click.option('-e', '--extended', is_flag=True, type=bool, default=None, help='extended log format')
+@click.option('-p', '--plain', is_flag=True, type=bool, default=None, help='plain log format')
 @click.option('-b', '--banner', is_flag=True, type=bool, default=False, help='log as banner')
 @click.option('-w', '--width', type=int, default=None, help='wrap width, default=140')
 @click.option('--wrap/--nowrap', type=bool, default=None, help='wrap text')
