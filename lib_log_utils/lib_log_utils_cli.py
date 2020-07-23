@@ -371,7 +371,8 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 @click.version_option(version=__init__conf__.version,
                       prog_name=__init__conf__.shell_command,
                       message='{} version %(version)s'.format(__init__conf__.shell_command))
-@click.option('--extended/--plain', is_flag=True, type=bool, default=None, help='extended log format')
+@click.option('-e, --extended', is_flag=True, type=bool, default=None, help='extended log format')
+@click.option('-p, --plain', is_flag=True, type=bool, default=None, help='plain log format')
 @click.option('-b', '--banner', is_flag=True, type=bool, default=False, help='log as banner')
 @click.option('-w', '--width', type=int, default=None, help='wrap width, default=140')
 @click.option('--wrap/--nowrap', type=bool, default=None, help='wrap text')
@@ -385,7 +386,7 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 @click.option('-c', '--colortest', is_flag=True, type=bool, default=False, help='color test')
 @click.option('--traceback/--no-traceback', is_flag=True, type=bool, default=None, help='return traceback information on cli')
 @click.argument('message', required=False, default='')
-def cli_main(message: str, level: str, extended: Optional[bool], banner: bool, width: Optional[int], wrap: Optional[bool],
+def cli_main(message: str, level: str, extended: Optional[bool], plain: Optional[bool], banner: bool, width: Optional[int], wrap: Optional[bool],
              silent: Optional[str], quiet: Optional[bool], force: bool, program_info: bool, colortest: bool, traceback: Optional[bool] = None) -> None:
     """ log a message """
     if traceback is not None:
@@ -393,6 +394,8 @@ def cli_main(message: str, level: str, extended: Optional[bool], banner: bool, w
     if program_info:
         cli_info()
     else:
+        if plain:
+            extended = False
         do_log(message=message, level_str=level, extended=extended, banner=banner, width=width,
                wrap=wrap, silent=silent, quiet=quiet, force=force, colortest=colortest)
 

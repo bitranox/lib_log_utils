@@ -46,7 +46,8 @@ option                       description
 -f --force                   take precedence over environment settings, default = False
 --wrap --nowrap              use text wrap (this is the default value), default = True
 --traceback --no-traceback   show traceback on commandline error, default = False
---extended --plain           extended or plain log format, default = plain
+-e --extended                extended log format, default = plain
+-p --plain                   plain log format, default = plain
 -c --colortest               color test
 ===========================  ====================================================================================
 
