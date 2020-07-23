@@ -6,6 +6,12 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.3.1a
+-------
+2020-07-22: development
+    -
+
+
 0.3.0
 ------
 2020-07-22: feature release
