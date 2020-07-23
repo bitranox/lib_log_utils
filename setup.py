@@ -83,7 +83,7 @@ if is_travis_deploy() and is_tagged_commit():
 
 setup_kwargs: Dict[str, Any] = dict()
 setup_kwargs['name'] = 'lib_log_utils'
-setup_kwargs['version'] = '0.4.0'
+setup_kwargs['version'] = '0.4.1'
 setup_kwargs['url'] = 'https://github.com/bitranox/lib_log_utils'
 setup_kwargs['packages'] = find_packages()
 setup_kwargs['package_data'] = {'lib_log_utils': ['py.typed', '*.pyi', '__init__.pyi']}
