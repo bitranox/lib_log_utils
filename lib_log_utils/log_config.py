@@ -119,11 +119,13 @@ def autodetect_settings() -> int:
     >>> # Test Binder Jupyter
     >>> os.environ['JUPYTERHUB_BASE_URL'] = '/binder/jupyter/'
     >>> assert autodetect_settings() > 0
-    >>> assert log_settings.stream == sys.stdout
+    >>> if not 'TRAVIS' in os.environ:
+    ...     assert log_settings.stream == sys.stdout
     >>> log_settings.stream = sys.stderr
     >>> os.environ['JUPYTERHUB_BASE_URL'] = '/something/else/'
     >>> assert autodetect_settings() > 0
-    >>> assert log_settings.stream == sys.stderr
+    >>> if not 'TRAVIS' in os.environ:
+    ...     assert log_settings.stream == sys.stderr
     >>> discard = os.environ.pop('JUPYTERHUB_BASE_URL', None)
 
     """
