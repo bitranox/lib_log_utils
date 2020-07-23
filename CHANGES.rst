@@ -6,6 +6,11 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.4.3a0
+-------
+2020-07-23: development
+
+
 0.4.2
 -------
 2020-07-23: separate travis profile
