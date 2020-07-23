@@ -1,4 +1,4 @@
-Version 0.4.1a as of 2020-07-23, see changelog_
+Version 0.4.1 as of 2020-07-23, see changelog_
 
 =======================================================
 
@@ -367,9 +367,9 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
-0.4.1a
+0.4.1
 -------
-2020-07-23: development
+2020-07-23: change color profiles
 
 
 0.4.0
