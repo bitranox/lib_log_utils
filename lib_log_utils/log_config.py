@@ -63,7 +63,7 @@ class LogSettings(object):
     level_styles_256: FieldAndLevelStyles = \
         {
             'spam': {'color': 'magenta', 'bright': True},                     # level 5   - SPAM
-            'debug': {'color': 'blue', 'bright': True},                       # level 10  - DEBUG
+            'debug': {'color': 'cyan', 'bright': True},                       # level 10  - DEBUG
             'verbose': {'color': 'yellow', 'bright': True},                   # level 15  - VERBOSE
             'info': {},                                                       # level 20  - INFO
             'notice': {'background': 'magenta', 'bright': True},              # level 25  - NOTICE
@@ -76,7 +76,7 @@ class LogSettings(object):
     level_styles_8: FieldAndLevelStyles = \
         {
             'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
-            'debug': {'color': 'blue', 'bold': True},                           # level 10  - DEBUG
+            'debug': {'color': 'cyan', 'bold': True},                           # level 10  - DEBUG
             'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
             'info': {},                                                         # level 20  - INFO
             'notice': {'background': 'magenta', 'bold': True},                  # level 25  - NOTICE
