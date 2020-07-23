@@ -6,6 +6,11 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.4.2a0
+-------
+2020-07-23: development
+
+
 0.4.1
 -------
 2020-07-23: change color profiles
