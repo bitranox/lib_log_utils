@@ -86,6 +86,19 @@ class LogSettings(object):
             'critical': {'background': 'red', 'bold': True}                     # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
             }
 
+    level_styles_travis: FieldAndLevelStyles = \
+        {
+            'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
+            'debug': {'color': 'cyan', 'bold': True},                           # level 10  - DEBUG
+            'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
+            'info': {},                                                         # level 20  - INFO
+            'notice': {'color': 'magenta', 'bold': True},                       # level 25  - NOTICE
+            'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
+            'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
+            'error': {'color': 'red', 'bold': True},                            # level 40  - ERROR
+            'critical': {'background': 'red', 'bold': True}                     # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+            }
+
     level_styles = level_styles_256
 
 
@@ -133,7 +146,7 @@ def autodetect_settings() -> int:
         # note that there will be no colored output on travis, as soon as
         # a secret is in travis.yaml, since then the output is filtered.
         # see also : https://travis-ci.community/t/ansi-colors-in-console-does-not-work-anymore/6608
-        log_settings.level_styles = log_settings.level_styles_8
+        log_settings.level_styles = log_settings.level_styles_travis
         colors = 8
         return colors
 

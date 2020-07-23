@@ -6,6 +6,11 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.4.2
+-------
+2020-07-23: separate travis profile
+
+
 0.4.1
 -------
 2020-07-23: change color profiles
