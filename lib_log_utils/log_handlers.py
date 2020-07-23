@@ -29,6 +29,15 @@ default_date_fmt = '%Y-%m-%d %H:%M:%S'
 
 
 class HostnameFilter(logging.Filter):
+    """
+    adds a filter for short hostname
+
+    >>> record = logging.makeLogRecord(dict())
+    >>> hostname_filter = HostnameFilter()
+    >>> discard = hostname_filter.filter(record)
+    >>> assert record.hostname == platform.node()   # noqa
+
+    """
     hostname = platform.node()
 
     def filter(self, record: Any) -> bool:
@@ -90,8 +99,8 @@ def set_stream_handler(logger: logging.Logger = logging.getLogger(),
         try:
             remove_handler_by_type(logger=logger, handler_type=logging.StreamHandler)
             remove_handler_by_name(name)
-        except ValueError:
-            pass
+        except ValueError:      # pragma: no cover
+            pass                # pragma: no cover
 
     stream_handler: logging.Handler = logging.StreamHandler(stream=stream)
     stream_handler = _add_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt, datefmt=datefmt)
@@ -243,6 +252,14 @@ def remove_handler_by_type(logger: logging.Logger, handler_type: LogHandler) -> 
 
 
 def exists_handler_with_name(name: str) -> bool:
+    """
+    >>> discard = set_stream_handler()
+    >>> assert exists_handler_with_name('stream_handler')
+    >>> discard2 = set_stream_handler_color()
+    >>> assert exists_handler_with_name('stream_handler_color')
+    >>> assert not exists_handler_with_name('unknown_handler')
+
+    """
     handlers = logging.getLogger().handlers
     for handler in handlers:
         if hasattr(handler, 'name'):

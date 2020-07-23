@@ -1,10 +1,15 @@
 # stdlib
+import getpass
 import logging
 import os
 import platform
 import subprocess
 import sys
 from typing import Dict, Union
+
+# OWN
+import lib_platform
+import lib_programname
 
 # Custom Types
 FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]
@@ -15,9 +20,22 @@ class LogSettings(object):
 
     use_colored_stream_handler = True
 
-    # the format of the log message, for instance :
-    # fmt = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'.format(username=getpass.getuser())
-    fmt = '%(message)s'
+    fmt_extended = '[{username}@{hostname}][{programname}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s' \
+        .format(username=getpass.getuser(),
+                hostname=lib_platform.hostname_short,
+                programname=lib_programname.get_path_executed_script().stem,
+                )
+
+    # todo: we might can get the ppid program name for cli
+    fmt_extended_cli = '[{username}@{hostname}][%(asctime)s][%(levelname)-8s]: %(message)s' \
+        .format(username=getpass.getuser(),
+                hostname=lib_platform.hostname_short,
+                )
+
+    fmt_plain = '%(message)s'
+
+    fmt = fmt_plain
+
     # that date format
     datefmt = '%Y-%m-%d %H:%M:%S'
     # the banner width
@@ -98,17 +116,26 @@ def autodetect_settings() -> int:
     ...    assert autodetect_settings() == 8
     ...    discard = os.environ.pop('TRAVIS', None)
 
-
+    >>> # Test Binder Jupyter
+    >>> os.environ['JUPYTERHUB_BASE_URL'] = '/binder/jupyter/'
+    >>> assert autodetect_settings() > 0
+    >>> if not 'TRAVIS' in os.environ:
+    ...     assert log_settings.stream == sys.stdout
+    >>> log_settings.stream = sys.stderr
+    >>> os.environ['JUPYTERHUB_BASE_URL'] = '/something/else/'
+    >>> assert autodetect_settings() > 0
+    >>> if not 'TRAVIS' in os.environ:
+    ...     assert log_settings.stream == sys.stderr
+    >>> discard = os.environ.pop('JUPYTERHUB_BASE_URL', None)
 
     """
     if 'TRAVIS' in os.environ:
         # note that there will be no colored output on travis, as soon as
         # a secret is in travis.yaml, since then the output is filtered.
         # see also : https://travis-ci.community/t/ansi-colors-in-console-does-not-work-anymore/6608
-        if os.environ['TRAVIS'].lower() == 'true':
-            log_settings.level_styles = log_settings.level_styles_8
-            colors = 8
-            return colors
+        log_settings.level_styles = log_settings.level_styles_8
+        colors = 8
+        return colors
 
     if 'JUPYTERHUB_BASE_URL' in os.environ:
         # for binder we need stdout as stream

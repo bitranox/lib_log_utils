@@ -315,9 +315,10 @@ def log_level(message: str,
 
     if there is no logger passed, the root logger will be used.
 
-
+    >>> logger = logging.getLogger()
     >>> log_level('test')
     >>> log_level('test', quiet=True)
+    >>> log_level('test', logger=logger)
     >>> log_level('test', logging.SUCCESS, wrap=True)  # noqa
     >>> log_level('test', logging.ERROR, wrap=True)
     >>> log_level('test', logging.ERROR, wrap=False)
@@ -409,6 +410,25 @@ def colortest(quiet: bool = False) -> None:
 
 
 def setup_handler(logger: logging.Logger = logging.getLogger(), remove_existing_stream_handlers: bool = False) -> None:
+    """
+
+    >>> # Setup
+    >>> save_use_use_colored_stream_handler = log_settings.use_colored_stream_handler
+
+    >>> # Test colored
+    >>> log_settings.use_colored_stream_handler = True
+    >>> setup_handler()
+    >>> assert log_handlers.exists_handler_with_name('stream_handler_color')
+
+    >>> # Test non colored
+    >>> log_settings.use_colored_stream_handler = False
+    >>> setup_handler()
+    >>> assert log_handlers.exists_handler_with_name('stream_handler')
+
+    >>> # Teardown
+    >>> log_settings.use_colored_stream_handler = save_use_use_colored_stream_handler
+
+    """
     if log_settings.use_colored_stream_handler:
         log_handlers.set_stream_handler_color(logger=logger,
                                               level=log_settings.stream_handler_log_level,

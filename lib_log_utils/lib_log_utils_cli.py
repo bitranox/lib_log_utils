@@ -38,13 +38,15 @@ def cli_info() -> None:
     __init__conf__.print_info()
 
 
-def do_log(message: str, level_str: str = 'info', banner: bool = False, width: Optional[int] = None,
+def do_log(message: str, level_str: str = 'info', extended: Optional[bool] = None, banner: bool = False, width: Optional[int] = None,
            wrap: Optional[bool] = None, silent: Optional[str] = None, quiet: Optional[bool] = None,
            force: bool = False, colortest: bool = False) -> None:
 
     """
     >>> do_log('test', banner=False)
     >>> do_log('test', banner=True)
+    >>> do_log('test', silent='True')
+    >>> do_log('test', silent='False')
 
     """
     if silent is not None:
@@ -56,6 +58,7 @@ def do_log(message: str, level_str: str = 'info', banner: bool = False, width: O
 
     level = log_levels.get_log_level_from_str(level_str)
     set_logger_level_from_env()
+    set_extended_from_env(extended, force)
     set_width_from_env(width, force)
     set_wrap_from_env(wrap, force)
     set_quiet_from_env(quiet, force)
@@ -168,6 +171,80 @@ def set_width_from_env(width: Optional[int] = None, force: bool = False) -> None
             log_settings.width = width
 
 
+def set_extended_from_env(extended: Optional[bool] = None, force: bool = False) -> None:
+    # env settings have precedence, unless force=True - if nothing is passed, the default value will be used
+    """
+    >>> # Setup
+    >>> default_fmt = log_settings.fmt
+
+    >>> # No env Setting, extended=None
+    >>> set_extended_from_env()
+    >>> assert log_settings.fmt == default_fmt
+
+    >>> # No env Setting, extended = True
+    >>> set_extended_from_env(True)
+    >>> assert log_settings.fmt == log_settings.fmt_extended_cli
+
+    >>> # No env Setting, extended = False
+    >>> set_extended_from_env(False)
+    >>> assert log_settings.fmt == log_settings.fmt_plain
+
+    >>> # Env Setting = plain, extended=None
+    >>> os.environ['LOG_UTIL_FMT'] = 'plain'
+    >>> set_extended_from_env()
+    >>> assert log_settings.fmt == log_settings.fmt_plain
+
+    >>> # Env Setting = extended, extended=None
+    >>> os.environ['LOG_UTIL_FMT'] = 'extended'
+    >>> set_extended_from_env()
+    >>> assert log_settings.fmt == log_settings.fmt_extended_cli
+
+    >>> # Env Setting = extended, extended=False, Force = False
+    >>> os.environ['LOG_UTIL_FMT'] = 'extended'
+    >>> set_extended_from_env(extended=False, force=False)
+    >>> assert log_settings.fmt == log_settings.fmt_extended_cli
+
+    >>> # Env Setting = extended, extended=False, Force = True
+    >>> os.environ['LOG_UTIL_FMT'] = 'extended'
+    >>> set_extended_from_env(extended=False, force=True)
+    >>> assert log_settings.fmt == log_settings.fmt_plain
+
+    >>> # Env Setting = extended, extended=True, Force = True
+    >>> os.environ['LOG_UTIL_FMT'] = 'plain'
+    >>> set_extended_from_env(extended=True, force=True)
+    >>> assert log_settings.fmt == log_settings.fmt_extended_cli
+
+    >>> # custom format string
+    >>> os.environ['LOG_UTIL_FMT'] = 'some_custom_format'
+    >>> set_extended_from_env()
+    >>> assert log_settings.fmt == 'some_custom_format'
+
+    >>> # Teardown
+    >>> log_settings.fmt = default_fmt
+    >>> del os.environ['LOG_UTIL_FMT']
+
+    """
+    def set_fmt(_ext: Optional[bool]) -> None:
+        if extended is True:
+            log_settings.fmt = log_settings.fmt_extended_cli
+        elif extended is False:
+            log_settings.fmt = log_settings.fmt_plain
+
+    if 'LOG_UTIL_FMT' in os.environ:
+        if extended is not None and force:
+            set_fmt(extended)
+        else:
+            if os.environ['LOG_UTIL_FMT'].lower().startswith('plain'):
+                log_settings.fmt = log_settings.fmt_plain
+            elif os.environ['LOG_UTIL_FMT'].lower().startswith('extended'):
+                log_settings.fmt = log_settings.fmt_extended_cli
+            else:
+                log_settings.fmt = os.environ['LOG_UTIL_FMT']
+
+    else:
+        set_fmt(extended)
+
+
 def set_wrap_from_env(wrap_text: Optional[bool] = None, force: bool = False) -> None:
     # env settings have precedence, unless force=True - if nothing is passed, the default value will be used
     """
@@ -191,6 +268,11 @@ def set_wrap_from_env(wrap_text: Optional[bool] = None, force: bool = False) -> 
     >>> os.environ['LOG_UTIL_WRAP'] = str(not default_wrap_text)
     >>> set_wrap_from_env(default_wrap_text)
     >>> assert log_settings.wrap != default_wrap_text
+
+    >>> # Env Setting = default_wrap_text, wrap=default_wrap_text (env has precedence)
+    >>> os.environ['LOG_UTIL_WRAP'] = str(default_wrap_text)
+    >>> set_wrap_from_env(default_wrap_text)
+    >>> assert log_settings.wrap == default_wrap_text
 
     >>> # Env Setting = not default_wrap_text, wrap=default_wrap_text (parameter has precedence)
     >>> set_wrap_from_env(default_wrap_text, True)
@@ -248,6 +330,11 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
     >>> set_quiet_from_env(default_quiet)
     >>> assert log_settings.quiet != default_quiet
 
+    >>> # Env Setting = default_quiet, log_console=not default_quiet (env has precedence)
+    >>> os.environ['LOG_UTIL_QUIET'] = str(default_quiet)
+    >>> set_quiet_from_env(default_quiet)
+    >>> assert log_settings.quiet == default_quiet
+
     >>> # Env Setting = not default_quiet, log_console=default_quiet (parameter has precedence)
     >>> set_quiet_from_env(default_quiet, True)
     >>> assert log_settings.quiet == default_quiet
@@ -284,6 +371,8 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 @click.version_option(version=__init__conf__.version,
                       prog_name=__init__conf__.shell_command,
                       message='{} version %(version)s'.format(__init__conf__.shell_command))
+@click.option('-e', '--extended', is_flag=True, type=bool, default=None, help='extended log format')
+@click.option('-p', '--plain', is_flag=True, type=bool, default=None, help='plain log format')
 @click.option('-b', '--banner', is_flag=True, type=bool, default=False, help='log as banner')
 @click.option('-w', '--width', type=int, default=None, help='wrap width, default=140')
 @click.option('--wrap/--nowrap', type=bool, default=None, help='wrap text')
@@ -297,7 +386,7 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 @click.option('-c', '--colortest', is_flag=True, type=bool, default=False, help='color test')
 @click.option('--traceback/--no-traceback', is_flag=True, type=bool, default=None, help='return traceback information on cli')
 @click.argument('message', required=False, default='')
-def cli_main(message: str, level: str, banner: bool, width: Optional[int], wrap: Optional[bool],
+def cli_main(message: str, level: str, extended: Optional[bool], plain: Optional[bool], banner: bool, width: Optional[int], wrap: Optional[bool],
              silent: Optional[str], quiet: Optional[bool], force: bool, program_info: bool, colortest: bool, traceback: Optional[bool] = None) -> None:
     """ log a message """
     if traceback is not None:
@@ -305,7 +394,10 @@ def cli_main(message: str, level: str, banner: bool, width: Optional[int], wrap:
     if program_info:
         cli_info()
     else:
-        do_log(message=message, level_str=level, banner=banner, width=width, wrap=wrap, silent=silent, quiet=quiet, force=force, colortest=colortest)
+        if plain:
+            extended = False
+        do_log(message=message, level_str=level, extended=extended, banner=banner, width=width,
+               wrap=wrap, silent=silent, quiet=quiet, force=force, colortest=colortest)
 
 
 # entry point if main

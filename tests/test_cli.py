@@ -31,6 +31,7 @@ def test_cli_commands():
         assert call_cli_command('-c')
         assert call_cli_command('--colortest')
         assert not call_cli_command('unquoted string')
+        assert not call_cli_command('--traceback unquoted string')
         assert call_cli_command('"log default level"')
         assert call_cli_command('-l error "log default level"')
         assert call_cli_command('"log default level" -l error')

@@ -6,6 +6,8 @@
 
    Options:
      --version                     Show the version and exit.
+     -e, --extended                extended log format
+     -p, --plain                   plain log format
      -b, --banner                  log as banner
      -w, --width INTEGER           wrap width, default=140
      --wrap / --nowrap             wrap text

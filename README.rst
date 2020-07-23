@@ -1,4 +1,4 @@
-Version 0.3.0 as of 2020-07-22, see changelog_
+Version 0.4.0 as of 2020-07-23, see changelog_
 
 =======================================================
 
@@ -45,6 +45,10 @@ lib_log_utils
    :target: https://snyk.io/test/github/bitranox/lib_log_utils
 
 this library makes it easy to log colored messages from python and from the commandline. Text Wrapping is supported.
+
+whenever possible, it tries to autodetect the correct settings for colored output.
+
+currently the settings for TRAVIS and BINDER/Jupyter are detected automatically
 
 ----
 
@@ -220,6 +224,8 @@ option                       description
 -f --force                   take precedence over environment settings, default = False
 --wrap --nowrap              use text wrap (this is the default value), default = True
 --traceback --no-traceback   show traceback on commandline error, default = False
+-e --extended                extended log format, default = plain
+-p --plain                   plain log format, default = plain
 -c --colortest               color test
 ===========================  ====================================================================================
 
@@ -265,6 +271,7 @@ Environment Settings
 ========================  =======================================================================================
 environment variable      function
 ========================  =======================================================================================
+LOG_UTIL_FMT              the log format - either "plain", "extended" or a custom formatting string, default = plain
 LOG_UTIL_LEVEL            the level of the logger, one of the predefined log levels, or "0" - "50", default = 0
 LOG_UTIL_WIDTH            the banner width if text wrap is used, must be >="10", default = 140
 LOG_UTIL_WRAP             if text wrap should be used, must be True or False (not case sensitive), default = True
@@ -287,22 +294,14 @@ EXAMPLES
     # multi-line banner
     log_util -l warning "Line1${IFS}Line2${IFS}Line3"
 
-    # use log_level
-    export log_utils_log_level=WARNING
+    # only show log messages from level WARNING upwards
+    export LOG_UTIL_LEVEL=WARNING
 
     log_util -l info   "spam"   # this is not shown
     log_util -l error  "ham"    # this is shown
 
-    # disable log_level
-    unset log_utils_log_level
-
-
-Notes
------
-
-colored output will not work on TRAVIS as soon as You put some secrets in the yaml file, because in that case the output will be filtered
-
-see : https://travis-ci.community/t/ansi-colors-in-console-does-not-work-anymore/6608
+    # reset the log_level to 0 (the default value)
+    unset LOG_UTIL_LEVEL
 
 Usage from Commandline
 ------------------------
@@ -315,6 +314,8 @@ Usage from Commandline
 
    Options:
      --version                     Show the version and exit.
+     -e, --extended                extended log format
+     -p, --plain                   plain log format
      -b, --banner                  log as banner
      -w, --width INTEGER           wrap width, default=140
      --wrap / --nowrap             wrap text
@@ -365,6 +366,12 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
+
+0.4.0
+-------
+2020-07-23: feature release
+    - correct print_exception_traceback is stdout, stderr = None
+    - added formatting parameter, custom log formatter
 
 0.3.0
 ------

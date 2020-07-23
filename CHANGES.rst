@@ -6,6 +6,12 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
+0.4.0
+-------
+2020-07-23: feature release
+    - correct print_exception_traceback is stdout, stderr = None
+    - added formatting parameter, custom log formatter
+
 0.3.0
 ------
 2020-07-22: feature release
