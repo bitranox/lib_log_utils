@@ -6,10 +6,11 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
-0.4.3a0
+0.4.3
 -------
-2020-07-23: development
-
+2020-07-27: feature release
+    - use cli_exit_tools
+    - add banner parameter, to temporary disable/enable banner
 
 0.4.2
 -------
