@@ -6,10 +6,10 @@ Changelog
 - new PATCH version for backwards compatible bug fixes
 
 
-0.4.4a0
+0.4.4
 -------
-2020-07-27: development
-
+2020-07-29: feature release
+    - use the new pizzacutter template
 
 0.4.3
 -------

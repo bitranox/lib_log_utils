@@ -5,7 +5,7 @@ import sys
 from typing import Optional
 
 # EXT
-import click                # noqa
+import click
 
 # OWN
 import cli_exit_tools
