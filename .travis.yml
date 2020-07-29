@@ -13,6 +13,10 @@ env:
         - cPIP="python -m pip"
         # switch off wine fix me messages
         - WINEDEBUG=fixme-all
+        # mypy path
+        - MYPYPATH="./lib_log_utils/3rd_party_stubs"
+        # package name
+        - PACKAGE_NAME="lib_log_utils"
         # the registered CLI Command
         - CLI_COMMAND=log_util
         # the source file for rst_include (rebuild rst file includes)
