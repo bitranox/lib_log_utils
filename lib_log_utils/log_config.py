@@ -121,13 +121,13 @@ def autodetect_settings() -> int:
     >>> if 'TRAVIS' in os.environ:
     ...    assert autodetect_settings() > 0
     ...    save_travis_env = os.environ['TRAVIS']
-    ...    discard = os.environ.pop('TRAVIS', None)
+    ...    os.unsetenv('TRAVIS')
     ...    assert autodetect_settings() > 0
     ...    os.environ['TRAVIS'] = save_travis_env
     ... else:
     ...    os.environ['TRAVIS'] = 'true'
     ...    assert autodetect_settings() == 8
-    ...    discard = os.environ.pop('TRAVIS', None)
+    ...    os.unsetenv('TRAVIS')
 
     >>> # Test Binder Jupyter
     >>> os.environ['JUPYTERHUB_BASE_URL'] = '/binder/jupyter/'
@@ -139,9 +139,9 @@ def autodetect_settings() -> int:
     >>> assert autodetect_settings() > 0
     >>> if not 'TRAVIS' in os.environ:
     ...     assert log_settings.stream == sys.stderr
-    >>> discard = os.environ.pop('JUPYTERHUB_BASE_URL', None)
-
+    >>> os.unsetenv('JUPYTERHUB_BASE_URL')
     """
+
     if 'TRAVIS' in os.environ:
         # note that there will be no colored output on travis, as soon as
         # a secret is in travis.yaml, since then the output is filtered.
