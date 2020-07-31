@@ -80,13 +80,15 @@ tests_require = get_requirements_from_file('requirements_test.txt')
 install_requires = get_requirements_from_file('requirements.txt')
 setup_requires = list(set(tests_require + install_requires))
 
-setup_requires = strip_links_from_required(setup_requires)
-tests_require = strip_links_from_required(tests_require)
-install_requires = strip_links_from_required(install_requires)
+# for deploy on pypi we must not rely on imports from github
+if is_travis_deploy() and is_tagged_commit():
+    setup_requires = strip_links_from_required(setup_requires)
+    tests_require = strip_links_from_required(tests_require)
+    install_requires = strip_links_from_required(install_requires)
 
 setup_kwargs: Dict[str, Any] = dict()
 setup_kwargs['name'] = 'lib_log_utils'
-setup_kwargs['version'] = '0.4.5'
+setup_kwargs['version'] = 'v1.4.6'
 setup_kwargs['url'] = 'https://github.com/bitranox/lib_log_utils'
 setup_kwargs['packages'] = find_packages()
 setup_kwargs['package_data'] = {'lib_log_utils': ['py.typed', '*.pyi', '__init__.pyi']}
