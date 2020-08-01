@@ -111,12 +111,16 @@ def autodetect_settings() -> int:
     - selects 8 colors for travis automatically
     - selects stream sys.stdout for jupyter binder automatically
 
+    >>> import pytest
     >>> # test Windows / Linux
     >>> if platform.system().lower() == 'windows':
     ...     assert autodetect_settings() > 0
     ... else:
     ...     assert autodetect_settings() > 0
 
+    >>> # os.unsetenv does not exist on Windows
+    >>> if platform.system().lower() == 'windows':
+    ...     pytest.skip()
     >>> # Test Travis
     >>> if 'TRAVIS' in os.environ:
     ...    assert autodetect_settings() > 0
