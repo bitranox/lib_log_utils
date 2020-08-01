@@ -5,7 +5,7 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
-v1.4.8a0
+v1.4.8
 ---------
 2020-08-01: fix doctests in windows
 

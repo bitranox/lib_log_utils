@@ -2,7 +2,7 @@ lib_log_utils
 =============
 
 
-Version v1.4.8a0 as of 2020-08-01 see `Changelog`_
+Version v1.4.8 as of 2020-08-01 see `Changelog`_
 
 |travis_build| |license| |jupyter| |pypi|
 
@@ -366,7 +366,7 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
-v1.4.8a0
+v1.4.8
 ---------
 2020-08-01: fix doctests in windows
 
