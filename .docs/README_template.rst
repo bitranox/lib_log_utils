@@ -1,9 +1,8 @@
-Version v1.4.6 as of 2020-07-31, see changelog_
-
-=======================================================
-
 lib_log_utils
 =============
+
+Version v1.4.7 as of 2020-08-01, see `Changelog`_.
+
 
 .. include:: ./badges.rst
 
