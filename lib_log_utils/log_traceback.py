@@ -115,7 +115,6 @@ def print_stdout(exc_info: Any) -> None:
     >>> print_stdout(exc_info)
 
     """
-    encoding = sys.getdefaultencoding()
     if hasattr(exc_info, 'stdout'):
         if exc_info.stdout is not None:
             assert isinstance(exc_info.stdout, bytes)
@@ -141,7 +140,6 @@ def print_stderr(exc_info: Any) -> None:
     >>> print_stderr(exc_info)
 
     """
-    encoding = sys.getdefaultencoding()
     if hasattr(exc_info, 'stderr'):
         if exc_info.stderr is not None:
             assert isinstance(exc_info.stderr, bytes)
