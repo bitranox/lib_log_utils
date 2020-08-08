@@ -1,6 +1,6 @@
 name = 'lib_log_utils'
 title = 'colored log messages and banners from commandline and python'
-version = 'v1.4.8'
+version = 'v1.4.9'
 url = 'https://github.com/bitranox/lib_log_utils'
 author = 'Robert Nowotny'
 author_email = 'bitranox@gmail.com'
@@ -14,7 +14,7 @@ Info for lib_log_utils:
 
     colored log messages and banners from commandline and python
 
-    Version : v1.4.8
+    Version : v1.4.9
     Url     : https://github.com/bitranox/lib_log_utils
     Author  : Robert Nowotny
     Email   : bitranox@gmail.com""")
