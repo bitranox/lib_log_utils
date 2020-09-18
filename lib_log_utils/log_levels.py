@@ -49,4 +49,4 @@ def get_log_level_from_str(log_level_str: str) -> int:
         log_level = logging._nameToLevel[log_level_str.upper()]
         return log_level
     except KeyError:
-        raise ValueError('can not detect log level from string "{}"'.format(log_level_str))
+        raise ValueError(f'can not detect log level from string "{log_level_str}"')

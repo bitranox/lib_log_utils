@@ -222,7 +222,7 @@ def get_handler_by_name(name: str) -> logging.Handler:
         if hasattr(handler, 'name'):
             if handler.name == name:
                 return handler
-    raise ValueError('Logging Handler "{name}" not found'.format(name=name))
+    raise ValueError(f'Logging Handler "{name}" not found')
 
 
 def remove_handler_by_name(name: str) -> None:

@@ -20,20 +20,12 @@ class LogSettings(object):
 
     use_colored_stream_handler = True
 
-    fmt_extended = '[{username}@{hostname}][{programname}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s' \
-        .format(username=getpass.getuser(),
-                hostname=lib_platform.hostname_short,
-                programname=lib_programname.get_path_executed_script().stem,
-                )
+    fmt_extended = f'[{getpass.getuser()}@{lib_platform.hostname_short}]'\
+                   f'[{lib_programname.get_path_executed_script().stem}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s'
 
     # todo: we might can get the ppid program name for cli
-    fmt_extended_cli = '[{username}@{hostname}][%(asctime)s][%(levelname)-8s]: %(message)s' \
-        .format(username=getpass.getuser(),
-                hostname=lib_platform.hostname_short,
-                )
-
+    fmt_extended_cli = f'[{getpass.getuser()}@{lib_platform.hostname_short}][%(asctime)s][%(levelname)-8s]: %(message)s'
     fmt_plain = '%(message)s'
-
     fmt = fmt_plain
 
     # that date format
