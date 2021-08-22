@@ -16,7 +16,7 @@ import lib_platform
 import lib_programname
 
 # EXT
-import bitranox_coloredlogs as coloredlogs
+import coloredlogs
 
 # Custom Types
 FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]

@@ -320,7 +320,7 @@ following modules will be automatically installed :
 
     ## Project Requirements
     click
-    bitranox_coloredlogs @ git+https://github.com/bitranox/bitranox_coloredlogs.git
+    coloredlogs
     cli_exit_tools @ git+https://github.com/bitranox/cli_exit_tools.git
     lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
     lib_platform @ git+https://github.com/bitranox/lib_platform.git
