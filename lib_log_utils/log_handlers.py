@@ -16,7 +16,7 @@ import lib_platform
 import lib_programname
 
 # EXT
-import coloredlogs
+import coloredlogs  # type: ignore
 
 # Custom Types
 FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]

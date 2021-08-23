@@ -8,7 +8,7 @@ import textwrap
 from typing import Dict
 
 # EXT
-import humanfriendly.cli            # type: ignore
+import humanfriendly.cli            # type: ignore  # noqa
 
 # OWN
 import lib_parameter

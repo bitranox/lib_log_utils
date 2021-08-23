@@ -46,7 +46,7 @@ def get_log_level_from_str(log_level_str: str) -> int:
         pass
 
     try:
-        log_level = logging._nameToLevel[log_level_str.upper()]
+        log_level = logging._nameToLevel[log_level_str.upper()]     # noqa
         return log_level
     except KeyError:
         raise ValueError(f'can not detect log level from string "{log_level_str}"')
