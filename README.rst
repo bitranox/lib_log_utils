@@ -327,10 +327,10 @@ following modules will be automatically installed :
     ## Project Requirements
     click
     coloredlogs
-    cli_exit_tools @ git+https://github.com/bitranox/cli_exit_tools.git
-    lib_parameter @ git+https://github.com/bitranox/lib_parameter.git
-    lib_platform @ git+https://github.com/bitranox/lib_platform.git
-    lib_programname @ git+https://github.com/bitranox/lib_programname.git
+    cli_exit_tools
+    lib_parameter
+    lib_platform
+    lib_programname
 
 Acknowledgements
 ----------------
@@ -356,6 +356,10 @@ Changelog
 - new MAJOR version for incompatible API changes,
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
+
+v.1.4.12
+---------
+2022-03-25: fix requirements.txt
 
 v.1.4.11
 ---------

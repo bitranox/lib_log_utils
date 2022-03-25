@@ -5,6 +5,10 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
+v.1.4.12
+---------
+2022-03-25: fix requirements.txt
+
 v.1.4.11
 ---------
 2022-03-25:
