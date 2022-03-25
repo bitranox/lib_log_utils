@@ -5,17 +5,14 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
-v.1.4.12
----------
-2022-03-25: fix requirements.txt
-
-v.1.4.11
+v1.4.13
 ---------
 2022-03-25:
  - fix ValueError: underlying buffer has been detached on github Actions Windows
  - implement github actions
  - update documentation and tests
  - list ./dist dir if existing
+ - fix requirements.txt
 
 v1.4.10
 ---------

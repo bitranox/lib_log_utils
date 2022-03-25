@@ -2,7 +2,7 @@ lib_log_utils
 =============
 
 
-Version 2022-03-25 as of 2022-03-25 see `Changelog`_
+Version v1.4.13 as of 2022-03-25 see `Changelog`_
 
 
 .. include:: ./badges.rst
