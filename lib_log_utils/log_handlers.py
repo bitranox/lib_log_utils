@@ -16,7 +16,7 @@ import lib_platform
 import lib_programname
 
 # EXT
-import bitranox_coloredlogs as coloredlogs
+import coloredlogs  # type: ignore
 
 # Custom Types
 FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]
@@ -24,8 +24,8 @@ FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]
 
 # default_fmt_string = '[{username}@%(hostname)s][%(asctime)s][%(levelname)-8s]: %(message)s'
 # we dont use the built in %(programname)s because it does not work in doctest
-default_fmt = '[{username}@{hostname_short}][{program_name}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s'
-default_date_fmt = '%Y-%m-%d %H:%M:%S'
+default_fmt = "[{username}@{hostname_short}][{program_name}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s"
+default_date_fmt = "%Y-%m-%d %H:%M:%S"
 
 
 class HostnameFilter(logging.Filter):
@@ -38,6 +38,7 @@ class HostnameFilter(logging.Filter):
     >>> assert record.hostname == platform.node()   # noqa
 
     """
+
     hostname = platform.node()
 
     def filter(self, record: Any) -> bool:
@@ -45,16 +46,18 @@ class HostnameFilter(logging.Filter):
         return True
 
 
-def set_file_handler(filename: str,
-                     logger: logging.Logger = logging.getLogger(),
-                     name: str = 'file_handler',
-                     level: int = logging.INFO,
-                     fmt: str = default_fmt,
-                     datefmt: str = default_date_fmt,
-                     remove_existing_file_handlers: bool = False,
-                     mode: str = 'a',
-                     encoding: str = 'utf-8',
-                     delay: bool = True) -> logging.Handler:
+def set_file_handler(
+    filename: str,
+    logger: logging.Logger = logging.getLogger(),
+    name: str = "file_handler",
+    level: int = logging.INFO,
+    fmt: str = default_fmt,
+    datefmt: str = default_date_fmt,
+    remove_existing_file_handlers: bool = False,
+    mode: str = "a",
+    encoding: str = "utf-8",
+    delay: bool = True,
+) -> logging.Handler:
     """
     name: the name of the file handler. if name = '', name = filename
 
@@ -69,18 +72,19 @@ def set_file_handler(filename: str,
         remove_handler_by_type(logger, logging.FileHandler)
 
     file_handler = logging.FileHandler(filename=filename, mode=mode, encoding=encoding, delay=delay)  # type: logging.Handler
-    file_handler = _add_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt,
-                                datefmt=datefmt)
+    file_handler = _add_handler(file_handler, logger=logger, name=name, level=level, fmt=fmt, datefmt=datefmt)
     return file_handler
 
 
-def set_stream_handler(logger: logging.Logger = logging.getLogger(),
-                       stream: TextIO = sys.stderr,
-                       name: str = 'stream_handler',
-                       level: int = logging.INFO,
-                       fmt: str = default_fmt,
-                       datefmt: str = default_date_fmt,
-                       remove_existing_stream_handlers: bool = False) -> logging.Handler:
+def set_stream_handler(
+    logger: logging.Logger = logging.getLogger(),
+    stream: TextIO = sys.stderr,
+    name: str = "stream_handler",
+    level: int = logging.INFO,
+    fmt: str = default_fmt,
+    datefmt: str = default_date_fmt,
+    remove_existing_stream_handlers: bool = False,
+) -> logging.Handler:
 
     """
     Sets a Stream Handler. A Handler with the same name will be replaced (with a warning)
@@ -99,23 +103,25 @@ def set_stream_handler(logger: logging.Logger = logging.getLogger(),
         try:
             remove_handler_by_type(logger=logger, handler_type=logging.StreamHandler)
             remove_handler_by_name(name)
-        except ValueError:      # pragma: no cover
-            pass                # pragma: no cover
+        except ValueError:  # pragma: no cover
+            pass  # pragma: no cover
 
     stream_handler: logging.Handler = logging.StreamHandler(stream=stream)
     stream_handler = _add_handler(stream_handler, logger=logger, name=name, level=level, fmt=fmt, datefmt=datefmt)
     return stream_handler
 
 
-def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
-                             stream: TextIO = sys.stderr,
-                             name: str = 'stream_handler_color',
-                             level: int = logging.INFO,
-                             fmt: str = default_fmt,
-                             datefmt: str = default_date_fmt,
-                             field_styles: Optional[FieldAndLevelStyles] = None,
-                             level_styles: Optional[FieldAndLevelStyles] = None,
-                             remove_existing_stream_handlers: bool = False) -> logging.Handler:
+def set_stream_handler_color(
+    logger: logging.Logger = logging.getLogger(),
+    stream: TextIO = sys.stderr,
+    name: str = "stream_handler_color",
+    level: int = logging.INFO,
+    fmt: str = default_fmt,
+    datefmt: str = default_date_fmt,
+    field_styles: Optional[FieldAndLevelStyles] = None,
+    level_styles: Optional[FieldAndLevelStyles] = None,
+    remove_existing_stream_handlers: bool = False,
+) -> logging.Handler:
     """
     Sets a Colored Stream Handler. A Handler with the same name will be replaced (with a warning)
     if remove_existing_stream_handlers is set, otgerwise it will be reconfigured
@@ -130,8 +136,8 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
 
     """
 
-    field_styles = lib_parameter.get_default_if_none(field_styles, coloredlogs.DEFAULT_FIELD_STYLES)
-    level_styles = lib_parameter.get_default_if_none(level_styles, coloredlogs.DEFAULT_LEVEL_STYLES)
+    field_styles = lib_parameter.get_default_if_none(field_styles, coloredlogs.DEFAULT_FIELD_STYLES)  # type: ignore
+    level_styles = lib_parameter.get_default_if_none(level_styles, coloredlogs.DEFAULT_LEVEL_STYLES)  # type: ignore
 
     if remove_existing_stream_handlers:
         try:
@@ -140,22 +146,17 @@ def set_stream_handler_color(logger: logging.Logger = logging.getLogger(),
         except ValueError:
             pass
 
-    fmt = override_fmt_via_environment(fmt, 'COLOREDLOGS_LOG_FORMAT')
-    if hasattr(fmt, 'format'):
+    fmt = override_fmt_via_environment(fmt, "COLOREDLOGS_LOG_FORMAT")
+    if hasattr(fmt, "format"):
         fmt = format_fmt(fmt)
-    datefmt = override_fmt_via_environment(datefmt, 'COLOREDLOGS_DATE_FORMAT')
-    field_styles = override_style_via_environment(field_styles, 'COLOREDLOGS_FIELD_STYLES')
-    level_styles = override_style_via_environment(level_styles, 'COLOREDLOGS_LEVEL_STYLES')
+    datefmt = override_fmt_via_environment(datefmt, "COLOREDLOGS_DATE_FORMAT")
+    field_styles = override_style_via_environment(field_styles, "COLOREDLOGS_FIELD_STYLES")
+    level_styles = override_style_via_environment(level_styles, "COLOREDLOGS_LEVEL_STYLES")
 
     # https://coloredlogs.readthedocs.io/en/latest/api.html
-    coloredlogs.install(logger=logger,
-                        level=level,
-                        fmt=fmt,
-                        datefmt=datefmt,
-                        field_styles=field_styles,
-                        level_styles=level_styles,
-                        stream=stream,
-                        isatty=True)
+    coloredlogs.install(
+        logger=logger, level=level, fmt=fmt, datefmt=datefmt, field_styles=field_styles, level_styles=level_styles, stream=stream, isatty=True
+    )  # type: ignore
     logger.handlers[-1].name = name
     handler = logger.handlers[-1]
     return handler
@@ -171,18 +172,20 @@ def override_fmt_via_environment(original_value: Any, environment_variable: str)
 
 def override_style_via_environment(original_value: Any, environment_variable: str) -> Any:
     if environment_variable in os.environ:
-        return_value = coloredlogs.parse_encoded_styles(os.environ[environment_variable])
+        return_value = coloredlogs.parse_encoded_styles(os.environ[environment_variable])  # type: ignore
     else:
         return_value = original_value
     return return_value
 
 
-def _add_handler(handler: logging.Handler,
-                 logger: logging.Logger = logging.getLogger(),
-                 name: str = 'log_handler',
-                 level: int = logging.INFO,
-                 fmt: str = default_fmt,
-                 datefmt: str = default_date_fmt) -> logging.Handler:
+def _add_handler(
+    handler: logging.Handler,
+    logger: logging.Logger = logging.getLogger(),
+    name: str = "log_handler",
+    level: int = logging.INFO,
+    fmt: str = default_fmt,
+    datefmt: str = default_date_fmt,
+) -> logging.Handler:
 
     """
     >>> result = set_stream_handler()
@@ -201,10 +204,12 @@ def _add_handler(handler: logging.Handler,
 
 
 def format_fmt(fmt: str) -> str:
-    fmt = fmt.format(username=getpass.getuser(),
-                     hostname_short=lib_platform.hostname_short,
-                     hostname=lib_platform.hostname,
-                     program_name=lib_programname.get_path_executed_script().stem)
+    fmt = fmt.format(
+        username=getpass.getuser(),
+        hostname_short=lib_platform.hostname_short,
+        hostname=lib_platform.hostname,
+        program_name=lib_programname.get_path_executed_script().stem,
+    )
     return fmt
 
 
@@ -219,7 +224,7 @@ def get_handler_by_name(name: str) -> logging.Handler:
 
     handlers = logging.getLogger().handlers
     for handler in handlers:
-        if hasattr(handler, 'name'):
+        if hasattr(handler, "name"):
             if handler.name == name:
                 return handler
     raise ValueError(f'Logging Handler "{name}" not found')
@@ -262,7 +267,7 @@ def exists_handler_with_name(name: str) -> bool:
     """
     handlers = logging.getLogger().handlers
     for handler in handlers:
-        if hasattr(handler, 'name'):
+        if hasattr(handler, "name"):
             if handler.name == name:
                 return True
     return False
@@ -274,14 +279,18 @@ def logger_flush_all_handlers(logger: logging.Logger = logging.getLogger()) -> N
 
     """
     for handler in logger.handlers:
-        if hasattr(handler, 'flush'):
-            handler.flush()
+        if hasattr(handler, "flush"):
+            try:
+                handler.flush()
+            except ValueError:
+                # we have got ValueError: underlying buffer has been detached on github Actions Windows
+                pass
 
 
 class SaveLogHandlerFormatter(object):
+    """ """
+
     """
-    """
-    '''
     >>> # those tests dont run on pytest
     >>> import lib_doctest_pycharm
     >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm()
@@ -305,14 +314,14 @@ class SaveLogHandlerFormatter(object):
     >>> # teardown
     >>> remove_handler_by_name(name='doctest_console_handler')
 
-    '''
+    """
 
     def __init__(self, handler: logging.Handler):
         self._handler = handler
         self._formatter: Optional[logging.Formatter] = None
         self.save()
 
-    def __enter__(self) -> 'SaveLogHandlerFormatter':
+    def __enter__(self) -> "SaveLogHandlerFormatter":
         return self
 
     def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> None:
@@ -336,9 +345,9 @@ def set_log_handler_formatter_prefix(handler: logging.Handler, log_formatter_pre
             handler.formatter._fmt = log_formatter_prefix + handler.formatter._fmt
             handler.formatter._style._fmt = log_formatter_prefix + handler.formatter._style._fmt
         else:
-            handler.formatter._fmt = log_formatter_prefix + '%(message)s'
-            handler.formatter._style._fmt = log_formatter_prefix + '%(message)s'
+            handler.formatter._fmt = log_formatter_prefix + "%(message)s"
+            handler.formatter._style._fmt = log_formatter_prefix + "%(message)s"
     else:
         datefmt = default_date_fmt
-        formatter = logging.Formatter(log_formatter_prefix + '%(message)s', datefmt)
+        formatter = logging.Formatter(log_formatter_prefix + "%(message)s", datefmt)
         handler.setFormatter(formatter)

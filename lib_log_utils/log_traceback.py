@@ -11,14 +11,14 @@ import lib_parameter
 try:
     from . import lib_log_utils
     from . import log_handlers
-except ImportError:                 # pragma: no cover
-    import lib_log_utils            # type: ignore  # pragma: no cover
-    import log_handlers             # type: ignore  # pragma: no cover
+except ImportError:  # pragma: no cover
+    import lib_log_utils  # type: ignore  # pragma: no cover
+    import log_handlers  # type: ignore  # pragma: no cover
 
 
-def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
-                            log_level_exec_info: Optional[int] = None,
-                            log_level_traceback: Optional[int] = None) -> str:
+def log_exception_traceback(
+    s_error: str, log_level: int = logging.ERROR, log_level_exec_info: Optional[int] = None, log_level_traceback: Optional[int] = None
+) -> str:
     """
 
     >>> # test with exc_info = None
@@ -50,13 +50,13 @@ def log_exception_traceback(s_error: str, log_level: int = logging.ERROR,
     if log_level_exec_info != logging.NOTSET:
         exc_info = sys.exc_info()[1]
         exc_info_type = type(exc_info).__name__
-        exc_info_msg = exc_info_type + ': ' + str(exc_info)
+        exc_info_msg = exc_info_type + ": " + str(exc_info)
         lib_log_utils.log_level(message=exc_info_msg, level=log_level_exec_info)
         log_stdout(exc_info, log_level_exec_info)
         log_stderr(exc_info, log_level_exec_info)
 
     if log_level_traceback != logging.NOTSET:
-        s_traceback = traceback.format_exc().rstrip('\n')
+        s_traceback = traceback.format_exc().rstrip("\n")
         lib_log_utils.log_level(message=s_traceback, level=log_level_traceback)
 
     log_handlers.logger_flush_all_handlers()
@@ -88,11 +88,11 @@ def print_exception_traceback(s_error: str) -> str:
     if exc_info is not None:
         encoding = sys.getdefaultencoding()
         exc_info_type = type(exc_info).__name__
-        exc_info_msg = exc_info_type + ': ' + str(exc_info)
+        exc_info_msg = exc_info_type + ": " + str(exc_info)
         print(exc_info_msg.encode(encoding), file=sys.stderr)
         print_stdout(exc_info)
         print_stderr(exc_info)
-        print(traceback.format_exc().rstrip('\n').encode(encoding), file=sys.stderr)
+        print(traceback.format_exc().rstrip("\n").encode(encoding), file=sys.stderr)
     return s_error  # to use it as input for re-raising
 
 
@@ -115,10 +115,10 @@ def print_stdout(exc_info: Any) -> None:
     >>> print_stdout(exc_info)
 
     """
-    if hasattr(exc_info, 'stdout'):
+    if hasattr(exc_info, "stdout"):
         if exc_info.stdout is not None:
             assert isinstance(exc_info.stdout, bytes)
-            print(b'STDOUT: ' + exc_info.stdout, file=sys.stderr)
+            print(b"STDOUT: " + exc_info.stdout, file=sys.stderr)
 
 
 def print_stderr(exc_info: Any) -> None:
@@ -140,10 +140,10 @@ def print_stderr(exc_info: Any) -> None:
     >>> print_stderr(exc_info)
 
     """
-    if hasattr(exc_info, 'stderr'):
+    if hasattr(exc_info, "stderr"):
         if exc_info.stderr is not None:
             assert isinstance(exc_info.stderr, bytes)
-            print(b'STDERR: ' + exc_info.stderr, file=sys.stderr)
+            print(b"STDERR: " + exc_info.stderr, file=sys.stderr)
 
 
 def log_stdout(exc_info: Any, log_level_exec_info: int) -> None:
@@ -166,10 +166,10 @@ def log_stdout(exc_info: Any, log_level_exec_info: int) -> None:
 
     """
     encoding = sys.getdefaultencoding()
-    if hasattr(exc_info, 'stdout'):
+    if hasattr(exc_info, "stdout"):
         if exc_info.stdout is not None:
             assert isinstance(exc_info.stdout, bytes)
-            lib_log_utils.log_level(message='STDOUT: ' + exc_info.stdout.decode(encoding), level=log_level_exec_info)
+            lib_log_utils.log_level(message="STDOUT: " + exc_info.stdout.decode(encoding), level=log_level_exec_info)
 
 
 def log_stderr(exc_info: Any, log_level_exec_info: int) -> None:
@@ -192,13 +192,13 @@ def log_stderr(exc_info: Any, log_level_exec_info: int) -> None:
 
     """
     encoding = sys.getdefaultencoding()
-    if hasattr(exc_info, 'stderr'):
+    if hasattr(exc_info, "stderr"):
         if exc_info.stderr is not None:
             assert isinstance(exc_info.stderr, bytes)
-            lib_log_utils.log_level(message='STDERR: ' + exc_info.stderr.decode(encoding), level=log_level_exec_info)
+            lib_log_utils.log_level(message="STDERR: " + exc_info.stderr.decode(encoding), level=log_level_exec_info)
 
 
-def test_log_util():   # type: ignore
+def test_log_util():  # type: ignore
     """
     # >>> import lib_doctest_pycharm
     # >>> lib_doctest_pycharm.setup_doctest_logger_for_pycharm(log_level=logging.DEBUG)
@@ -215,4 +215,4 @@ def test_log_util():   # type: ignore
         xxx = 1 / 0
         return xxx
     except ZeroDivisionError:
-        log_exception_traceback('Error', log_level=logging.WARNING, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)
+        log_exception_traceback("Error", log_level=logging.WARNING, log_level_exec_info=logging.INFO, log_level_traceback=logging.INFO)

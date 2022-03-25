@@ -16,20 +16,22 @@ FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]
 
 
 class LogSettings(object):
-    """ this holds all the Logger Settings - You can overwrite that values as needed from Your module """
+    """this holds all the Logger Settings - You can overwrite that values as needed from Your module"""
 
     use_colored_stream_handler = True
 
-    fmt_extended = f'[{getpass.getuser()}@{lib_platform.hostname_short}]'\
-                   f'[{lib_programname.get_path_executed_script().stem}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s'
+    fmt_extended = (
+        f"[{getpass.getuser()}@{lib_platform.hostname_short}]"
+        f"[{lib_programname.get_path_executed_script().stem}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s"
+    )
 
     # todo: we might can get the ppid program name for cli
-    fmt_extended_cli = f'[{getpass.getuser()}@{lib_platform.hostname_short}][%(asctime)s][%(levelname)-8s]: %(message)s'
-    fmt_plain = '%(message)s'
+    fmt_extended_cli = f"[{getpass.getuser()}@{lib_platform.hostname_short}][%(asctime)s][%(levelname)-8s]: %(message)s"
+    fmt_plain = "%(message)s"
     fmt = fmt_plain
 
     # that date format
-    datefmt = '%Y-%m-%d %H:%M:%S'
+    datefmt = "%Y-%m-%d %H:%M:%S"
     # the banner width
     width = 140
     # if text should be wrapped
@@ -43,53 +45,49 @@ class LogSettings(object):
     # the stream the stream_handler should use
     stream = sys.stderr
 
-    field_styles: FieldAndLevelStyles = \
-        {
-            'asctime': {'color': 'green'},
-            'hostname': {'color': 'green'},                                   # 'hostname': {'color': 'magenta'},
-            'levelname': {'color': 'yellow'},                                 # 'levelname': {'color': 'black', 'bold': True},
-            'name': {'color': 'blue'},
-            'programname': {'color': 'cyan'}
-            }
+    field_styles: FieldAndLevelStyles = {
+        "asctime": {"color": "green"},
+        "hostname": {"color": "green"},  # 'hostname': {'color': 'magenta'},
+        "levelname": {"color": "yellow"},  # 'levelname': {'color': 'black', 'bold': True},
+        "name": {"color": "blue"},
+        "programname": {"color": "cyan"},
+    }
 
-    level_styles_256: FieldAndLevelStyles = \
-        {
-            'spam': {'color': 'magenta', 'bright': True},                     # level 5   - SPAM
-            'debug': {'color': 'cyan', 'bright': True},                       # level 10  - DEBUG
-            'verbose': {'color': 'yellow', 'bright': True},                   # level 15  - VERBOSE
-            'info': {},                                                       # level 20  - INFO
-            'notice': {'background': 'magenta', 'bright': True},              # level 25  - NOTICE
-            'warning': {'color': 'red', 'bright': True},                      # level 30  - WARNING
-            'success': {'color': 'green', 'bright': True},                    # level 35  - SUCCESS
-            'error': {'background': 'red', 'bright': True},                   # level 40  - ERROR
-            'critical': {'background': 'red'}                                 # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
-            }
+    level_styles_256: FieldAndLevelStyles = {
+        "spam": {"color": "magenta", "bright": True},  # level 5   - SPAM
+        "debug": {"color": "cyan", "bright": True},  # level 10  - DEBUG
+        "verbose": {"color": "yellow", "bright": True},  # level 15  - VERBOSE
+        "info": {},  # level 20  - INFO
+        "notice": {"background": "magenta", "bright": True},  # level 25  - NOTICE
+        "warning": {"color": "red", "bright": True},  # level 30  - WARNING
+        "success": {"color": "green", "bright": True},  # level 35  - SUCCESS
+        "error": {"background": "red", "bright": True},  # level 40  - ERROR
+        "critical": {"background": "red"},  # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+    }
 
-    level_styles_8: FieldAndLevelStyles = \
-        {
-            'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
-            'debug': {'color': 'cyan', 'bold': True},                           # level 10  - DEBUG
-            'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
-            'info': {},                                                         # level 20  - INFO
-            'notice': {'background': 'magenta', 'bold': True},                  # level 25  - NOTICE
-            'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
-            'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
-            'error': {'background': 'red'},                                     # level 40  - ERROR
-            'critical': {'background': 'red', 'bold': True}                     # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
-            }
+    level_styles_8: FieldAndLevelStyles = {
+        "spam": {"color": "magenta", "bold": True},  # level 5   - SPAM
+        "debug": {"color": "cyan", "bold": True},  # level 10  - DEBUG
+        "verbose": {"color": "yellow", "bold": True},  # level 15  - VERBOSE
+        "info": {},  # level 20  - INFO
+        "notice": {"background": "magenta", "bold": True},  # level 25  - NOTICE
+        "warning": {"color": "red", "bold": True},  # level 30  - WARNING
+        "success": {"color": "green", "bold": True},  # level 35  - SUCCESS
+        "error": {"background": "red"},  # level 40  - ERROR
+        "critical": {"background": "red", "bold": True},  # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+    }
 
-    level_styles_travis: FieldAndLevelStyles = \
-        {
-            'spam': {'color': 'magenta', 'bold': True},                         # level 5   - SPAM
-            'debug': {'color': 'cyan', 'bold': True},                           # level 10  - DEBUG
-            'verbose': {'color': 'yellow', 'bold': True},                       # level 15  - VERBOSE
-            'info': {},                                                         # level 20  - INFO
-            'notice': {'color': 'magenta', 'bold': True},                       # level 25  - NOTICE
-            'warning': {'color': 'red', 'bold': True},                          # level 30  - WARNING
-            'success': {'color': 'green', 'bold': True},                        # level 35  - SUCCESS
-            'error': {'color': 'red', 'bold': True},                            # level 40  - ERROR
-            'critical': {'background': 'red', 'bold': True}                     # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
-            }
+    level_styles_travis: FieldAndLevelStyles = {
+        "spam": {"color": "magenta", "bold": True},  # level 5   - SPAM
+        "debug": {"color": "cyan", "bold": True},  # level 10  - DEBUG
+        "verbose": {"color": "yellow", "bold": True},  # level 15  - VERBOSE
+        "info": {},  # level 20  - INFO
+        "notice": {"color": "magenta", "bold": True},  # level 25  - NOTICE
+        "warning": {"color": "red", "bold": True},  # level 30  - WARNING
+        "success": {"color": "green", "bold": True},  # level 35  - SUCCESS
+        "error": {"color": "red", "bold": True},  # level 40  - ERROR
+        "critical": {"background": "red", "bold": True},  # level 50  - CRITICAL  # type: Dict[str, Dict[str, Any]]
+    }
 
     level_styles = level_styles_256
 
@@ -138,7 +136,7 @@ def autodetect_settings() -> int:
     >>> os.unsetenv('JUPYTERHUB_BASE_URL')
     """
 
-    if 'TRAVIS' in os.environ:
+    if "TRAVIS" in os.environ:
         # note that there will be no colored output on travis, as soon as
         # a secret is in travis.yaml, since then the output is filtered.
         # see also : https://travis-ci.community/t/ansi-colors-in-console-does-not-work-anymore/6608
@@ -146,23 +144,23 @@ def autodetect_settings() -> int:
         colors = 8
         return colors
 
-    if 'JUPYTERHUB_BASE_URL' in os.environ:
+    if "JUPYTERHUB_BASE_URL" in os.environ:
         # for binder we need stdout as stream
-        if os.environ['JUPYTERHUB_BASE_URL'].lower() == '/binder/jupyter/':
+        if os.environ["JUPYTERHUB_BASE_URL"].lower() == "/binder/jupyter/":
             log_settings.level_styles = log_settings.level_styles_256
             log_settings.stream = sys.stdout
             colors = 256
             return colors
 
-    if platform.system().lower() != 'windows':
+    if platform.system().lower() != "windows":
         try:
             # capture_output not available under python 3.6 !
             # my_process = subprocess.run(['tput', 'colors'], check=True, capture_output=True)
             # colors = int(my_process.stdout)
-            output = subprocess.check_output(['tput', 'colors'], stderr=subprocess.PIPE)
+            output = subprocess.check_output(["tput", "colors"], stderr=subprocess.PIPE)
             colors = int(output)
-        except subprocess.CalledProcessError:       # pragma: no cover
-            colors = 256                            # pragma: no cover
+        except subprocess.CalledProcessError:  # pragma: no cover
+            colors = 256  # pragma: no cover
     else:
         colors = 256
     return colors
