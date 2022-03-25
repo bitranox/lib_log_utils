@@ -2,21 +2,23 @@ lib_log_utils
 =============
 
 
-Version v1.4.10 as of 2020-10-09 see `Changelog`_
+Version 2022-03-25 as of 2022-03-25 see `Changelog`_
 
-|travis_build| |license| |jupyter| |pypi|
+|build_badge| |license| |jupyter| |pypi| |pypi-downloads| |black|
 
 |codecov| |better_code| |cc_maintain| |cc_issues| |cc_coverage| |snyk|
 
 
-.. |travis_build| image:: https://img.shields.io/travis/bitranox/lib_log_utils/master.svg
-   :target: https://travis-ci.org/bitranox/lib_log_utils
+
+.. |build_badge| image:: https://github.com/bitranox/lib_log_utils/actions/workflows/python-package.yml/badge.svg
+   :target: https://github.com/bitranox/lib_log_utils/actions/workflows/python-package.yml
+
 
 .. |license| image:: https://img.shields.io/github/license/webcomics/pywine.svg
    :target: http://en.wikipedia.org/wiki/MIT_License
 
 .. |jupyter| image:: https://mybinder.org/badge_logo.svg
- :target: https://mybinder.org/v2/gh/bitranox/lib_log_utils/master?filepath=lib_log_utils.ipynb
+   :target: https://mybinder.org/v2/gh/bitranox/lib_log_utils/master?filepath=lib_log_utils.ipynb
 
 .. for the pypi status link note the dashes, not the underscore !
 .. |pypi| image:: https://img.shields.io/pypi/status/lib-log-utils?label=PyPI%20Package
@@ -46,6 +48,10 @@ Version v1.4.10 as of 2020-10-09 see `Changelog`_
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
 
+.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/lib-log-utils
+   :target: https://pypi.org/project/lib-log-utils/
+   :alt: PyPI - Downloads
+
 this library makes it easy to log colored messages from python and from the commandline. Text Wrapping is supported.
 
 whenever possible, it tries to autodetect the correct settings for colored output.
@@ -59,9 +65,9 @@ automated tests, Travis Matrix, Documentation, Badges, etc. are managed with `Pi
 
 Python version required: 3.6.0 or newer
 
-tested on linux "bionic" with python 3.6, 3.7, 3.8, 3.9-dev, pypy3 - architectures: amd64, ppc64le, s390x, arm64
+tested on recent linux with python 3.6, 3.7, 3.8, 3.9, 3.10.0, pypy-3.8 - architectures: amd64
 
-`good code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, flake8 style checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://travis-ci.org/bitranox/lib_log_utils>`_, automatic daily builds and monitoring
+`good code coverage <https://codecov.io/gh/bitranox/lib_log_utils>`_, flake8 style checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://github.com/bitranox/lib_log_utils/actions/workflows/python-package.yml>`_, automatic daily builds and monitoring
 
 ----
 
@@ -219,7 +225,7 @@ EXAMPLES
 Usage from Commandline
 ------------------------
 
-.. code-block:: bash
+.. code-block::
 
    Usage: log_util [OPTIONS] [MESSAGE]
 
@@ -247,28 +253,28 @@ Installation and Upgrade
 - Before You start, its highly recommended to update pip and setup tools:
 
 
-.. code-block:: bash
+.. code-block::
 
     python -m pip --upgrade pip
     python -m pip --upgrade setuptools
 
 - to install the latest release from PyPi via pip (recommended):
 
-.. code-block:: bash
+.. code-block::
 
     python -m pip install --upgrade lib_log_utils
 
 - to install the latest version from github via pip:
 
 
-.. code-block:: bash
+.. code-block::
 
     python -m pip install --upgrade git+https://github.com/bitranox/lib_log_utils.git
 
 
 - include it into Your requirements.txt:
 
-.. code-block:: bash
+.. code-block::
 
     # Insert following line in Your requirements.txt:
     # for the latest Release on pypi:
@@ -283,7 +289,7 @@ Installation and Upgrade
 
 - to install the latest development version from source code:
 
-.. code-block:: bash
+.. code-block::
 
     # cd ~
     $ git clone https://github.com/bitranox/lib_log_utils.git
@@ -350,6 +356,14 @@ Changelog
 - new MAJOR version for incompatible API changes,
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
+
+v.1.4.11
+---------
+2022-03-25:
+ - fix ValueError: underlying buffer has been detached on github Actions Windows
+ - implement github actions
+ - update documentation and tests
+ - list ./dist dir if existing
 
 v1.4.10
 ---------

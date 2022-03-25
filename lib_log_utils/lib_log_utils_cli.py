@@ -18,13 +18,13 @@ try:
     from .log_config import log_settings
 except (ImportError, ModuleNotFoundError):  # pragma: no cover
     # imports for doctest
-    import __init__conf__                   # type: ignore  # pragma: no cover
-    import lib_log_utils                    # type: ignore  # pragma: no cover
-    import log_levels                       # type: ignore  # pragma: no cover
-    from log_config import log_settings     # type: ignore  # pragma: no cover
+    import __init__conf__  # type: ignore  # pragma: no cover
+    import lib_log_utils  # type: ignore  # pragma: no cover
+    import log_levels  # type: ignore  # pragma: no cover
+    from log_config import log_settings  # type: ignore  # pragma: no cover
 
 # CONSTANTS
-CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CLICK_CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 logger = logging.getLogger()
 
@@ -38,9 +38,18 @@ def cli_info() -> None:
     __init__conf__.print_info()
 
 
-def do_log(message: str, level_str: str = 'info', extended: Optional[bool] = None, banner: bool = False, width: Optional[int] = None,
-           wrap: Optional[bool] = None, silent: Optional[str] = None, quiet: Optional[bool] = None,
-           force: bool = False, colortest: bool = False) -> None:
+def do_log(
+    message: str,
+    level_str: str = "info",
+    extended: Optional[bool] = None,
+    banner: bool = False,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    silent: Optional[str] = None,
+    quiet: Optional[bool] = None,
+    force: bool = False,
+    colortest: bool = False,
+) -> None:
 
     """
     >>> do_log('test', banner=False)
@@ -51,7 +60,7 @@ def do_log(message: str, level_str: str = 'info', extended: Optional[bool] = Non
     """
     if silent is not None:
         # this is intentionally, we accept every value, only "true" is handled !
-        if silent.lower().startswith('true'):
+        if silent.lower().startswith("true"):
             quiet = True
         else:
             quiet = False
@@ -99,9 +108,9 @@ def set_logger_level_from_env() -> None:
 
     """
 
-    if 'LOG_UTIL_LEVEL' in os.environ:
+    if "LOG_UTIL_LEVEL" in os.environ:
         try:
-            log_settings.new_logger_level = log_levels.get_log_level_from_str(os.environ['LOG_UTIL_LEVEL'])
+            log_settings.new_logger_level = log_levels.get_log_level_from_str(os.environ["LOG_UTIL_LEVEL"])
         except ValueError:
             raise ValueError('the environment setting "LOG_UTIL_LEVEL" has to be from 0-50 or one of the predefined logging levels')
 
@@ -154,13 +163,13 @@ def set_width_from_env(width: Optional[int] = None, force: bool = False) -> None
 
     """
 
-    if 'LOG_UTIL_WIDTH' in os.environ:
+    if "LOG_UTIL_WIDTH" in os.environ:
         if width is not None and force:
             log_settings.width = width
         else:
             s_error = 'invalid environment setting for "LOG_UTIL_WIDTH", must be numerical and >= 10'
             try:
-                width = int(os.environ['LOG_UTIL_WIDTH'])
+                width = int(os.environ["LOG_UTIL_WIDTH"])
             except ValueError:
                 raise ValueError(s_error)
             if width < 10:
@@ -224,22 +233,23 @@ def set_extended_from_env(extended: Optional[bool] = None, force: bool = False) 
     >>> del os.environ['LOG_UTIL_FMT']
 
     """
+
     def set_fmt(_ext: Optional[bool]) -> None:
         if extended is True:
             log_settings.fmt = log_settings.fmt_extended_cli
         elif extended is False:
             log_settings.fmt = log_settings.fmt_plain
 
-    if 'LOG_UTIL_FMT' in os.environ:
+    if "LOG_UTIL_FMT" in os.environ:
         if extended is not None and force:
             set_fmt(extended)
         else:
-            if os.environ['LOG_UTIL_FMT'].lower().startswith('plain'):
+            if os.environ["LOG_UTIL_FMT"].lower().startswith("plain"):
                 log_settings.fmt = log_settings.fmt_plain
-            elif os.environ['LOG_UTIL_FMT'].lower().startswith('extended'):
+            elif os.environ["LOG_UTIL_FMT"].lower().startswith("extended"):
                 log_settings.fmt = log_settings.fmt_extended_cli
             else:
-                log_settings.fmt = os.environ['LOG_UTIL_FMT']
+                log_settings.fmt = os.environ["LOG_UTIL_FMT"]
 
     else:
         set_fmt(extended)
@@ -290,13 +300,13 @@ def set_wrap_from_env(wrap_text: Optional[bool] = None, force: bool = False) -> 
     >>> del os.environ['LOG_UTIL_WRAP']
 
     """
-    if 'LOG_UTIL_WRAP' in os.environ:
+    if "LOG_UTIL_WRAP" in os.environ:
         if wrap_text is not None and force:
             log_settings.wrap = wrap_text
         else:
-            if os.environ['LOG_UTIL_WRAP'].lower().startswith('false'):
+            if os.environ["LOG_UTIL_WRAP"].lower().startswith("false"):
                 log_settings.wrap = False
-            elif os.environ['LOG_UTIL_WRAP'].lower().startswith('true'):
+            elif os.environ["LOG_UTIL_WRAP"].lower().startswith("true"):
                 log_settings.wrap = True
             else:
                 raise ValueError('invalid environment setting for "LOG_UTIL_WRAP", must be "True" or "False"')
@@ -352,13 +362,13 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 
     """
 
-    if 'LOG_UTIL_QUIET' in os.environ:
+    if "LOG_UTIL_QUIET" in os.environ:
         if quiet is not None and force:
             log_settings.quiet = quiet
         else:
-            if os.environ['LOG_UTIL_QUIET'].lower().startswith('false'):
+            if os.environ["LOG_UTIL_QUIET"].lower().startswith("false"):
                 log_settings.quiet = False
-            elif os.environ['LOG_UTIL_QUIET'].lower().startswith('true'):
+            elif os.environ["LOG_UTIL_QUIET"].lower().startswith("true"):
                 log_settings.quiet = True
             else:
                 raise ValueError('invalid environment setting for "LOG_UTIL_QUIET", must be "True" or "False"')
@@ -368,27 +378,40 @@ def set_quiet_from_env(quiet: Optional[bool] = None, force: bool = False) -> Non
 
 
 @click.command(help=__init__conf__.title, context_settings=CLICK_CONTEXT_SETTINGS)
-@click.version_option(version=__init__conf__.version,
-                      prog_name=__init__conf__.shell_command,
-                      message=f'{__init__conf__.shell_command} version {__init__conf__.version}')
-@click.option('-e', '--extended', is_flag=True, type=bool, default=None, help='extended log format')
-@click.option('-p', '--plain', is_flag=True, type=bool, default=None, help='plain log format')
-@click.option('-b', '--banner', is_flag=True, type=bool, default=False, help='log as banner')
-@click.option('-w', '--width', type=int, default=None, help='wrap width, default=140')
-@click.option('--wrap/--nowrap', type=bool, default=None, help='wrap text')
+@click.version_option(
+    version=__init__conf__.version, prog_name=__init__conf__.shell_command, message=f"{__init__conf__.shell_command} version {__init__conf__.version}"
+)
+@click.option("-e", "--extended", is_flag=True, type=bool, default=None, help="extended log format")
+@click.option("-p", "--plain", is_flag=True, type=bool, default=None, help="plain log format")
+@click.option("-b", "--banner", is_flag=True, type=bool, default=False, help="log as banner")
+@click.option("-w", "--width", type=int, default=None, help="wrap width, default=140")
+@click.option("--wrap/--nowrap", type=bool, default=None, help="wrap text")
 # if parameter -q is anything else then "True" (not case sensitive), or not set, it is considered as False.
 # This makes it possible to silence messages elegantly in a shellscript
-@click.option('-s', '--silent', type=str, default=None, help='disable logging if "True"')
-@click.option('-q', '--quiet', is_flag=True, type=bool, default=None, help='disable logging as flag')
-@click.option('-f', '--force', is_flag=True, type=bool, default=False, help='take precedence over environment settings')
-@click.option('-l', '--level', type=str, default="info", help='log level as number or predefined Level')
-@click.option('--program_info', is_flag=True, type=bool, default=False, help='get program info')
-@click.option('-c', '--colortest', is_flag=True, type=bool, default=False, help='color test')
-@click.option('--traceback/--no-traceback', is_flag=True, type=bool, default=None, help='return traceback information on cli')
-@click.argument('message', required=False, default='')
-def cli_main(message: str, level: str, extended: Optional[bool], plain: Optional[bool], banner: bool, width: Optional[int], wrap: Optional[bool],
-             silent: Optional[str], quiet: Optional[bool], force: bool, program_info: bool, colortest: bool, traceback: Optional[bool] = None) -> None:
-    """ log a message """
+@click.option("-s", "--silent", type=str, default=None, help='disable logging if "True"')
+@click.option("-q", "--quiet", is_flag=True, type=bool, default=None, help="disable logging as flag")
+@click.option("-f", "--force", is_flag=True, type=bool, default=False, help="take precedence over environment settings")
+@click.option("-l", "--level", type=str, default="info", help="log level as number or predefined Level")
+@click.option("--program_info", is_flag=True, type=bool, default=False, help="get program info")
+@click.option("-c", "--colortest", is_flag=True, type=bool, default=False, help="color test")
+@click.option("--traceback/--no-traceback", is_flag=True, type=bool, default=None, help="return traceback information on cli")
+@click.argument("message", required=False, default="")
+def cli_main(
+    message: str,
+    level: str,
+    extended: Optional[bool],
+    plain: Optional[bool],
+    banner: bool,
+    width: Optional[int],
+    wrap: Optional[bool],
+    silent: Optional[str],
+    quiet: Optional[bool],
+    force: bool,
+    program_info: bool,
+    colortest: bool,
+    traceback: Optional[bool] = None,
+) -> None:
+    """log a message"""
     if traceback is not None:
         cli_exit_tools.config.traceback = traceback
     if program_info:
@@ -396,12 +419,22 @@ def cli_main(message: str, level: str, extended: Optional[bool], plain: Optional
     else:
         if plain:
             extended = False
-        do_log(message=message, level_str=level, extended=extended, banner=banner, width=width,
-               wrap=wrap, silent=silent, quiet=quiet, force=force, colortest=colortest)
+        do_log(
+            message=message,
+            level_str=level,
+            extended=extended,
+            banner=banner,
+            width=width,
+            wrap=wrap,
+            silent=silent,
+            quiet=quiet,
+            force=force,
+            colortest=colortest,
+        )
 
 
 # entry point if main
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         cli_main()
     except Exception as exc:

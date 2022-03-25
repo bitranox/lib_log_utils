@@ -55,9 +55,7 @@ def get_requirements_from_file(requirements_filename: str) -> List[str]:
     """
     l_requirements = list()
     try:
-        with open(
-            str(pathlib.Path(__file__).parent / requirements_filename), mode="r"
-        ) as requirements_file:
+        with open(str(pathlib.Path(__file__).parent / requirements_filename), mode="r") as requirements_file:
             for line in requirements_file:
                 line_data = get_line_data(line)
                 if line_data:
@@ -86,13 +84,11 @@ if is_travis_deploy() and is_tagged_commit():
 
 setup_kwargs: Dict[str, Any] = dict()
 setup_kwargs["name"] = "lib_log_utils"
-setup_kwargs["version"] = "v1.4.10"
+setup_kwargs["version"] = "2022-03-25"
 setup_kwargs["url"] = "https://github.com/bitranox/lib_log_utils"
 setup_kwargs["packages"] = find_packages()
 setup_kwargs["package_data"] = {"lib_log_utils": ["py.typed", "*.pyi", "__init__.pyi"]}
-setup_kwargs[
-    "description"
-] = "colored log messages and banners from commandline and python"
+setup_kwargs["description"] = "colored log messages and banners from commandline and python"
 setup_kwargs["long_description"] = long_description
 setup_kwargs["long_description_content_type"] = "text/x-rst"
 setup_kwargs["author"] = "Robert Nowotny"
@@ -106,9 +102,7 @@ setup_kwargs["classifiers"] = [
     "Programming Language :: Python",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-setup_kwargs["entry_points"] = {
-    "console_scripts": ["log_util = lib_log_utils.lib_log_utils_cli:cli_main"]
-}
+setup_kwargs["entry_points"] = {"console_scripts": ["log_util = lib_log_utils.lib_log_utils_cli:cli_main"]}
 # minimally needs to run tests - no project requirements here
 setup_kwargs["tests_require"] = tests_require
 # specify what a project minimally needs to run correctly

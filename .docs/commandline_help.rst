@@ -1,4 +1,4 @@
-.. code-block:: bash
+.. code-block::
 
    Usage: log_util [OPTIONS] [MESSAGE]
 

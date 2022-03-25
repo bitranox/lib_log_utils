@@ -8,7 +8,7 @@ import textwrap
 from typing import Dict
 
 # EXT
-import humanfriendly.cli            # type: ignore  # noqa
+import humanfriendly.cli  # type: ignore  # noqa
 
 # OWN
 import lib_parameter
@@ -20,24 +20,25 @@ try:
     from . import log_handlers
     from . import log_levels
     from . import log_traceback
-except ImportError:                         # pragma: no cover
-    from log_config import log_settings     # type: ignore # pragma: no cover
-    import log_handlers                     # type: ignore # pragma: no cover
-    import log_levels                       # type: ignore # pragma: no cover
-    import log_traceback                    # type: ignore # pragma: no cover
+except ImportError:  # pragma: no cover
+    from log_config import log_settings  # type: ignore # pragma: no cover
+    import log_handlers  # type: ignore # pragma: no cover
+    import log_levels  # type: ignore # pragma: no cover
+    import log_traceback  # type: ignore # pragma: no cover
 
 
 # Custom Types
 FieldAndLevelStyles = Dict[str, Dict[str, Union[str, bool]]]
 
 
-def banner_spam(message: str,
-                width: Optional[int] = None,
-                wrap: Optional[bool] = None,
-                logger: Optional[logging.Logger] = None,
-                quiet: Optional[bool] = None,
-                banner: bool = True,
-                ) -> None:
+def banner_spam(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner SPAM
 
@@ -47,13 +48,14 @@ def banner_spam(message: str,
     log_level(message=message, level=log_levels.SPAM, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_debug(message: str,
-                 width: Optional[int] = None,
-                 wrap: Optional[bool] = None,
-                 logger: Optional[logging.Logger] = None,
-                 quiet: Optional[bool] = None,
-                 banner: bool = True,
-                 ) -> None:
+def banner_debug(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner DEBUG
 
@@ -63,13 +65,14 @@ def banner_debug(message: str,
     log_level(message=message, level=logging.DEBUG, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_verbose(message: str,
-                   width: Optional[int] = None,
-                   wrap: Optional[bool] = None,
-                   logger: Optional[logging.Logger] = None,
-                   quiet: Optional[bool] = None,
-                   banner: bool = True,
-                   ) -> None:
+def banner_verbose(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner VERBOSE
 
@@ -79,13 +82,14 @@ def banner_verbose(message: str,
     log_level(message=message, level=log_levels.VERBOSE, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_info(message: str,
-                width: Optional[int] = None,
-                wrap: Optional[bool] = None,
-                logger: Optional[logging.Logger] = None,
-                quiet: Optional[bool] = None,
-                banner: bool = True,
-                ) -> None:
+def banner_info(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner INFO
 
@@ -95,13 +99,14 @@ def banner_info(message: str,
     log_level(message=message, level=logging.INFO, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_notice(message: str,
-                  width: Optional[int] = None,
-                  wrap: Optional[bool] = None,
-                  logger: Optional[logging.Logger] = None,
-                  quiet: Optional[bool] = None,
-                  banner: bool = True,
-                  ) -> None:
+def banner_notice(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner NOTICE
 
@@ -111,13 +116,14 @@ def banner_notice(message: str,
     log_level(message=message, level=log_levels.NOTICE, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_success(message: str,
-                   width: Optional[int] = None,
-                   wrap: Optional[bool] = None,
-                   logger: Optional[logging.Logger] = None,
-                   quiet: Optional[bool] = None,
-                   banner: bool = True,
-                   ) -> None:
+def banner_success(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner SUCCESS
 
@@ -127,13 +133,14 @@ def banner_success(message: str,
     log_level(message=message, level=log_levels.SUCCESS, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_warning(message: str,
-                   width: Optional[int] = None,
-                   wrap: Optional[bool] = None,
-                   logger: Optional[logging.Logger] = None,
-                   quiet: Optional[bool] = None,
-                   banner: bool = True,
-                   ) -> None:
+def banner_warning(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner WARNING
 
@@ -143,13 +150,14 @@ def banner_warning(message: str,
     log_level(message=message, level=logging.WARNING, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_error(message: str,
-                 width: Optional[int] = None,
-                 wrap: Optional[bool] = None,
-                 logger: Optional[logging.Logger] = None,
-                 quiet: Optional[bool] = None,
-                 banner: bool = True,
-                 ) -> None:
+def banner_error(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner ERROR
 
@@ -159,13 +167,14 @@ def banner_error(message: str,
     log_level(message=message, level=logging.ERROR, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def banner_critical(message: str,
-                    width: Optional[int] = None,
-                    wrap: Optional[bool] = None,
-                    logger: Optional[logging.Logger] = None,
-                    quiet: Optional[bool] = None,
-                    banner: bool = True,
-                    ) -> None:
+def banner_critical(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = True,
+) -> None:
     """
     logs a banner CRITICAL
 
@@ -175,13 +184,14 @@ def banner_critical(message: str,
     log_level(message=message, level=logging.CRITICAL, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_spam(message: str,
-             width: Optional[int] = None,
-             wrap: Optional[bool] = None,
-             logger: Optional[logging.Logger] = None,
-             quiet: Optional[bool] = None,
-             banner: bool = False,
-             ) -> None:
+def log_spam(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs SPAM
 
@@ -191,13 +201,14 @@ def log_spam(message: str,
     log_level(message=message, level=log_levels.SPAM, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_debug(message: str,
-              width: Optional[int] = None,
-              wrap: Optional[bool] = None,
-              logger: Optional[logging.Logger] = None,
-              quiet: Optional[bool] = None,
-              banner: bool = False,
-              ) -> None:
+def log_debug(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs DEBUG
 
@@ -207,13 +218,14 @@ def log_debug(message: str,
     log_level(message=message, level=logging.DEBUG, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_verbose(message: str,
-                width: Optional[int] = None,
-                wrap: Optional[bool] = None,
-                logger: Optional[logging.Logger] = None,
-                quiet: Optional[bool] = None,
-                banner: bool = False,
-                ) -> None:
+def log_verbose(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs VERBOSE
 
@@ -223,13 +235,14 @@ def log_verbose(message: str,
     log_level(message=message, level=log_levels.VERBOSE, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_info(message: str,
-             width: Optional[int] = None,
-             wrap: Optional[bool] = None,
-             logger: Optional[logging.Logger] = None,
-             quiet: Optional[bool] = None,
-             banner: bool = False,
-             ) -> None:
+def log_info(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs INFO
 
@@ -239,13 +252,14 @@ def log_info(message: str,
     log_level(message=message, level=logging.INFO, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_notice(message: str,
-               width: Optional[int] = None,
-               wrap: Optional[bool] = None,
-               logger: Optional[logging.Logger] = None,
-               quiet: Optional[bool] = None,
-               banner: bool = False,
-               ) -> None:
+def log_notice(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs NOTICE
 
@@ -255,13 +269,14 @@ def log_notice(message: str,
     log_level(message=message, level=log_levels.NOTICE, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_success(message: str,
-                width: Optional[int] = None,
-                wrap: Optional[bool] = None,
-                logger: Optional[logging.Logger] = None,
-                quiet: Optional[bool] = None,
-                banner: bool = False,
-                ) -> None:
+def log_success(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs SUCCESS
 
@@ -271,13 +286,14 @@ def log_success(message: str,
     log_level(message=message, level=log_levels.SUCCESS, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_warning(message: str,
-                width: Optional[int] = None,
-                wrap: Optional[bool] = None,
-                logger: Optional[logging.Logger] = None,
-                quiet: Optional[bool] = None,
-                banner: bool = False,
-                ) -> None:
+def log_warning(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs WARNING
 
@@ -287,13 +303,14 @@ def log_warning(message: str,
     log_level(message=message, level=logging.WARNING, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_error(message: str,
-              width: Optional[int] = None,
-              wrap: Optional[bool] = None,
-              logger: Optional[logging.Logger] = None,
-              quiet: Optional[bool] = None,
-              banner: bool = False,
-              ) -> None:
+def log_error(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs ERROR
 
@@ -303,13 +320,14 @@ def log_error(message: str,
     log_level(message=message, level=logging.ERROR, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_critical(message: str,
-                 width: Optional[int] = None,
-                 wrap: Optional[bool] = None,
-                 logger: Optional[logging.Logger] = None,
-                 quiet: Optional[bool] = None,
-                 banner: bool = False,
-                 ) -> None:
+def log_critical(
+    message: str,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs CRITICAL
 
@@ -320,14 +338,15 @@ def log_critical(message: str,
     log_level(message=message, level=logging.CRITICAL, width=width, wrap=wrap, logger=logger, quiet=quiet, banner=banner)
 
 
-def log_level(message: str,
-              level: Optional[int] = None,
-              width: Optional[int] = None,
-              wrap: Optional[bool] = None,
-              logger: Optional[logging.Logger] = None,
-              quiet: Optional[bool] = None,
-              banner: bool = False
-              ) -> None:
+def log_level(
+    message: str,
+    level: Optional[int] = None,
+    width: Optional[int] = None,
+    wrap: Optional[bool] = None,
+    logger: Optional[logging.Logger] = None,
+    quiet: Optional[bool] = None,
+    banner: bool = False,
+) -> None:
     """
     logs a message
 
@@ -366,21 +385,21 @@ def log_level(message: str,
     if logger is None:
         logger = logging.getLogger()
 
-    l_message = message.split('\n')
+    l_message = message.split("\n")
 
     if banner:
-        sep_line = '*' * width
+        sep_line = "*" * width
         logger.log(level=level, msg=sep_line)  # 140 characters is about the width in travis log screen
         for line in l_message:
             if wrap:
-                l_wrapped_lines = textwrap.wrap(line, width=width - 2, tabsize=4, replace_whitespace=False, initial_indent='* ', subsequent_indent='* ')
+                l_wrapped_lines = textwrap.wrap(line, width=width - 2, tabsize=4, replace_whitespace=False, initial_indent="* ", subsequent_indent="* ")
                 for wrapped_line in l_wrapped_lines:
-                    msg_line = wrapped_line + (width - len(wrapped_line) - 1) * ' ' + '*'
+                    msg_line = wrapped_line + (width - len(wrapped_line) - 1) * " " + "*"
                     logger.log(level=level, msg=msg_line)
             else:
                 line = "* " + line.rstrip()
                 if len(line) < width - 1:
-                    line = line + (width - len(line) - 1) * ' ' + '*'
+                    line = line + (width - len(line) - 1) * " " + "*"
                 logger.log(level=level, msg=line)
         logger.log(level=level, msg=sep_line)
         log_handlers.logger_flush_all_handlers(logger)
@@ -397,7 +416,7 @@ def log_level(message: str,
 
 
 def colortest(quiet: bool = False) -> None:
-    """ test banner colors
+    """test banner colors
 
     >>> # Setup
     >>> log_settings.use_colored_stream_handler=True
@@ -415,15 +434,15 @@ def colortest(quiet: bool = False) -> None:
 
     """
     if not quiet:
-        log_spam('test level spam')
-        log_debug('test level debug')
-        log_verbose('test level verbose')
-        log_info('test level info')
-        log_notice('test level notice')
-        log_success('test level success')
-        log_warning('test level warning')
-        log_error('test level error')
-        log_critical('test level critical')
+        log_spam("test level spam")
+        log_debug("test level debug")
+        log_verbose("test level verbose")
+        log_info("test level info")
+        log_notice("test level notice")
+        log_success("test level success")
+        log_warning("test level warning")
+        log_error("test level error")
+        log_critical("test level critical")
         humanfriendly.cli.demonstrate_ansi_formatting()
 
 
@@ -448,18 +467,22 @@ def setup_handler(logger: logging.Logger = logging.getLogger(), remove_existing_
 
     """
     if log_settings.use_colored_stream_handler:
-        log_handlers.set_stream_handler_color(logger=logger,
-                                              level=log_settings.stream_handler_log_level,
-                                              fmt=log_settings.fmt,
-                                              datefmt=log_settings.datefmt,
-                                              field_styles=log_settings.field_styles,
-                                              level_styles=log_settings.level_styles,
-                                              stream=log_settings.stream,
-                                              remove_existing_stream_handlers=remove_existing_stream_handlers)
+        log_handlers.set_stream_handler_color(
+            logger=logger,
+            level=log_settings.stream_handler_log_level,
+            fmt=log_settings.fmt,
+            datefmt=log_settings.datefmt,
+            field_styles=log_settings.field_styles,
+            level_styles=log_settings.level_styles,
+            stream=log_settings.stream,
+            remove_existing_stream_handlers=remove_existing_stream_handlers,
+        )
     else:
-        log_handlers.set_stream_handler(logger=logger,
-                                        level=log_settings.stream_handler_log_level,
-                                        fmt=log_settings.fmt,
-                                        datefmt=log_settings.datefmt,
-                                        stream=log_settings.stream,
-                                        remove_existing_stream_handlers=remove_existing_stream_handlers)
+        log_handlers.set_stream_handler(
+            logger=logger,
+            level=log_settings.stream_handler_log_level,
+            fmt=log_settings.fmt,
+            datefmt=log_settings.datefmt,
+            stream=log_settings.stream,
+            remove_existing_stream_handlers=remove_existing_stream_handlers,
+        )
