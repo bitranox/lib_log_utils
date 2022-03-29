@@ -2,7 +2,7 @@ lib_log_utils
 =============
 
 
-Version v1.4.13 as of 2022-03-25 see `Changelog`_
+Version v1.4.14 as of 2022-03-29 see `Changelog`_
 
 |build_badge| |license| |jupyter| |pypi| |pypi-downloads| |black|
 
@@ -356,6 +356,10 @@ Changelog
 - new MAJOR version for incompatible API changes,
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
+
+v1.4.14
+--------
+2022-03-29: remedy mypy type error in lob_log_utils_cli
 
 v1.4.13
 ---------
