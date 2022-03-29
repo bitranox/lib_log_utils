@@ -5,6 +5,10 @@ Changelog
 - new MINOR version for added functionality in a backwards compatible manner
 - new PATCH version for backwards compatible bug fixes
 
+v1.4.14
+--------
+2022-03-29: remedy mypy type error in lob_log_utils_cli
+
 v1.4.13
 ---------
 2022-03-25:
