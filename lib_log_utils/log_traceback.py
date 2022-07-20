@@ -87,13 +87,44 @@ def print_exception_traceback(s_error: str) -> str:
     exc_info = sys.exc_info()[1]
     if exc_info is not None:
         encoding = sys.getdefaultencoding()
-        exc_info_type = type(exc_info).__name__
-        exc_info_msg = exc_info_type + ": " + str(exc_info)
+        exc_info_msg = get_exc_info_msg()
         print(exc_info_msg.encode(encoding), file=sys.stderr)
         print_stdout(exc_info)
         print_stderr(exc_info)
         print(traceback.format_exc().rstrip("\n").encode(encoding), file=sys.stderr)
     return s_error  # to use it as input for re-raising
+
+
+def get_exc_info_msg(s_error: str = '') -> str:
+    """
+
+    >>> # test with exc_info = None
+    >>> assert get_exc_info_msg('test') == 'test: '
+
+    >>> # test with exc_info
+    >>> try:
+    ...     raise FileNotFoundError('test')
+    ... except Exception:       # noqa
+    ...     assert get_exc_info_msg('test') == 'test: FileNotFoundError: test'
+
+    >>> # test with subprocess to get stdout, stderr
+    >>> import subprocess
+    >>> try:
+    ...     discard=subprocess.run('unknown_command', shell=True, check=True)
+    ... except subprocess.CalledProcessError:
+    ...     assert get_exc_info_msg('test') == "test: CalledProcessError: Command 'unknown_command' returned non-zero exit status 127."
+
+    """
+    if s_error:
+        exc_info_msg = f'{s_error}: '
+    else:
+        exc_info_msg = ''
+
+    exc_info = sys.exc_info()[1]
+    if exc_info is not None:
+        exc_info_type = type(exc_info).__name__
+        exc_info_msg += exc_info_type + ": " + str(exc_info)
+    return exc_info_msg
 
 
 def print_stdout(exc_info: Any) -> None:
