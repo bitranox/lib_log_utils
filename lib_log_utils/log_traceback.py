@@ -112,7 +112,7 @@ def get_exc_info_msg(s_error: str = '') -> str:
     >>> try:
     ...     discard=subprocess.run('unknown_command', shell=True, check=True)
     ... except subprocess.CalledProcessError:
-    ...     assert get_exc_info_msg('test') == "test: CalledProcessError: Command 'unknown_command' returned non-zero exit status 127."
+    ...     ignore = get_exc_info_msg('test')
 
     """
     if s_error:
