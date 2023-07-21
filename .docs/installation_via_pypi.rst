@@ -3,3 +3,11 @@
 .. code-block::
 
     python -m pip install --upgrade lib_log_utils
+
+
+- to install the latest release from PyPi via pip, including test dependencies:
+
+.. code-block::
+
+    python -m pip install --upgrade lib_log_utils[test]
+
