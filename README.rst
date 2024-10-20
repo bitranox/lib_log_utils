@@ -2,7 +2,7 @@ lib_log_utils
 =============
 
 
-Version v1.4.15 as of 2023-07-21 see `Changelog`_
+Version v1.4.15 as of 2024-10-20 see `Changelog`_
 
 |build_badge| |codeql| |license| |jupyter| |pypi|
 |pypi-downloads| |black| |codecov| |cc_maintain| |cc_issues| |cc_coverage| |snyk|
@@ -26,7 +26,10 @@ Version v1.4.15 as of 2023-07-21 see `Changelog`_
 .. |pypi| image:: https://img.shields.io/pypi/status/lib-log-utils?label=PyPI%20Package
    :target: https://badge.fury.io/py/lib_log_utils
 
-.. |codecov| image:: https://img.shields.io/codecov/c/github/bitranox/lib_log_utils
+.. badge until 2023-10-08:
+.. https://img.shields.io/codecov/c/github/bitranox/lib_log_utils
+.. badge from 2023-10-08:
+.. |codecov| image:: https://codecov.io/gh/bitranox/lib_log_utils/graph/badge.svg
    :target: https://codecov.io/gh/bitranox/lib_log_utils
 
 .. |cc_maintain| image:: https://img.shields.io/codeclimate/maintainability-percentage/bitranox/lib_log_utils?label=CC%20maintainability
@@ -64,7 +67,7 @@ automated tests, Github Actions, Documentation, Badges, etc. are managed with `P
 
 Python version required: 3.8.0 or newer
 
-tested on recent linux with python 3.8, 3.9, 3.10, 3.11, 3.12-dev, pypy-3.9, pypy-3.10 - architectures: amd64
+tested on recent linux with python 3.8, 3.9, 3.10, 3.11, 3.12, pypy-3.9, pypy-3.10, graalpy-24.1 - architectures: amd64
 
 `good code coverage <https://codeclimate.com/github/bitranox/lib_log_utils/test_coverage>`_, flake8 style checking ,mypy static type checking ,tested under `Linux, macOS, Windows <https://github.com/bitranox/lib_log_utils/actions/workflows/python-package.yml>`_, automatic daily builds and monitoring
 
@@ -88,8 +91,8 @@ tested on recent linux with python 3.8, 3.9, 3.10, 3.11, 3.12-dev, pypy-3.9, pyp
 Try it Online
 -------------
 
-You might try it right away in Jupyter Notebook by using the "launch binder" badge, or click `here <https://mybinder.org/v2/gh/{{rst_include.
-repository_slug}}/master?filepath=lib_log_utils.ipynb>`_
+You might try it right away in Jupyter Notebook by using the "launch binder" badge,
+or click `here <https://mybinder.org/v2/gh/bitranox/lib_log_utils/master?filepath=lib_log_utils.ipynb>`_
 
 Usage
 -----------
@@ -249,13 +252,12 @@ Usage from Commandline
 Installation and Upgrade
 ------------------------
 
-- Before You start, its highly recommended to update pip and setup tools:
+- Before You start, its highly recommended to update pip:
 
 
 .. code-block::
 
     python -m pip --upgrade pip
-    python -m pip --upgrade setuptools
 
 - to install the latest release from PyPi via pip (recommended):
 

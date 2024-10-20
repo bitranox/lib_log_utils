@@ -20,7 +20,10 @@
 .. |pypi| image:: https://img.shields.io/pypi/status/lib-log-utils?label=PyPI%20Package
    :target: https://badge.fury.io/py/lib_log_utils
 
-.. |codecov| image:: https://img.shields.io/codecov/c/github/bitranox/lib_log_utils
+.. badge until 2023-10-08:
+.. https://img.shields.io/codecov/c/github/bitranox/lib_log_utils
+.. badge from 2023-10-08:
+.. |codecov| image:: https://codecov.io/gh/bitranox/lib_log_utils/graph/badge.svg
    :target: https://codecov.io/gh/bitranox/lib_log_utils
 
 .. |cc_maintain| image:: https://img.shields.io/codeclimate/maintainability-percentage/bitranox/lib_log_utils?label=CC%20maintainability
