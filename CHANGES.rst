@@ -28,7 +28,7 @@ v1.4.15
 
 v1.4.14.2
 ---------
-2022-06-02: update to github actions checkout@v3 and setup-python@v3
+2022-06-02: update to github actions checkout@v3 and setup-python@v6
 
 v1.4.14
 --------
