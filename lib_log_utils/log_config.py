@@ -21,12 +21,12 @@ class LogSettings(object):
     use_colored_stream_handler = True
 
     fmt_extended = (
-        f"[{getpass.getuser()}@{lib_platform.hostname_short}]"
+        f"[{getpass.getuser()}@{lib_platform.get_hostname_short()}]"
         f"[{lib_programname.get_path_executed_script().stem}@%(process)d][%(asctime)s][%(levelname)-8s]: %(message)s"
     )
 
     # todo: we might can get the ppid program name for cli
-    fmt_extended_cli = f"[{getpass.getuser()}@{lib_platform.hostname_short}][%(asctime)s][%(levelname)-8s]: %(message)s"
+    fmt_extended_cli = f"[{getpass.getuser()}@{lib_platform.get_hostname_short()}][%(asctime)s][%(levelname)-8s]: %(message)s"
     fmt_plain = "%(message)s"
     fmt = fmt_plain
 

@@ -206,8 +206,8 @@ def _add_handler(
 def format_fmt(fmt: str) -> str:
     fmt = fmt.format(
         username=getpass.getuser(),
-        hostname_short=lib_platform.hostname_short,
-        hostname=lib_platform.hostname,
+        hostname_short=lib_platform.get_hostname_short(),
+        hostname=lib_platform.get_hostname(),
         program_name=lib_programname.get_path_executed_script().stem,
     )
     return fmt
