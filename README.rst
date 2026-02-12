@@ -336,7 +336,6 @@ following modules will be automatically installed :
     click
     coloredlogs
     cli_exit_tools
-    lib_parameter
     lib_platform
     lib_programname
 

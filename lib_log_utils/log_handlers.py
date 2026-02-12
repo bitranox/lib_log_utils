@@ -11,7 +11,6 @@ from typing import Any, Dict, Optional, Tuple, Union, TextIO, Type
 LogHandler = Union[type, Tuple[Union[type, Tuple[Any, ...]], ...]]
 
 # OWN
-import lib_parameter
 import lib_platform
 import lib_programname
 
@@ -136,8 +135,8 @@ def set_stream_handler_color(
 
     """
 
-    field_styles = lib_parameter.get_default_if_none(field_styles, coloredlogs.DEFAULT_FIELD_STYLES)  # type: ignore
-    level_styles = lib_parameter.get_default_if_none(level_styles, coloredlogs.DEFAULT_LEVEL_STYLES)  # type: ignore
+    field_styles = field_styles if field_styles is not None else coloredlogs.DEFAULT_FIELD_STYLES
+    level_styles = level_styles if level_styles is not None else coloredlogs.DEFAULT_LEVEL_STYLES
 
     if remove_existing_stream_handlers:
         try:

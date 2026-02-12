@@ -29,7 +29,6 @@ dependencies = [
     "cli_exit_tools",
     "click",
     "coloredlogs",
-    "lib_parameter",
     "lib_platform",
     "lib_programname",
 ]

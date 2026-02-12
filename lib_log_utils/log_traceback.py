@@ -4,9 +4,6 @@ import sys
 import traceback
 from typing import Any, Optional
 
-# OWN
-import lib_parameter
-
 # PROJ
 try:
     from . import lib_log_utils
@@ -40,9 +37,8 @@ def log_exception_traceback(
 
 
     """
-
-    log_level_exec_info = int(lib_parameter.get_default_if_none(log_level_exec_info, log_level))
-    log_level_traceback = int(lib_parameter.get_default_if_none(log_level_traceback, log_level_exec_info))
+    log_level_exec_info = int(log_level_exec_info if log_level_exec_info is not None else log_level)
+    log_level_traceback = int(log_level_traceback if log_level_traceback is not None else log_level_exec_info)
 
     if s_error and log_level != logging.NOTSET:
         lib_log_utils.log_level(message=s_error, level=log_level)

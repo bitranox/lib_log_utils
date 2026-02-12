@@ -10,9 +10,6 @@ from typing import Dict
 # EXT
 import humanfriendly.cli  # type: ignore  # noqa
 
-# OWN
-import lib_parameter
-
 # PROJ
 # imports for local pytest
 try:
@@ -371,16 +368,16 @@ def log_level(
                    logging.ERROR, width=10, wrap=False, banner = True)
     """
 
-    quiet = bool(lib_parameter.get_default_if_none(quiet, default=log_settings.quiet))
+    quiet = bool(quiet if quiet is not None else log_settings.quiet)
 
     if quiet:
         return
 
     message = str(message)
 
-    level = int(lib_parameter.get_default_if_none(level, default=log_settings.new_logger_level))
-    width = int(lib_parameter.get_default_if_none(width, default=log_settings.width))
-    wrap = bool(lib_parameter.get_default_if_none(wrap, default=log_settings.wrap))
+    level = int(level if level is not None else log_settings.new_logger_level)
+    width = int(width if width is not None else log_settings.width)
+    wrap = bool(wrap if wrap is not None else log_settings.wrap)
 
     if logger is None:
         logger = logging.getLogger()
