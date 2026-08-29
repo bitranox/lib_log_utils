@@ -4,3 +4,4 @@ coloredlogs
 cli_exit_tools
 lib_platform
 lib_programname
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
